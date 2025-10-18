@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in_button">Sign in with Foursquare</string>
+    <string name="login_succeeded">Login succeeded.</string>
+    <string name="login_failed">Login failed.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in_button">Foursquare にログイン</string>
+    <string name="login_succeeded">ログインしました。</string>
+    <string name="login_failed">ログインに失敗しました。</string>
+</resources>

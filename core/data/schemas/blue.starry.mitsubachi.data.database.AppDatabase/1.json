@@ -1,0 +1,55 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "1a2acacef8cc2edf5303e84c0661d316",
+    "entities": [
+      {
+        "tableName": "foursquare_accounts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `display_name` TEXT NOT NULL, `icon_url` TEXT NOT NULL, `access_token` TEXT NOT NULL, `auth_state_json` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "display_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iconUrl",
+            "columnName": "icon_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accessToken",
+            "columnName": "access_token",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "authStateJson",
+            "columnName": "auth_state_json",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a2acacef8cc2edf5303e84c0661d316')"
+    ]
+  }
+}

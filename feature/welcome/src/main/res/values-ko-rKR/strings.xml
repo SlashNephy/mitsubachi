@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in_button">Foursquare로 로그인</string>
+    <string name="login_succeeded">로그인했습니다.</string>
+    <string name="login_failed">로그인에 실패했습니다.</string>
+</resources>
