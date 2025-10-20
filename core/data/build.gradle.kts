@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.convention.android.library)
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
+  alias(libs.plugins.convention.datastore)
   alias(libs.plugins.convention.room)
   alias(libs.plugins.convention.detekt)
 }

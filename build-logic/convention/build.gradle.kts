@@ -11,6 +11,7 @@ dependencies {
   compileOnly(libs.kotlin.serialization.gradle.plugin)
   compileOnly(libs.ksp.gradle.plugin)
   compileOnly(libs.hilt.gradle.plugin)
+  compileOnly(libs.protobuf.gradle.plugin)
   compileOnly(libs.room.gradle.plugin)
   compileOnly(libs.detekt.gradle.plugin)
 }
@@ -47,6 +48,10 @@ gradlePlugin {
     register("kotlin-serialization") {
       id = libs.plugins.convention.kotlin.serialization.get().pluginId
       implementationClass = "KotlinSerializationConventionPlugin"
+    }
+    register("datastore") {
+      id = libs.plugins.convention.datastore.get().pluginId
+      implementationClass = "DataStoreConventionPlugin"
     }
     register("room") {
       id = libs.plugins.convention.room.get().pluginId

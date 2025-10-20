@@ -9,3 +9,5 @@ internal val Project.versions: VersionCatalog
 internal fun VersionCatalog.plugin(alias: String) = findPlugin(alias).get().get().pluginId
 
 internal fun VersionCatalog.library(alias: String) = findLibrary(alias).get()
+
+internal fun VersionCatalog.artifact(alias: String) = library(alias).get().toString()
