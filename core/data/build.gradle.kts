@@ -15,6 +15,14 @@ dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
 
+  // Room
+  implementation(libs.sqlcipher.android) {
+    artifact {
+      type = "aar"
+    }
+  }
+  implementation(libs.androidx.sqlite)
+
   // Google Play Services
   implementation(libs.play.services.location)
   implementation(libs.kotlinx.coroutines.play.services)

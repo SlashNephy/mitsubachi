@@ -28,6 +28,8 @@ protobuf-gradle-plugin = "0.9.5"
 protobuf = "4.33.0"
 androidx-datastore = "1.1.7"
 room = "2.8.2"
+sqlcipher-android = "4.11.0"
+androidx-sqlite = "2.6.1"
 detekt = "2.0.0-alpha.0"
 detekt-rules-compose = "0.4.27"
 ksp = "2.2.20-2.0.4"
@@ -106,6 +108,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+sqlcipher-android = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlcipher-android" }
+androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidx-sqlite" }
 
 # detekt
 detekt-rules-ktlint-wrapper = { module = "dev.detekt:detekt-rules-ktlint-wrapper", version.ref = "detekt" }

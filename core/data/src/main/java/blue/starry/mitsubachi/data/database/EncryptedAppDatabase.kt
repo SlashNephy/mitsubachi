@@ -6,6 +6,6 @@ import blue.starry.mitsubachi.data.database.dao.FoursquareAccountDao
 import blue.starry.mitsubachi.data.database.entity.FoursquareAccount
 
 @Database(version = 1, entities = [FoursquareAccount::class])
-abstract class AppDatabase : RoomDatabase() {
+abstract class EncryptedAppDatabase : RoomDatabase() {
   abstract fun foursquareAccount(): FoursquareAccountDao
 }
