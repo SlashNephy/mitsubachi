@@ -10,6 +10,7 @@ android {
 dependencies {
   api(kotlin("test"))
 
+  api(platform(libs.androidx.compose.bom))
   api(libs.androidx.junit)
   api(libs.androidx.espresso.core)
   api(libs.androidx.compose.ui.test.junit4)
