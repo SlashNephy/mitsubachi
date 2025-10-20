@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.domain.model.Venue
@@ -51,8 +52,13 @@ fun CreateCheckInScreen(
         .fillMaxWidth()
         .padding(16.dp),
     ) {
+      val keyboardController = LocalSoftwareKeyboardController.current
+
       Button(
-        onClick = onCancelCheckIn,
+        onClick = {
+          keyboardController?.hide()
+          onCancelCheckIn()
+        },
         modifier = Modifier.weight(1f),
       ) {
         Text("キャンセル")
