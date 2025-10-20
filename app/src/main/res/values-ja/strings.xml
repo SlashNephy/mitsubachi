@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mitsubachi</string>
+    <string name="home_bar">ホーム</string>
+    <string name="search_bar">検索</string>
+    <string name="settings_button">設定</string>
+    <string name="check_in_button">チェックイン</string>
+    <string name="like_button">いいね</string>
+    <string name="location_permission_missing">位置情報へのアクセスが許可されていません。</string>
+</resources>

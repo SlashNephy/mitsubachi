@@ -1,0 +1,75 @@
+# https://github.com/detekt/detekt/blob/v2.0.0-alpha.0/detekt-core/src/main/resources/default-detekt-config.yml
+
+config:
+  validation: true
+  warningsAsErrors: true
+
+comments:
+  AbsentOrWrongFileLicense:
+    active: false
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false
+
+complexity:
+  LongMethod:
+    ignoreAnnotated:
+      - Preview
+
+exceptions:
+  NotImplementedDeclaration:
+    active: false
+
+ktlint:
+  BlankLineBeforeDeclaration:
+    active: false
+  ChainMethodContinuation:
+    active: false
+  ClassSignature:
+    active: false
+  ExpressionOperandWrapping:
+    active: false
+  Filename:
+    active: false
+  FunctionExpressionBody:
+    active: false
+  FunctionName:
+    ignoreAnnotated:
+      - Composable
+  FunctionSignature:
+    active: false
+  Indentation:
+    indentSize: 2
+  MaximumLineLength:
+    active: false
+  MultilineExpressionWrapping:
+    active: false
+
+naming:
+  FunctionNameMaxLength:
+    active: false
+  FunctionNaming:
+    ignoreAnnotated:
+      - Composable
+
+style:
+  ClassOrdering:
+    active: false
+  ExpressionBodySyntax:
+    active: false
+  ForbiddenComment:
+    active: false
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    active: false
+  ReturnCount:
+    max: 3
+  UnnecessaryAnnotationUseSiteTarget:
+    # @param:ApplicationContext などで文句を言ってくる
+    active: false
+  UseIfInsteadOfWhen:
+    active: false
