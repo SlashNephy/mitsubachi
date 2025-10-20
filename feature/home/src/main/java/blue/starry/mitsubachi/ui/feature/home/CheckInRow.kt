@@ -70,14 +70,14 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
       url = checkIn.user.iconUrl,
       contentDescription = checkIn.user.handle,
       modifier = Modifier
-        .weight(2f, false)
+        .size(72.dp)
         .padding(horizontal = 8.dp, vertical = 4.dp),
     )
 
     Column(
       modifier = Modifier
         .fillMaxHeight()
-        .weight(8f),
+        .weight(1f)
     ) {
       Text(checkIn.user.displayName, color = Color.Gray)
       Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
@@ -113,7 +113,8 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
       isLiked = checkIn.isLiked,
       onClick = {}, // TODO
       modifier = Modifier
-        .weight(1.5f, false),
+        .size(48.dp)
+        .padding(end = 16.dp)
     )
   }
 

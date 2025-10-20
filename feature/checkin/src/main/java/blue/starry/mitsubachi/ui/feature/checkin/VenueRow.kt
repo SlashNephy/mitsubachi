@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -34,24 +34,23 @@ fun VenueRow(
 ) {
   Row(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
-    modifier = Modifier.fillMaxWidth().clickable(onClick = {
-      onClickVenue(venue)
-    }),
+    modifier = Modifier
+      .fillMaxWidth()
+      .clickable(onClick = {
+        onClickVenue(venue)
+      }),
   ) {
     val primaryCategory = venue.primaryCategory
     VenueCategoryIcon(
       model = primaryCategory?.iconUrl,
       contentDescription = primaryCategory?.name,
       modifier = Modifier
-        .weight(1.5f, false)
-        .padding(horizontal = 8.dp, vertical = 8.dp),
+        .size(72.dp)
+        .padding(horizontal = 8.dp, vertical = 4.dp),
     )
 
     Column(
-      modifier = Modifier
-        .fillMaxHeight()
-        .weight(8f)
-        .padding(vertical = 8.dp),
+      modifier = Modifier.fillMaxSize().padding(vertical = 8.dp),
     ) {
       Text(venue.name, fontWeight = FontWeight.Bold)
       Text(
