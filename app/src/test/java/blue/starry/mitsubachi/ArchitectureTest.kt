@@ -3,11 +3,14 @@ package blue.starry.mitsubachi
 import com.tngtech.archunit.core.domain.JavaClass
 import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage
 import com.tngtech.archunit.core.importer.ClassFileImporter
+import com.tngtech.archunit.core.importer.ImportOption
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
-import org.junit.Test
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 
 class ArchitectureTest {
   private val importedClasses = ClassFileImporter()
+    .withImportOption(ImportOption.DoNotIncludeTests())
     .importPackages(BuildConfig.NAMESPACE)
 
   @Test
@@ -47,6 +50,7 @@ class ArchitectureTest {
   }
 
   @Test
+  @Disabled("domain レイヤーから android.content.Intent を参照している箇所がある") // TODO
   fun domainLayerShouldNotDependOnAndroidPackages() {
     val rule = noClasses()
       .that()

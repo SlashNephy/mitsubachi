@@ -21,6 +21,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
   private val viewModel: MainActivityViewModel by viewModels()
 
+  @Suppress("LateinitUsage")
   @Inject
   lateinit var accountRepository: FoursquareAccountRepository
 
