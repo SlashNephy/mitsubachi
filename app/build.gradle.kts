@@ -36,9 +36,6 @@ android {
       "FOURSQUARE_CLIENT_SECRET",
       localProperties.getProperty("foursquare.client_secret")
     )
-
-    // 実際のスキームは AndroidManifest.xml で設定するが、テストが実行できるように埋めておく
-    manifestPlaceholders["appAuthRedirectScheme"] = ""
   }
 
   buildTypes {
