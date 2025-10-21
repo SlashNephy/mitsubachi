@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.datastore)
   alias(libs.plugins.convention.room)
+  alias(libs.plugins.convention.ktorfit)
   alias(libs.plugins.convention.detekt)
 }
 
@@ -33,6 +34,7 @@ dependencies {
   implementation(libs.ktor.client.okhttp)
   implementation(libs.ktor.client.content.negotiation)
   implementation(libs.ktor.serialization.kotlinx.json)
+  implementation(libs.ktor.client.auth)
   implementation(libs.ktor.client.logging)
 
   implementation(libs.appauth)

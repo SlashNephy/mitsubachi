@@ -13,6 +13,7 @@ dependencies {
   compileOnly(libs.hilt.gradle.plugin)
   compileOnly(libs.protobuf.gradle.plugin)
   compileOnly(libs.room.gradle.plugin)
+  compileOnly(libs.ktorfit.gradle.plugin)
   compileOnly(libs.detekt.gradle.plugin)
 }
 
@@ -56,6 +57,10 @@ gradlePlugin {
     register("room") {
       id = libs.plugins.convention.room.get().pluginId
       implementationClass = "RoomConventionPlugin"
+    }
+    register("ktorfit") {
+      id = libs.plugins.convention.ktorfit.get().pluginId
+      implementationClass = "KtorfitConventionPlugin"
     }
   }
 }

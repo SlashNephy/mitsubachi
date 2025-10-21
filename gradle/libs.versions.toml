@@ -11,6 +11,7 @@ androidx-lifecycle = "2.10.0-alpha05"
 play-services-location = "21.3.0"
 kotlinx-coroutines-play-services = "1.10.2"
 ktor = "3.3.1"
+ktorfit = "2.6.4"
 slf4j-android = "1.7.36"
 appauth = "0.11.1"
 timber = "5.0.1"
@@ -73,8 +74,12 @@ ktor-client-core = { module = "io.ktor:ktor-client-core" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging" }
 slf4j-android = { module = "org.slf4j:slf4j-android", version.ref = "slf4j-android" }
+
+# Ktorfit
+ktorfit-lib-light = { module = "de.jensklingenberg.ktorfit:ktorfit-lib-light", version.ref = "ktorfit" }
 
 # Coil
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
@@ -124,6 +129,7 @@ ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.
 hilt-gradle-plugin = { module = "com.google.dagger.hilt.android:com.google.dagger.hilt.android.gradle.plugin", version.ref = "hilt" }
 protobuf-gradle-plugin = { module = "com.google.protobuf:protobuf-gradle-plugin", version.ref = "protobuf-gradle-plugin" }
 room-gradle-plugin = { module = "androidx.room:androidx.room.gradle.plugin", version.ref = "room" }
+ktorfit-gradle-plugin = { module = "de.jensklingenberg.ktorfit:de.jensklingenberg.ktorfit.gradle.plugin", version.ref = "ktorfit" }
 detekt-gradle-plugin = { module = "dev.detekt:dev.detekt.gradle.plugin", version.ref = "detekt" }
 
 [plugins]
@@ -136,6 +142,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf-gradle-plugin" }
 room = { id = "androidx.room", version.ref = "room" }
+ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 
 convention-android-compose-application = { id = "blue.starry.mitsubachi.buildlogic.convention.android.compose.application" }
@@ -146,3 +153,4 @@ convention-hilt = { id = "blue.starry.mitsubachi.buildlogic.convention.hilt" }
 convention-kotlin-serialization = { id = "blue.starry.mitsubachi.buildlogic.convention.kotlin.serialization" }
 convention-datastore = { id = "blue.starry.mitsubachi.buildlogic.convention.datastore" }
 convention-room = { id = "blue.starry.mitsubachi.buildlogic.convention.room" }
+convention-ktorfit = { id = "blue.starry.mitsubachi.buildlogic.convention.ktorfit" }
