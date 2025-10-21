@@ -3,7 +3,6 @@ package blue.starry.mitsubachi.data.network.model
 import kotlinx.serialization.Serializable
 import blue.starry.mitsubachi.domain.model.FoursquareUser as DomainFoursquareUser
 
-
 @Serializable
 data class FoursquareUser(
   val address: String?,

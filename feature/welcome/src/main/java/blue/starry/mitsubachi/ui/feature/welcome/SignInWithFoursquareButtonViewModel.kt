@@ -27,7 +27,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
   sealed interface UiState {
     data object Pending : UiState
     data object Authorized : UiState
-    data class Failed(val exception: Exception) : UiState
+    data class Failed(val exception: Throwable) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Pending)
@@ -46,11 +46,11 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      try {
+      runCatching {
         finishAuthorizationUseCase(data)
-
+      }.onSuccess {
         _state.value = UiState.Authorized
-      } catch (e: Exception) {
+      }.onFailure { e ->
         _state.value = UiState.Failed(e)
       }
     }

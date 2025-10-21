@@ -7,7 +7,7 @@ import javax.inject.Singleton
 class SignOutUseCase @Inject constructor(
   private val foursquareAccountRepository: FoursquareAccountRepository,
 ) {
-  suspend operator fun invoke(/* account: FoursquareAccount */) {
+  suspend operator fun invoke() {
     // TODO: 複数アカウント対応
     val account = foursquareAccountRepository.list().firstOrNull() ?: return
 

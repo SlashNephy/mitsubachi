@@ -17,7 +17,7 @@ import javax.inject.Singleton
 object DatabaseMasterKeyDataStoreModule {
   private val Context.dataStore: DataStore<DatabaseMasterKey> by dataStore(
     fileName = "database_master_key.pb",
-    serializer = DatabaseMasterKeySerializer
+    serializer = DatabaseMasterKeySerializer,
   )
 
   @Provides

@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import blue.starry.mitsubachi.domain.model.FoursquareAccount as DomainFoursquareAccount
 
-
 @Entity(tableName = "foursquare_accounts")
 data class FoursquareAccount(
   @PrimaryKey val id: String,

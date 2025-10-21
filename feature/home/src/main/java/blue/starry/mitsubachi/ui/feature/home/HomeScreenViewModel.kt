@@ -48,11 +48,17 @@ class HomeScreenViewModel @Inject constructor(
       _state.value = UiState.Loading
     }
 
-    try {
-      val data = fetchFeedUseCase()
+    runCatching {
+      fetchFeedUseCase()
+    }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
-    } catch (e: Exception) {
-      _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
+    }.onFailure { e ->
+      if (currentState is UiState.Success) {
+        // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
+        _state.value = currentState.copy(isRefreshing = false)
+      } else {
+        _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
+      }
     }
   }
 

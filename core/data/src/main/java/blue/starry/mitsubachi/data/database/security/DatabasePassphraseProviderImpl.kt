@@ -33,7 +33,10 @@ internal class DatabasePassphraseProviderImpl @Inject constructor(
     val newMasterKey = generatePlainMasterKey()
     val newEncryptedMasterKey = encrypt(newMasterKey)
     databaseMasterKeyRepository.set(
-      DatabaseMasterKey.newBuilder().setKey(newEncryptedMasterKey.toByteString()).build()
+      DatabaseMasterKey
+        .newBuilder()
+        .setKey(newEncryptedMasterKey.toByteString())
+        .build(),
     )
 
     return newMasterKey
@@ -53,7 +56,7 @@ internal class DatabasePassphraseProviderImpl @Inject constructor(
     val parameterSpec = KeyGenParameterSpec
       .Builder(
         KEYSTORE_ALIAS,
-        KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
       )
       .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
       .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)

@@ -77,7 +77,7 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
     Column(
       modifier = Modifier
         .fillMaxHeight()
-        .weight(1f)
+        .weight(1f),
     ) {
       Text(checkIn.user.displayName, color = Color.Gray)
       Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
@@ -114,27 +114,32 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
       onClick = {}, // TODO
       modifier = Modifier
         .size(48.dp)
-        .padding(end = 16.dp)
+        .padding(end = 16.dp),
     )
   }
 
   if (checkIn.photos.isNotEmpty()) {
     // TODO: 複数画像のグリッドレイアウト
-    Box(
+    Photo(url = checkIn.photos.first().url)
+  }
+}
+
+@Composable
+fun Photo(url: String) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp),
+    contentAlignment = Alignment.Center,
+  ) {
+    AsyncImage(
+      model = url,
+      contentDescription = null,
       modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      AsyncImage(
-        model = checkIn.photos.first().url,
-        contentDescription = null,
-        modifier = Modifier
-          .fillMaxSize()
-          .clip(ShapeDefaults.Medium),
-        contentScale = ContentScale.FillWidth,
-      )
-    }
+        .fillMaxSize()
+        .clip(ShapeDefaults.Medium),
+      contentScale = ContentScale.FillWidth,
+    )
   }
 }
 

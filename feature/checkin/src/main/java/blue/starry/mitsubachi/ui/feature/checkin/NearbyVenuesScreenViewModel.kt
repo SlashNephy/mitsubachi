@@ -79,10 +79,11 @@ class NearbyVenuesScreenViewModel @Inject constructor(
 
     try {
       withTimeout(10.seconds) {
-        try {
-          val data = searchNearVenuesUseCase(query = query)
+        runCatching {
+          searchNearVenuesUseCase(query = query)
+        }.onSuccess { data ->
           _state.value = UiState.Success(data, isRefreshing = false)
-        } catch (e: Exception) {
+        }.onFailure { e ->
           _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
         }
       }
