@@ -9,9 +9,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -37,7 +37,7 @@ object KtorClientModule {
           "Mitsubachi/${config.versionName} (Android; +https://github.com/SlashNephy/mitsubachi)"
       }
 
-      install(DefaultRequest) {
+      defaultRequest {
         header(HttpHeaders.AcceptLanguage, findPrimaryLanguageTag())
       }
 

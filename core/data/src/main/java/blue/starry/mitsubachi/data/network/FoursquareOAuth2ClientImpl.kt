@@ -4,19 +4,17 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.net.toUri
 import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
-import blue.starry.mitsubachi.data.network.model.FoursquareTokenResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserDetailsResponse
 import blue.starry.mitsubachi.data.network.model.toDomain
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.domain.usecase.FoursquareOAuth2Client
 import dagger.hilt.android.qualifiers.ApplicationContext
+import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.http.HttpHeaders
-import io.ktor.http.parameters
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
@@ -41,6 +39,14 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     const val TOKEN_ENDPOINT = "https://foursquare.com/oauth2/access_token"
     const val REDIRECT_URI = "blue.starry.mitsubachi://oauth2/callback"
   }
+
+  private val ktorfit =
+    Ktorfit
+      .Builder()
+      .baseUrl("https://foursquare.com", checkUrl = false)
+      .httpClient(httpClient)
+      .build()
+      .createFoursquareOAuth2NetworkApi()
 
   private val configuration = AuthorizationServiceConfiguration(
     AUTHORIZATION_ENDPOINT.toUri(),
@@ -111,27 +117,23 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     //   }
     // }
 
-    val response = httpClient.submitForm(
-      url = TOKEN_ENDPOINT,
-      formParameters = parameters {
-        append("client_id", config.foursquareClientId)
-        append("client_secret", config.foursquareClientSecret)
-        append("grant_type", request.grantType)
-        append("redirect_uri", request.redirectUri.toString())
-        append("code", checkNotNull(request.authorizationCode))
-        append("code_verifier", checkNotNull(request.codeVerifier))
-      },
+    val data = ktorfit.getAccessToken(
+      clientId = config.foursquareClientId,
+      clientSecret = config.foursquareClientSecret,
+      grantType = request.grantType,
+      redirectUri = request.redirectUri.toString(),
+      code = checkNotNull(request.authorizationCode),
+      codeVerifier = checkNotNull(request.codeVerifier),
     )
-
-    val tokenResponse = response.body<FoursquareTokenResponse>()
     return TokenResponse
       .Builder(request)
       .setRequest(request)
-      .setAccessToken(tokenResponse.accessToken)
+      .setAccessToken(data.accessToken)
       .setTokenType("Bearer")
       .build()
   }
 
+  // TODO: このメソッドを FoursquareApiClientImpl 側に移動する
   private suspend fun getUserDetails(accessToken: String): FoursquareApiResponse<FoursquareUserDetailsResponse> {
     val response = httpClient.get("https://api.foursquare.com/v2/users/self?v=20251020") {
       headers.append(HttpHeaders.Authorization, "Bearer $accessToken")
