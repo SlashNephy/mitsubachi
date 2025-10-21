@@ -79,5 +79,7 @@ dependencies {
   debugImplementation(libs.androidx.compose.ui.test.manifest)
 
   testImplementation(projects.core.testing)
+  testRuntimeOnly(libs.junit.jupiter.engine)
+  testRuntimeOnly(libs.junit.platform.launcher)
   androidTestImplementation(projects.core.uiTesting)
 }

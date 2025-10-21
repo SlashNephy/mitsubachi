@@ -10,7 +10,6 @@ android {
 dependencies {
   api(kotlin("test"))
 
-  api(libs.junit)
   api(libs.junit.jupiter)
   api(libs.mockk)
   api(libs.archunit)

@@ -3,6 +3,7 @@ import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -74,7 +75,19 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
             checkDependencies = true
           }
 
-          testOptions.unitTests.isIncludeAndroidResources = true
+          testOptions {
+            unitTests {
+              isIncludeAndroidResources = true
+              isReturnDefaultValues = true
+              all {
+                it.useJUnitPlatform()
+              }
+            }
+          }
+
+          tasks.withType<Test>().configureEach {
+            failOnNoDiscoveredTests.set(false)
+          }
         }
       }
     }
