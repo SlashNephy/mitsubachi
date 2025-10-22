@@ -35,7 +35,7 @@ object ImageLoaderModule {
             httpClient = { httpClient },
             cacheStrategy = {
               CacheControlCacheStrategy()
-            }
+            },
           ),
         )
       }

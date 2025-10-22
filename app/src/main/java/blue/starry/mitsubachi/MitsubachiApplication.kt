@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
+  @Suppress("LateinitUsage")
   @Inject
   lateinit var imageLoader: ImageLoader
 
