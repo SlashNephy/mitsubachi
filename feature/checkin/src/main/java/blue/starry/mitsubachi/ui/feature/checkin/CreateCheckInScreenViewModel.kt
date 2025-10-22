@@ -18,13 +18,16 @@ class CreateCheckInScreenViewModel @Inject constructor(
   private val createCheckInUseCase: CreateCheckInUseCase,
 ) : ViewModel() {
   data class ShoutState(
-    val text: String,
+    val value: String,
     val remainingLength: Int,
     val hasError: Boolean,
-  )
+  ) {
+    val valueOrNull: String?
+      get() = value.ifBlank { null }
+  }
 
   private val _state = MutableStateFlow(
-    ShoutState(text = "", remainingLength = SHOUT_MAX_LENGTH, hasError = false)
+    ShoutState(value = "", remainingLength = SHOUT_MAX_LENGTH, hasError = false),
   )
   val state = _state.asStateFlow()
 
@@ -36,7 +39,7 @@ class CreateCheckInScreenViewModel @Inject constructor(
 
   fun onShoutUpdated(shout: String) {
     _state.value = ShoutState(
-      text = shout,
+      value = shout,
       remainingLength = SHOUT_MAX_LENGTH - countShoutLength(shout),
       hasError = !validateShout(shout),
     )

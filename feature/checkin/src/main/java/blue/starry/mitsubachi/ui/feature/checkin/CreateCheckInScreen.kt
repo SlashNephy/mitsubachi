@@ -40,10 +40,10 @@ fun CreateCheckInScreen(
     Box(
       modifier = Modifier
         .weight(1f)
-        .fillMaxWidth()
+        .fillMaxWidth(),
     ) {
       CheckInEditor(
-        shout = state.text,
+        shout = state.value,
         isError = state.hasError,
         onShoutChange = viewModel::onShoutUpdated,
         modifier = Modifier.fillMaxSize(),
@@ -66,32 +66,28 @@ fun CreateCheckInScreen(
     ) {
       val keyboardController = LocalSoftwareKeyboardController.current
 
-      Button(
+      CancelButton(
         onClick = {
           keyboardController?.hide()
           onCancelCheckIn()
         },
         modifier = Modifier.weight(1f),
-      ) {
-        Text("キャンセル")
-      }
+      )
 
-      Button(
+      SubmitButton(
         onClick = {
           viewModel
             .createCheckIn(
               venue = venue,
-              shout = state.text.ifBlank { null },
+              shout = state.valueOrNull,
             )
             .invokeOnCompletion {
               onCompleteCheckIn()
             }
         },
-        enabled = !state.hasError,
+        isEnabled = !state.hasError,
         modifier = Modifier.weight(1f),
-      ) {
-        Text("チェックイン!")
-      }
+      )
     }
   }
 }
@@ -124,7 +120,11 @@ private fun CheckInEditor(
 }
 
 @Composable
-private fun ShoutLengthCounter(remaining: Int, isError: Boolean, modifier: Modifier = Modifier) {
+private fun ShoutLengthCounter(
+  remaining: Int,
+  isError: Boolean,
+  modifier: Modifier = Modifier,
+) {
   val color = if (isError) {
     Color.Red
   } else {
@@ -136,4 +136,25 @@ private fun ShoutLengthCounter(remaining: Int, isError: Boolean, modifier: Modif
     color = color,
     modifier = modifier,
   )
+}
+
+@Composable
+private fun CancelButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+  Button(
+    onClick = onClick,
+    modifier = modifier,
+  ) {
+    Text("キャンセル")
+  }
+}
+
+@Composable
+private fun SubmitButton(onClick: () -> Unit, isEnabled: Boolean, modifier: Modifier = Modifier) {
+  Button(
+    onClick = onClick,
+    enabled = isEnabled,
+    modifier = modifier,
+  ) {
+    Text("チェックイン!")
+  }
 }
