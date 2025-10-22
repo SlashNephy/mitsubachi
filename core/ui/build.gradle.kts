@@ -38,6 +38,8 @@ dependencies {
   // Coil
   api(libs.coil.compose)
   implementation(libs.coil.network.ktor3)
+  implementation(libs.coil.network.cache.control)
+  testImplementation(libs.coil.test)
 
   testImplementation(projects.core.testing)
   androidTestImplementation(projects.core.uiTesting)
