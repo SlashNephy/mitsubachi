@@ -31,7 +31,7 @@ androidx-datastore = "1.1.7"
 room = "2.8.2"
 sqlcipher-android = "4.11.0"
 androidx-sqlite = "2.6.1"
-detekt = "2.0.0-alpha.0"
+detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.4.27"
 ksp = "2.2.20-2.0.4"
 
