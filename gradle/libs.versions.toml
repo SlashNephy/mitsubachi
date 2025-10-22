@@ -33,7 +33,7 @@ sqlcipher-android = "4.11.0"
 androidx-sqlite = "2.6.1"
 detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.4.27"
-ksp = "2.2.20-2.0.4"
+ksp = "2.3.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
