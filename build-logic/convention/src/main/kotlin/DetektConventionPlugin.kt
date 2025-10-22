@@ -20,6 +20,15 @@ class DetektConventionPlugin : Plugin<Project> {
         buildUponDefaultConfig.set(true)
         allRules.set(true)
         config.setFrom(rootProject.file("detekt.yml"))
+        basePath.set(rootProject.projectDir.absolutePath)
+        parallel.set(true)
+        autoCorrect.set(true)
+
+        reports {
+          checkstyle.required.set(false)
+          sarif.required.set(true)
+          markdown.required.set(true)
+        }
       }
     }
   }
