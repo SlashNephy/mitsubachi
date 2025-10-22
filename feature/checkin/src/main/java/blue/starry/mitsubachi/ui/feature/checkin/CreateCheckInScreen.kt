@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.ui.feature.checkin
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,15 +14,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.domain.model.Venue
 
 @Composable
@@ -31,20 +30,33 @@ fun CreateCheckInScreen(
   onCancelCheckIn: () -> Unit,
   viewModel: CreateCheckInScreenViewModel = hiltViewModel(),
 ) {
-  var shout by remember { mutableStateOf("") }
+  val state by viewModel.state.collectAsStateWithLifecycle()
 
   Column(
     modifier = Modifier
       .fillMaxSize()
       .imePadding(),
   ) {
-    CheckInEditor(
-      shout = shout,
-      onShoutChange = { shout = it },
+    Box(
       modifier = Modifier
         .weight(1f)
         .fillMaxWidth(),
-    )
+    ) {
+      CheckInEditor(
+        shout = state.value,
+        isError = state.hasError,
+        onShoutChange = viewModel::onShoutUpdated,
+        modifier = Modifier.fillMaxSize(),
+      )
+
+      ShoutLengthCounter(
+        remaining = state.remainingLength,
+        isError = state.hasError,
+        modifier = Modifier
+          .align(Alignment.BottomEnd)
+          .padding(horizontal = 24.dp, vertical = 8.dp),
+      )
+    }
 
     Row(
       horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
@@ -54,31 +66,28 @@ fun CreateCheckInScreen(
     ) {
       val keyboardController = LocalSoftwareKeyboardController.current
 
-      Button(
+      CancelButton(
         onClick = {
           keyboardController?.hide()
           onCancelCheckIn()
         },
         modifier = Modifier.weight(1f),
-      ) {
-        Text("キャンセル")
-      }
+      )
 
-      Button(
+      SubmitButton(
         onClick = {
           viewModel
             .createCheckIn(
               venue = venue,
-              shout = shout.ifBlank { null },
+              shout = state.valueOrNull,
             )
             .invokeOnCompletion {
               onCompleteCheckIn()
             }
         },
+        isEnabled = !state.hasError,
         modifier = Modifier.weight(1f),
-      ) {
-        Text("チェックイン!")
-      }
+      )
     }
   }
 }
@@ -86,6 +95,7 @@ fun CreateCheckInScreen(
 @Composable
 private fun CheckInEditor(
   shout: String,
+  isError: Boolean,
   onShoutChange: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -94,6 +104,7 @@ private fun CheckInEditor(
 
   TextField(
     value = shout,
+    isError = isError,
     onValueChange = onShoutChange,
     placeholder = {
       Text("何をしていますか？")
@@ -106,4 +117,44 @@ private fun CheckInEditor(
     ),
     modifier = modifier,
   )
+}
+
+@Composable
+private fun ShoutLengthCounter(
+  remaining: Int,
+  isError: Boolean,
+  modifier: Modifier = Modifier,
+) {
+  val color = if (isError) {
+    Color.Red
+  } else {
+    Color.Gray
+  }
+
+  Text(
+    remaining.toString(),
+    color = color,
+    modifier = modifier,
+  )
+}
+
+@Composable
+private fun CancelButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+  Button(
+    onClick = onClick,
+    modifier = modifier,
+  ) {
+    Text("キャンセル")
+  }
+}
+
+@Composable
+private fun SubmitButton(onClick: () -> Unit, isEnabled: Boolean, modifier: Modifier = Modifier) {
+  Button(
+    onClick = onClick,
+    enabled = isEnabled,
+    modifier = modifier,
+  ) {
+    Text("チェックイン!")
+  }
 }
