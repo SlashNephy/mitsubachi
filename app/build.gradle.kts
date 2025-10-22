@@ -28,13 +28,13 @@ android {
     buildConfigField(
       "String",
       "FOURSQUARE_CLIENT_ID",
-      localProperties.getProperty("foursquare.client_id", "null")
+      localProperties.getProperty("foursquare.client_id", "\"dummy\"")
     )
     // クライアントシークレットは製品アプリでバンドルすべきではないがストア公開しないので諦める
     buildConfigField(
       "String",
       "FOURSQUARE_CLIENT_SECRET",
-      localProperties.getProperty("foursquare.client_secret", "null")
+      localProperties.getProperty("foursquare.client_secret", "\"dummy\"")
     )
   }
 
