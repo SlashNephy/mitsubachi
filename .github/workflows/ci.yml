@@ -22,6 +22,9 @@ jobs:
           cache: gradle
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
       - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - run: echo "$SECRET_JSON" > app/google-services.json
+        env:
+          SECRET_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: ./gradlew assembleDebug
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -39,6 +42,9 @@ jobs:
           distribution: jetbrains
           cache: gradle
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+      - run: echo "$SECRET_JSON" > app/google-services.json
+        env:
+          SECRET_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: ./gradlew testDebug
 
   instrumented-test:
@@ -84,6 +90,9 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Created AVD"
+      - run: echo "$SECRET_JSON" > app/google-services.json
+        env:
+          SECRET_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - name: Test
         uses: reactivecircus/android-emulator-runner@1dcd0090116d15e7c562f8db72807de5e036a4ed # v2.34.0
         with:
@@ -110,6 +119,9 @@ jobs:
           cache: gradle
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
       - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - run: echo "$SECRET_JSON" > app/google-services.json
+        env:
+          SECRET_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: ./gradlew lintDebug
       - name: Merge SARIF files
         if: always()
@@ -133,6 +145,9 @@ jobs:
           distribution: jetbrains
           cache: gradle
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+      - run: echo "$SECRET_JSON" > app/google-services.json
+        env:
+          SECRET_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: ./gradlew detekt detektMergeReports --continue
       - uses: github/codeql-action/upload-sarif@16140ae1a102900babc80a33c44059580f687047 # v4.30.9
         if: always()
