@@ -33,7 +33,7 @@ class DetektConventionPlugin : Plugin<Project> {
         }
 
         exclude {
-          it.file.path.contains("generated/")
+          it.file.invariantSeparatorsPath.contains("generated/")
         }
       }
 
