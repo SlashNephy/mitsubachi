@@ -34,6 +34,7 @@ androidx-sqlite = "2.6.1"
 detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.4.27"
 ksp = "2.3.0"
+android-mapsplatform-secrets = "2.0.1"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
@@ -147,6 +148,7 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobuf-gradle-plugin" 
 room = { id = "androidx.room", version.ref = "room" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
+android-mapsplatform-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "android-mapsplatform-secrets" }
 
 convention-android-compose-application = { id = "blue.starry.mitsubachi.buildlogic.convention.android.compose.application" }
 convention-android-library = { id = "blue.starry.mitsubachi.buildlogic.convention.android.library" }
