@@ -35,7 +35,7 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
   private val config: ApplicationConfig,
 ) : FoursquareOAuth2Client, Closeable {
   private companion object {
-    const val AUTHORIZATION_ENDPOINT = "https://foursquare.com/oauth2/authenticate"
+    const val AUTHORIZATION_ENDPOINT = "https://foursquare.com/oauth2/authorize"
     const val TOKEN_ENDPOINT = "https://foursquare.com/oauth2/access_token"
     const val REDIRECT_URI = "blue.starry.mitsubachi://oauth2/callback"
   }
