@@ -32,5 +32,9 @@ sealed interface RouteKey : NavKey {
 
   @Immutable
   @Serializable
+  data class Map(val latitude: Double, val longitude: Double) : RouteKey
+
+  @Immutable
+  @Serializable
   data object Settings : RouteKey
 }
