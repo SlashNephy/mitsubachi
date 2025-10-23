@@ -35,20 +35,20 @@ class RelativeDateTimeFormatterTest {
   fun years() {
     assertEquals(
       "in 1 year",
-      formatter.formatDuration(1.years, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.years, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 years",
-      formatter.formatDuration(2.years, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.years, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 year ago",
-      formatter.formatDuration(1.years, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.years, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 years ago",
-      formatter.formatDuration(2.years, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.years, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -56,20 +56,20 @@ class RelativeDateTimeFormatterTest {
   fun months() {
     assertEquals(
       "in 1 month",
-      formatter.formatDuration(1.months, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.months, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 months",
-      formatter.formatDuration(2.months, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.months, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 month ago",
-      formatter.formatDuration(1.months, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.months, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 months ago",
-      formatter.formatDuration(2.months, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.months, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -77,20 +77,20 @@ class RelativeDateTimeFormatterTest {
   fun weeks() {
     assertEquals(
       "in 1 week",
-      formatter.formatDuration(1.weeks, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.weeks, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 weeks",
-      formatter.formatDuration(2.weeks, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.weeks, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 week ago",
-      formatter.formatDuration(1.weeks, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.weeks, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 weeks ago",
-      formatter.formatDuration(2.weeks, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.weeks, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -98,20 +98,20 @@ class RelativeDateTimeFormatterTest {
   fun days() {
     assertEquals(
       "in 1 day",
-      formatter.formatDuration(1.days, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.days, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 days",
-      formatter.formatDuration(2.days, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.days, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 day ago",
-      formatter.formatDuration(1.days, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.days, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 days ago",
-      formatter.formatDuration(2.days, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.days, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -119,20 +119,20 @@ class RelativeDateTimeFormatterTest {
   fun hours() {
     assertEquals(
       "in 1 hour",
-      formatter.formatDuration(1.hours, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.hours, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 hours",
-      formatter.formatDuration(2.hours, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.hours, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 hour ago",
-      formatter.formatDuration(1.hours, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.hours, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 hours ago",
-      formatter.formatDuration(2.hours, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.hours, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -140,20 +140,20 @@ class RelativeDateTimeFormatterTest {
   fun minutes() {
     assertEquals(
       "in 1 minute",
-      formatter.formatDuration(1.minutes, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.minutes, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 minutes",
-      formatter.formatDuration(2.minutes, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.minutes, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 minute ago",
-      formatter.formatDuration(1.minutes, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.minutes, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 minutes ago",
-      formatter.formatDuration(2.minutes, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.minutes, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -161,20 +161,20 @@ class RelativeDateTimeFormatterTest {
   fun seconds() {
     assertEquals(
       "in 1 second",
-      formatter.formatDuration(1.seconds, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(1.seconds, RelativeDateTimeFormatter.Direction.NEXT),
     )
     assertEquals(
       "in 2 seconds",
-      formatter.formatDuration(2.seconds, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(2.seconds, RelativeDateTimeFormatter.Direction.NEXT),
     )
 
     assertEquals(
       "1 second ago",
-      formatter.formatDuration(1.seconds, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(1.seconds, RelativeDateTimeFormatter.Direction.LAST),
     )
     assertEquals(
       "2 seconds ago",
-      formatter.formatDuration(2.seconds, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration(2.seconds, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 
@@ -182,7 +182,7 @@ class RelativeDateTimeFormatterTest {
   fun justNow() {
     assertEquals(
       context.getString(R.string.just_now),
-      formatter.formatDuration(0.seconds, RelativeDateTimeFormatter.Direction.NEXT)
+      formatter.formatDuration(0.seconds, RelativeDateTimeFormatter.Direction.NEXT),
     )
   }
 
@@ -190,7 +190,7 @@ class RelativeDateTimeFormatterTest {
   fun ignoreNegativeDuration() {
     assertEquals(
       "1 second ago",
-      formatter.formatDuration((-1).seconds, RelativeDateTimeFormatter.Direction.LAST)
+      formatter.formatDuration((-1).seconds, RelativeDateTimeFormatter.Direction.LAST),
     )
   }
 }

@@ -1,7 +1,9 @@
 import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.report.ReportMergeTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.maybeCreate
 import org.gradle.kotlin.dsl.withType
 
 class DetektConventionPlugin : Plugin<Project> {
@@ -29,6 +31,17 @@ class DetektConventionPlugin : Plugin<Project> {
           sarif.required.set(true)
           markdown.required.set(true)
         }
+
+        exclude {
+          it.file.invariantSeparatorsPath.contains("generated/")
+        }
+      }
+
+      rootProject.tasks.maybeCreate<ReportMergeTask>("detektMergeReports").apply {
+        input.from(
+          tasks.withType<Detekt>().map { it.reports.sarif.outputLocation }
+        )
+        output.set(rootProject.layout.buildDirectory.file("reports/detekt/merged.sarif"))
       }
     }
   }
