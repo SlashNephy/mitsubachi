@@ -41,6 +41,7 @@ include(
   ":core:ui-testing",
   ":feature:checkin",
   ":feature:home",
+  ":feature:map",
   ":feature:settings",
   ":feature:welcome",
 )

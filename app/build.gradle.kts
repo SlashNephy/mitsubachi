@@ -8,6 +8,8 @@ plugins {
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
+
+  alias(libs.plugins.android.mapsplatform.secrets)
 }
 
 val localProperties = Properties()
@@ -60,6 +62,11 @@ android {
   }
 }
 
+secrets {
+  propertiesFileName = rootProject.relativePath("secrets.properties")
+  defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
+}
+
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.data)
@@ -67,6 +74,7 @@ dependencies {
   implementation(projects.core.ui)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
+  implementation(projects.feature.map)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
 

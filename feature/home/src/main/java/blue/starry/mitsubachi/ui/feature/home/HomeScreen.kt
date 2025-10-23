@@ -20,7 +20,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-fun HomeScreen(viewModel: HomeScreenViewModel = hiltViewModel()) {
+fun HomeScreen(
+  onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
+  viewModel: HomeScreenViewModel = hiltViewModel(),
+) {
   val state by viewModel.state.collectAsStateWithLifecycle()
 
   PullToRefreshBox(
@@ -46,7 +49,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel = hiltViewModel()) {
             .fillMaxSize(),
         ) {
           itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
-            CheckInRow(checkIn, viewModel)
+            CheckInRow(checkIn, onClickVenue = onClickVenue)
 
             if (index < state.feed.lastIndex) {
               HorizontalDivider(modifier = Modifier.padding(12.dp))
