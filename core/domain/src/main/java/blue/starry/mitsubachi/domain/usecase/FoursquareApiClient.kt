@@ -1,17 +1,37 @@
 package blue.starry.mitsubachi.domain.usecase
 
 import blue.starry.mitsubachi.domain.model.CheckIn
+import blue.starry.mitsubachi.domain.model.Coordinates
+import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.Venue
+import java.time.ZonedDateTime
 
 interface FoursquareApiClient {
-  suspend fun getRecentCheckIns(): List<CheckIn>
+  suspend fun getRecentCheckIns(
+    limit: Int? = null,
+    after: ZonedDateTime? = null,
+    coordinates: Coordinates? = null,
+  ): List<CheckIn>
+
   suspend fun searchNearVenues(
-    latitude: Double,
-    longitude: Double,
+    coordinates: Coordinates,
     query: String? = null,
   ): List<Venue>
 
-  suspend fun addCheckIn(venueId: String, shout: String? = null)
+  suspend fun addCheckIn(
+    venueId: String,
+    shout: String? = null,
+    broadcastFlags: List<FoursquareCheckInBroadcastFlag>? = null,
+    stickerId: String? = null,
+  ): CheckIn
+
   suspend fun updateCheckIn(checkInId: String, shout: String? = null)
   suspend fun deleteCheckIn(checkInId: String)
+  suspend fun addPhotoToCheckIn(
+    checkInId: String,
+    image: FilePart,
+    isPublic: Boolean = true,
+  )
+
+  suspend fun likeCheckIn(checkInId: String)
 }

@@ -3,6 +3,8 @@ import java.util.Properties
 
 plugins {
   alias(libs.plugins.convention.android.compose.application)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.firebase.crashlytics)
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
@@ -78,6 +80,10 @@ dependencies {
 
   implementation(libs.appauth)
   implementation(libs.androidx.core.splashscreen)
+
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.crashlytics.ndk)
+  implementation(libs.firebase.analytics)
 
   debugImplementation(libs.slf4j.android)
   debugImplementation(libs.androidx.compose.ui.tooling)
