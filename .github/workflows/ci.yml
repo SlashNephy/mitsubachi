@@ -114,7 +114,7 @@ jobs:
       - name: Merge SARIF files
         if: always()
         run: find . -type f -name lint-results-debug.sarif -exec npx @microsoft/sarif-multitool merge --merge-runs {} +
-      - uses: github/codeql-action/upload-sarif@42213152a85ae7569bdb6bec7bcd74cd691bfe41 # v3.30.9
+      - uses: github/codeql-action/upload-sarif@16140ae1a102900babc80a33c44059580f687047 # v4.30.9
         if: always()
         with:
           sarif_file: merged.sarif
@@ -134,7 +134,7 @@ jobs:
           cache: gradle
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
       - run: ./gradlew detekt detektMergeReports --continue
-      - uses: github/codeql-action/upload-sarif@42213152a85ae7569bdb6bec7bcd74cd691bfe41 # v3.30.9
+      - uses: github/codeql-action/upload-sarif@16140ae1a102900babc80a33c44059580f687047 # v4.30.9
         if: always()
         with:
           sarif_file: build/reports/detekt/merged.sarif
