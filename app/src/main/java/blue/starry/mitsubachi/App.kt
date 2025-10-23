@@ -27,6 +27,7 @@ import blue.starry.mitsubachi.ui.feature.home.HomeScreenBottomBar
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenFloatingActionButton
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.MapScreen
+import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
 import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
 import kotlinx.coroutines.launch
 
@@ -79,6 +80,14 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
     is RouteKey.CreateCheckIn -> {
       CreateCheckInScreenTopBar(
         venue = key.venue,
+        onBack = {
+          backStack.remove(key)
+        },
+      )
+    }
+
+    is RouteKey.Map -> {
+      MapScreenTopBar(
         onBack = {
           backStack.remove(key)
         },
@@ -138,7 +147,11 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
 
       is RouteKey.Home -> {
         NavEntry(key) {
-          HomeScreen()
+          HomeScreen(
+            onClickVenue = { latitude, longitude, title ->
+              backStack.add(RouteKey.Map(latitude, longitude, title))
+            },
+          )
         }
       }
 
@@ -172,6 +185,7 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
           MapScreen(
             latitude = key.latitude,
             longitude = key.longitude,
+            title = key.title,
           )
         }
       }
