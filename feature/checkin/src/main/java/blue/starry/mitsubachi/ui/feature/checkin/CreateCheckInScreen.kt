@@ -45,7 +45,7 @@ fun CreateCheckInScreen(
   viewModel: CreateCheckInScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
-  
+
   // TODO: ステート管理を ViewModel に移す
   val imageUris = remember { mutableStateListOf<Uri>() }
   val launcher = rememberLauncherForActivityResult(
@@ -143,11 +143,6 @@ fun CreateCheckInScreen(
       )
     }
   }
-}
-
-@Composable
-private fun TopToolbar() {
-
 }
 
 @Composable
