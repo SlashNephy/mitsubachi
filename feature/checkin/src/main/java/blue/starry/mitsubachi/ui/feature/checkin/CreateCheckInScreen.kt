@@ -1,19 +1,32 @@
 package blue.starry.mitsubachi.ui.feature.checkin
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.domain.model.Venue
 
 @Composable
+@Suppress("LongMethod") // TODO: 後でなんとかする
 fun CreateCheckInScreen(
   venue: Venue,
   onCompleteCheckIn: () -> Unit,
@@ -31,12 +45,49 @@ fun CreateCheckInScreen(
   viewModel: CreateCheckInScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
+  
+  // TODO: ステート管理を ViewModel に移す
+  val imageUris = remember { mutableStateListOf<Uri>() }
+  val launcher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.PickMultipleVisualMedia(),
+  ) { uris ->
+    imageUris.clear()
+    imageUris.addAll(uris)
+  }
 
   Column(
     modifier = Modifier
       .fillMaxSize()
       .imePadding(),
   ) {
+    Row(modifier = Modifier.height(64.dp)) {
+      BadgedBox(
+        badge = {
+          if (imageUris.isNotEmpty()) {
+            Badge {
+              Text(imageUris.size.toString())
+            }
+          }
+        },
+      ) {
+        IconButton(
+          onClick = {
+            launcher.launch(
+              PickVisualMediaRequest(
+                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly,
+                maxItems = 4,
+                isOrderedSelection = true,
+              ),
+            )
+          },
+        ) {
+          Icon(Icons.Filled.CameraAlt, contentDescription = null)
+        }
+      }
+
+      // TODO: ステッカー対応
+    }
+
     Box(
       modifier = Modifier
         .weight(1f)
@@ -80,6 +131,8 @@ fun CreateCheckInScreen(
             .createCheckIn(
               venue = venue,
               shout = state.valueOrNull,
+              isPublic = true, // TODO: 非公開対応
+              imageUris = imageUris,
             )
             .invokeOnCompletion {
               onCompleteCheckIn()
@@ -93,15 +146,17 @@ fun CreateCheckInScreen(
 }
 
 @Composable
+private fun TopToolbar() {
+
+}
+
+@Composable
 private fun CheckInEditor(
   shout: String,
   isError: Boolean,
   onShoutChange: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  // TODO: 写真アップロード対応
-  // TODO: ステッカー対応
-
   TextField(
     value = shout,
     isError = isError,
