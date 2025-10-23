@@ -13,6 +13,10 @@ kotlinx-coroutines-play-services = "1.10.2"
 ktor = "3.3.1"
 ktorfit = "2.6.4"
 slf4j-android = "1.7.36"
+play-services-maps = "19.2.0"
+android-maps-ktx = "5.2.1"
+android-maps-compose = "6.12.1"
+android-places = "5.0.0"
 appauth = "0.11.1"
 timber = "5.0.1"
 coil = "3.3.0"
@@ -87,6 +91,12 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 coil-network-cache-control = { module = "io.coil-kt.coil3:coil-network-cache-control", version.ref = "coil" }
 coil-test = { module = "io.coil-kt.coil3:coil-test", version.ref = "coil" }
+
+# Google Maps SDK
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+android-maps-ktx = { module = "com.google.maps.android:maps-ktx", version.ref = "android-maps-ktx" }
+android-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "android-maps-compose" }
+android-places = { module = "com.google.android.libraries.places:places", version.ref = "android-places" }
 
 appauth = { module = "net.openid:appauth", version.ref = "appauth" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }

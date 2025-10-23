@@ -72,6 +72,7 @@ dependencies {
   implementation(projects.core.ui)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
+  implementation(projects.feature.map)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
 
