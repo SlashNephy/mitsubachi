@@ -38,11 +38,37 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     data class Error(val message: String) : UiState
   }
 
+  enum class SortOrder {
+    RELEVANCE,
+    DISTANCE,
+  }
+
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
   val state = _state.asStateFlow()
 
+  private val _sortOrder = MutableStateFlow(SortOrder.RELEVANCE)
+  val sortOrder = _sortOrder.asStateFlow()
+
+  private var rawVenues: List<Venue> = emptyList()
+
   init {
     refresh()
+  }
+
+  fun setSortOrder(order: SortOrder) {
+    _sortOrder.value = order
+    applySorting()
+  }
+
+  private fun applySorting() {
+    val currentState = _state.value
+    if (currentState is UiState.Success) {
+      val sortedVenues = when (_sortOrder.value) {
+        SortOrder.RELEVANCE -> rawVenues
+        SortOrder.DISTANCE -> rawVenues.sortedBy { it.location.distance ?: Int.MAX_VALUE }
+      }
+      _state.value = currentState.copy(venues = sortedVenues)
+    }
   }
 
   fun refresh(query: String? = null): Job {
@@ -82,7 +108,12 @@ class NearbyVenuesScreenViewModel @Inject constructor(
         runCatching {
           searchNearVenuesUseCase(query = query)
         }.onSuccess { data ->
-          _state.value = UiState.Success(data, isRefreshing = false)
+          rawVenues = data
+          val sortedVenues = when (_sortOrder.value) {
+            SortOrder.RELEVANCE -> data
+            SortOrder.DISTANCE -> data.sortedBy { it.location.distance ?: Int.MAX_VALUE }
+          }
+          _state.value = UiState.Success(sortedVenues, isRefreshing = false)
         }.onFailure { e ->
           _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
         }
