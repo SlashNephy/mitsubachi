@@ -2,13 +2,22 @@ package blue.starry.mitsubachi.ui.feature.checkin
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -18,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,6 +41,7 @@ fun NearbyVenuesScreen(
   topBarViewModel: NearbyVenuesScreenTopBarViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
+  val sortOrder by viewModel.sortOrder.collectAsStateWithLifecycle()
 
   val query by topBarViewModel.query.collectAsStateWithLifecycle(null)
   LaunchedEffect(query) {
@@ -70,18 +81,12 @@ fun NearbyVenuesScreen(
       }
 
       is NearbyVenuesScreenViewModel.UiState.Success -> {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-          itemsIndexed(
-            items = state.venues,
-            key = { _, venue -> venue.id },
-          ) { index, venue ->
-            VenueRow(venue, onClickVenue = onClickVenue)
-
-            if (index < state.venues.lastIndex) {
-              HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(12.dp))
-            }
-          }
-        }
+        VenueListContent(
+          state = state,
+          sortOrder = sortOrder,
+          onSortOrderChange = viewModel::setSortOrder,
+          onClickVenue = onClickVenue,
+        )
       }
 
       is NearbyVenuesScreenViewModel.UiState.Error -> {
@@ -90,5 +95,81 @@ fun NearbyVenuesScreen(
         }
       }
     }
+  }
+}
+
+@Composable
+private fun VenueListContent(
+  state: NearbyVenuesScreenViewModel.UiState.Success,
+  sortOrder: NearbyVenuesScreenViewModel.SortOrder,
+  onSortOrderChange: (NearbyVenuesScreenViewModel.SortOrder) -> Unit,
+  onClickVenue: (Venue) -> Unit,
+) {
+  if (state.venues.isEmpty()) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+      Text(
+        text = stringResource(R.string.no_venues_found),
+        modifier = Modifier.padding(16.dp),
+        textAlign = TextAlign.Center,
+      )
+    }
+  } else {
+    Column(modifier = Modifier.fillMaxSize()) {
+      // Sort buttons
+      SortButtons(
+        sortOrder = sortOrder,
+        onSortOrderChange = onSortOrderChange,
+      )
+
+      // Venue list
+      LazyColumn(modifier = Modifier.fillMaxSize()) {
+        itemsIndexed(
+          items = state.venues,
+          key = { _, venue -> venue.id },
+        ) { index, venue ->
+          VenueRow(venue, onClickVenue = onClickVenue)
+
+          if (index < state.venues.lastIndex) {
+            HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(12.dp))
+          }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun SortButtons(
+  sortOrder: NearbyVenuesScreenViewModel.SortOrder,
+  onSortOrderChange: (NearbyVenuesScreenViewModel.SortOrder) -> Unit,
+) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp, vertical = 8.dp),
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+  ) {
+    FilterChip(
+      selected = sortOrder == NearbyVenuesScreenViewModel.SortOrder.RELEVANCE,
+      onClick = { onSortOrderChange(NearbyVenuesScreenViewModel.SortOrder.RELEVANCE) },
+      label = { Text(stringResource(R.string.sort_by_relevance)) },
+      leadingIcon = {
+        Icon(
+          imageVector = Icons.Default.SortByAlpha,
+          contentDescription = null,
+        )
+      },
+    )
+    FilterChip(
+      selected = sortOrder == NearbyVenuesScreenViewModel.SortOrder.DISTANCE,
+      onClick = { onSortOrderChange(NearbyVenuesScreenViewModel.SortOrder.DISTANCE) },
+      label = { Text(stringResource(R.string.sort_by_distance)) },
+      leadingIcon = {
+        Icon(
+          imageVector = Icons.Default.Place,
+          contentDescription = null,
+        )
+      },
+    )
   }
 }
