@@ -111,7 +111,10 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
 
     LikeIcon(
       isLiked = checkIn.isLiked,
-      onClick = {}, // TODO
+      likeCount = checkIn.likeCount,
+      onClick = {
+        viewModel.toggleLike(checkIn.id, checkIn.isLiked)
+      },
       modifier = Modifier
         .size(48.dp)
         .padding(end = 16.dp),
@@ -201,6 +204,7 @@ private fun CheckInRowPreview() {
       ),
       timestamp = ZonedDateTime.now(),
       isLiked = true,
+      likeCount = 5,
       source = Source(name = "Swarm for iOS", url = "https://www.swarmapp.com"),
       isMeyer = true,
     ),
@@ -257,19 +261,35 @@ private fun UserIconPreview() {
 }
 
 @Composable
-private fun LikeIcon(isLiked: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-  IconButton(
-    onClick = onClick,
+private fun LikeIcon(
+  isLiked: Boolean,
+  likeCount: Int,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
   ) {
-    Icon(
-      imageVector = if (isLiked) {
-        Icons.Filled.Favorite
-      } else {
-        Icons.Filled.FavoriteBorder
-      },
-      contentDescription = stringResource(R.string.like_button),
-    )
+    IconButton(
+      onClick = onClick,
+    ) {
+      Icon(
+        imageVector = if (isLiked) {
+          Icons.Filled.Favorite
+        } else {
+          Icons.Filled.FavoriteBorder
+        },
+        contentDescription = stringResource(R.string.like_button),
+        tint = if (isLiked) Color.Red else Color.Gray,
+      )
+    }
+    if (likeCount > 0) {
+      Text(
+        text = likeCount.toString(),
+        color = Color.Gray,
+      )
+    }
   }
 }
 
@@ -278,6 +298,7 @@ private fun LikeIcon(isLiked: Boolean, onClick: () -> Unit, modifier: Modifier =
 private fun BorderLikeIconPreview() {
   LikeIcon(
     isLiked = false,
+    likeCount = 10,
     onClick = {},
     modifier = Modifier.size(50.dp),
   )
@@ -288,6 +309,7 @@ private fun BorderLikeIconPreview() {
 private fun LikeIconPreview() {
   LikeIcon(
     isLiked = true,
+    likeCount = 42,
     onClick = {},
     modifier = Modifier.size(50.dp),
   )

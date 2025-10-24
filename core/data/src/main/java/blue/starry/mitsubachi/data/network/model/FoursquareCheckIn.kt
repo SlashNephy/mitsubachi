@@ -190,6 +190,7 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
     photos = photos.items.map { it.toDomain() },
     timestamp = Instant.ofEpochSecond(createdAt).atZone(ZoneId.systemDefault()),
     isLiked = like,
+    likeCount = likes.count,
     source = source.toDomain(),
     isMeyer = isMayor,
   )

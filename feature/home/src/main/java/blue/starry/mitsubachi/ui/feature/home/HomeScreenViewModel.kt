@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
+import blue.starry.mitsubachi.domain.usecase.ToggleLikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
   private val fetchFeedUseCase: FetchFeedUseCase,
+  private val toggleLikeCheckInUseCase: ToggleLikeCheckInUseCase,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
@@ -64,5 +66,19 @@ class HomeScreenViewModel @Inject constructor(
 
   override fun onAccountDeleted() {
     _state.value = UiState.Loading
+  }
+
+  fun toggleLike(checkInId: String, isLiked: Boolean): Job {
+    return viewModelScope.launch {
+      runCatching {
+        toggleLikeCheckInUseCase(checkInId, isLiked)
+      }.onSuccess {
+        // Refresh to get updated like status
+        fetch()
+      }.onFailure { e ->
+        // Log error but don't show error to user
+        // The UI will remain in its current state
+      }
+    }
   }
 }
