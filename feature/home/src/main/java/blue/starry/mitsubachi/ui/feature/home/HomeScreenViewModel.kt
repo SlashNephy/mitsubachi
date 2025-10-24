@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.ErrorHandler
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
   private val fetchFeedUseCase: FetchFeedUseCase,
+  private val errorHandler: ErrorHandler,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
@@ -53,6 +55,7 @@ class HomeScreenViewModel @Inject constructor(
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
     }.onFailure { e ->
+      errorHandler.handle(e)
       if (currentState is UiState.Success) {
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
         _state.value = currentState.copy(isRefreshing = false)

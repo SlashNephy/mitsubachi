@@ -2,4 +2,5 @@
 <resources>
     <string name="back_button">戻る</string>
     <string name="just_now">たった今</string>
+    <string name="error_request_timeout">リクエストがタイムアウトしました。もう一度お試しください。</string>
 </resources>

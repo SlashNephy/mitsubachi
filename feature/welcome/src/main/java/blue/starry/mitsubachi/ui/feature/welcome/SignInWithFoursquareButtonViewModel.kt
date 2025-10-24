@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.usecase.BeginAuthorizationUseCase
 import blue.starry.mitsubachi.domain.usecase.FinishAuthorizationUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.ErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val beginAuthorizationUseCase: BeginAuthorizationUseCase,
   private val finishAuthorizationUseCase: FinishAuthorizationUseCase,
+  private val errorHandler: ErrorHandler,
 ) : ViewModel(), AccountEventHandler {
   sealed interface UiState {
     data object Pending : UiState
@@ -51,6 +53,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
       }.onSuccess {
         _state.value = UiState.Authorized
       }.onFailure { e ->
+        errorHandler.handle(e)
         _state.value = UiState.Failed(e)
       }
     }
