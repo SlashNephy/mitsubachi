@@ -14,7 +14,7 @@ data class CheckIn(
   val photos: List<Photo>,
   val timestamp: ZonedDateTime,
   val isLiked: Boolean,
-  val source: Source,
+  val source: Source?,
   val isMeyer: Boolean,
 )
 
