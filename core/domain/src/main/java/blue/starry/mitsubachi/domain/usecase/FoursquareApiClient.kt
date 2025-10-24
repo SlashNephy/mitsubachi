@@ -34,4 +34,5 @@ interface FoursquareApiClient {
   )
 
   suspend fun likeCheckIn(checkInId: String)
+  suspend fun unlikeCheckIn(checkInId: String)
 }

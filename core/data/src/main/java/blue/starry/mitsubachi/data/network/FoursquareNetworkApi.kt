@@ -52,4 +52,7 @@ interface FoursquareNetworkApi {
 
   @POST("/checkins/{checkInId}/like")
   suspend fun likeCheckIn(@Path checkInId: String)
+
+  @POST("/checkins/{checkInId}/unlike")
+  suspend fun unlikeCheckIn(@Path checkInId: String)
 }
