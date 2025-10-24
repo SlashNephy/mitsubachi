@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.ErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -28,6 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 class NearbyVenuesScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val searchNearVenuesUseCase: SearchNearVenuesUseCase,
+  private val errorHandler: ErrorHandler,
 ) : ViewModel(), AccountEventHandler {
   @Immutable
   sealed interface UiState {
@@ -84,6 +86,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
         }.onSuccess { data ->
           _state.value = UiState.Success(data, isRefreshing = false)
         }.onFailure { e ->
+          errorHandler.handle(e)
           _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
         }
       }

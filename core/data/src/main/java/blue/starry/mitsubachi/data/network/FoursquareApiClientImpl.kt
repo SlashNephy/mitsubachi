@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.data.network
 import blue.starry.mitsubachi.data.network.model.FoursquareCheckIn
 import blue.starry.mitsubachi.data.network.model.FoursquareVenue
 import blue.starry.mitsubachi.data.network.model.toDomain
+import blue.starry.mitsubachi.domain.error.RequestTimeoutError
 import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.Coordinates
@@ -13,6 +14,7 @@ import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.domain.usecase.FoursquareCheckInBroadcastFlag
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -60,23 +62,31 @@ class FoursquareApiClientImpl @Inject constructor(
     after: ZonedDateTime?,
     coordinates: Coordinates?,
   ): List<CheckIn> {
-    val data = ktorfit.getRecentCheckIns(
-      limit = limit,
-      afterTimeStamp = after?.toEpochSecond(),
-      ll = coordinates?.let { "${it.latitude},${it.longitude}" },
-    )
-    return data.response.recent.map(FoursquareCheckIn::toDomain)
+    return try {
+      val data = ktorfit.getRecentCheckIns(
+        limit = limit,
+        afterTimeStamp = after?.toEpochSecond(),
+        ll = coordinates?.let { "${it.latitude},${it.longitude}" },
+      )
+      data.response.recent.map(FoursquareCheckIn::toDomain)
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 
   override suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String?,
   ): List<Venue> {
-    val data = ktorfit.searchNearVenues(
-      ll = "${coordinates.latitude},${coordinates.longitude}",
-      query = query?.ifBlank { null },
-    )
-    return data.response.venues.map(FoursquareVenue::toDomain)
+    return try {
+      val data = ktorfit.searchNearVenues(
+        ll = "${coordinates.latitude},${coordinates.longitude}",
+        query = query?.ifBlank { null },
+      )
+      data.response.venues.map(FoursquareVenue::toDomain)
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 
   override suspend fun addCheckIn(
@@ -85,21 +95,33 @@ class FoursquareApiClientImpl @Inject constructor(
     broadcastFlags: List<FoursquareCheckInBroadcastFlag>?,
     stickerId: String?,
   ): CheckIn {
-    val data = ktorfit.addCheckIn(
-      venueId,
-      shout?.ifBlank { null },
-      broadcastFlags?.joinToString(",") { it.serialize() },
-      stickerId?.ifBlank { null },
-    )
-    return data.response.checkIn.toDomain()
+    return try {
+      val data = ktorfit.addCheckIn(
+        venueId,
+        shout?.ifBlank { null },
+        broadcastFlags?.joinToString(",") { it.serialize() },
+        stickerId?.ifBlank { null },
+      )
+      data.response.checkIn.toDomain()
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 
   override suspend fun updateCheckIn(checkInId: String, shout: String?) {
-    ktorfit.updateCheckIn(checkInId, shout?.ifBlank { null })
+    try {
+      ktorfit.updateCheckIn(checkInId, shout?.ifBlank { null })
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 
   override suspend fun deleteCheckIn(checkInId: String) {
-    ktorfit.deleteCheckIn(checkInId)
+    try {
+      ktorfit.deleteCheckIn(checkInId)
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 
   override suspend fun addPhotoToCheckIn(
@@ -107,26 +129,34 @@ class FoursquareApiClientImpl @Inject constructor(
     image: FilePart,
     isPublic: Boolean,
   ) {
-    ktorfit.addPhoto(
-      checkInId = checkInId,
-      public = if (isPublic) 1 else 0,
-      body = MultiPartFormDataContent(
-        formData {
-          append(
-            "file",
-            image.data,
-            Headers.build {
-              image.contentType?.also { append(HttpHeaders.ContentType, it) }
-              append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
-            },
-          )
-        },
-      ),
-    )
+    try {
+      ktorfit.addPhoto(
+        checkInId = checkInId,
+        public = if (isPublic) 1 else 0,
+        body = MultiPartFormDataContent(
+          formData {
+            append(
+              "file",
+              image.data,
+              Headers.build {
+                image.contentType?.also { append(HttpHeaders.ContentType, it) }
+                append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
+              },
+            )
+          },
+        ),
+      )
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 
   override suspend fun likeCheckIn(checkInId: String) {
-    ktorfit.likeCheckIn(checkInId)
+    try {
+      ktorfit.likeCheckIn(checkInId)
+    } catch (e: HttpRequestTimeoutException) {
+      throw RequestTimeoutError()
+    }
   }
 }
 
