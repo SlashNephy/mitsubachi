@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "7481207fa8f2063bd06ec710e180e657",
+    "identityHash": "d11d2adfa6b04188faf73d23463ae7bd",
     "entities": [
       {
         "tableName": "foursquare_accounts",
@@ -48,7 +48,7 @@
       },
       {
         "tableName": "caches",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `type` TEXT NOT NULL, `payload` BLOB NOT NULL, PRIMARY KEY(`key`, `type`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `format` TEXT NOT NULL, `payload` BLOB NOT NULL, PRIMARY KEY(`key`, `format`))",
         "fields": [
           {
             "fieldPath": "key",
@@ -57,8 +57,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "type",
-            "columnName": "type",
+            "fieldPath": "format",
+            "columnName": "format",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -73,14 +73,14 @@
           "autoGenerate": false,
           "columnNames": [
             "key",
-            "type"
+            "format"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7481207fa8f2063bd06ec710e180e657')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd11d2adfa6b04188faf73d23463ae7bd')"
     ]
   }
 }

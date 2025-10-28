@@ -3,10 +3,10 @@ package blue.starry.mitsubachi.data.database.entity
 import androidx.room.Entity
 import androidx.room.TypeConverter
 
-@Entity(tableName = "caches", primaryKeys = ["key", "type"])
+@Entity(tableName = "caches", primaryKeys = ["key", "format"])
 data class Cache(
   val key: String,
-  val type: CacheType,
+  val format: CacheFormat,
   val payload: ByteArray,
 ) {
   override fun equals(other: Any?): Boolean {
@@ -16,7 +16,7 @@ data class Cache(
     other as Cache
 
     if (key != other.key) return false
-    if (type != other.type) return false
+    if (format != other.format) return false
     if (!payload.contentEquals(other.payload)) return false
 
     return true
@@ -24,24 +24,24 @@ data class Cache(
 
   override fun hashCode(): Int {
     var result = key.hashCode()
-    result = 31 * result + type.hashCode()
+    result = 31 * result + format.hashCode()
     result = 31 * result + payload.contentHashCode()
     return result
   }
 }
 
-enum class CacheType {
+enum class CacheFormat {
   JSON,
 }
 
-object CacheTypeConverter {
+object CacheFormatConverter {
   @TypeConverter
-  fun toCacheType(value: String): CacheType {
-    return CacheType.valueOf(value)
+  fun toCacheFormat(value: String): CacheFormat {
+    return enumValueOf(value)
   }
 
   @TypeConverter
-  fun fromCacheType(cacheType: CacheType): String {
-    return cacheType.name
+  fun fromCacheFormat(cacheFormat: CacheFormat): String {
+    return cacheFormat.name
   }
 }
