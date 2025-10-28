@@ -15,7 +15,7 @@ interface FoursquareAccountDao {
   suspend fun list(): List<FoursquareAccount>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend fun insertOrUpdate(account: FoursquareAccount)
+  suspend fun insertOrUpdate(entity: FoursquareAccount)
 
   @Query("DELETE FROM `foursquare_accounts` WHERE `id` = :id")
   suspend fun deleteById(id: String)
