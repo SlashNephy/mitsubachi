@@ -188,12 +188,13 @@ jobs:
       - uses: github/codeql-action/init@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
         with:
           languages: java-kotlin
-          build-mode: autobuild
+          build-mode: manual
           queries: security-and-quality
           dependency-caching: true
       - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      - run: ./gradlew assembleDebug
       - uses: github/codeql-action/analyze@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
         with:
           category: /language:java-kotlin
