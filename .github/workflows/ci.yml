@@ -187,6 +187,9 @@ jobs:
         with:
           languages: java-kotlin
           build-mode: autobuild
+      - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - uses: github/codeql-action/analyze@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
         with:
           category: /language:java-kotlin
