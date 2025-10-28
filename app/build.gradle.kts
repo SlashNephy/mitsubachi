@@ -1,3 +1,4 @@
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -5,6 +6,7 @@ plugins {
   alias(libs.plugins.convention.android.compose.application)
   alias(libs.plugins.google.services)
   alias(libs.plugins.firebase.crashlytics)
+  alias(libs.plugins.firebase.app.distribution)
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
@@ -42,6 +44,11 @@ android {
     )
   }
 
+  firebaseAppDistribution {
+    artifactType = "APK"
+    serviceCredentialsFile = "$rootDir/firebase-service-account.json"
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = true
@@ -49,10 +56,16 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      firebaseAppDistribution {
+        groups = "tester, tester-release"
+      }
     }
     debug {
       applicationIdSuffix = ".debug"
       isDebuggable = true
+      firebaseAppDistribution {
+        groups = "tester, tester-debug"
+      }
     }
   }
 
