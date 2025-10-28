@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.data.network
 
 import android.content.Context
 import android.content.Intent
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserDetailsResponse
@@ -63,7 +64,16 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
         REDIRECT_URI.toUri(),
       )
       .build()
-    return service.getAuthorizationRequestIntent(request)
+    return service.getAuthorizationRequestIntent(
+      request,
+      // TODO: AuthTabIntent を使うようにしたい。脱 AppAuth も検討。
+      service
+        .createCustomTabsIntentBuilder()
+        .setUrlBarHidingEnabled(true)
+        .setShowTitle(false)
+        .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+        .build(),
+    )
   }
 
   override suspend fun exchangeToken(authorizationResult: Intent): FoursquareAccount {
