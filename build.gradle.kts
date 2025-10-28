@@ -13,4 +13,5 @@ plugins {
   alias(libs.plugins.room) apply false
   alias(libs.plugins.ktorfit) apply false
   alias(libs.plugins.detekt) apply false
+  alias(libs.plugins.android.mapsplatform.secrets) apply false
 }

@@ -26,6 +26,8 @@ import blue.starry.mitsubachi.ui.feature.home.HomeScreen
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenBottomBar
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenFloatingActionButton
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenTopBar
+import blue.starry.mitsubachi.ui.feature.map.MapScreen
+import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
 import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
 import kotlinx.coroutines.launch
 
@@ -84,6 +86,14 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
       )
     }
 
+    is RouteKey.Map -> {
+      MapScreenTopBar(
+        onBack = {
+          backStack.remove(key)
+        },
+      )
+    }
+
     else -> {}
   }
 }
@@ -119,7 +129,7 @@ private fun AppFloatingActionButtonPosition(): FabPosition {
   return FabPosition.End
 }
 
-@Suppress("FunctionName")
+@Suppress("FunctionName", "LongMethod")
 private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> {
   // TODO: Navigation 3 では各エントリーのことを Scene と呼んでいそう
   return { key ->
@@ -137,7 +147,11 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
 
       is RouteKey.Home -> {
         NavEntry(key) {
-          HomeScreen()
+          HomeScreen(
+            onClickVenue = { latitude, longitude, title ->
+              backStack.add(RouteKey.Map(latitude, longitude, title))
+            },
+          )
         }
       }
 
@@ -162,6 +176,16 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
             onCancelCheckIn = {
               backStack.remove(key)
             },
+          )
+        }
+      }
+
+      is RouteKey.Map -> {
+        NavEntry(key) {
+          MapScreen(
+            latitude = key.latitude,
+            longitude = key.longitude,
+            title = key.title,
           )
         }
       }

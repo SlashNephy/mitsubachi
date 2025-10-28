@@ -13,6 +13,10 @@ kotlinx-coroutines-play-services = "1.10.2"
 ktor = "3.3.1"
 ktorfit = "2.6.4"
 slf4j-android = "1.7.36"
+play-services-maps = "19.2.0"
+android-maps-ktx = "5.2.1"
+android-maps-compose = "6.12.1"
+android-places = "5.0.0"
 appauth = "0.11.1"
 cache4k = "0.14.0"
 timber = "5.0.1"
@@ -34,6 +38,7 @@ androidx-sqlite = "2.6.1"
 detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.4.27"
 ksp = "2.3.0"
+android-mapsplatform-secrets = "2.0.1"
 google-services = "4.4.4"
 firebase = "34.4.0"
 firebase-crashlytics-gradle-plugin = "3.0.6"
@@ -91,6 +96,12 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 coil-network-cache-control = { module = "io.coil-kt.coil3:coil-network-cache-control", version.ref = "coil" }
 coil-test = { module = "io.coil-kt.coil3:coil-test", version.ref = "coil" }
+
+# Google Maps SDK
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+android-maps-ktx = { module = "com.google.maps.android:maps-ktx", version.ref = "android-maps-ktx" }
+android-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "android-maps-compose" }
+android-places = { module = "com.google.android.libraries.places:places", version.ref = "android-places" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
@@ -161,6 +172,7 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobuf-gradle-plugin" 
 room = { id = "androidx.room", version.ref = "room" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
+android-mapsplatform-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "android-mapsplatform-secrets" }
 
 convention-android-compose-application = { id = "blue.starry.mitsubachi.buildlogic.convention.android.compose.application" }
 convention-android-library = { id = "blue.starry.mitsubachi.buildlogic.convention.android.library" }
