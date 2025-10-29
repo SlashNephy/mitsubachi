@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.data.network.model.toDomain
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
+import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.domain.usecase.FoursquareCheckInBroadcastFlag
@@ -94,6 +95,11 @@ class FoursquareApiClientImpl @Inject constructor(
 
   override suspend fun deleteCheckIn(checkInId: String) {
     ktorfit.deleteCheckIn(checkInId)
+  }
+
+  override suspend fun getUser(userId: String?): FoursquareUser {
+    val data = ktorfit.getUser(userId = userId ?: "self")
+    return data.response.user.toDomain()
   }
 
   override suspend fun addPhotoToCheckIn(
