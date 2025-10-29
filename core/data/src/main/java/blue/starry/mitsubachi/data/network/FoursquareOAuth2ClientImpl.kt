@@ -4,18 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
-import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
-import blue.starry.mitsubachi.data.network.model.FoursquareUserDetailsResponse
-import blue.starry.mitsubachi.data.network.model.toDomain
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.domain.model.FoursquareAccount
+import blue.starry.mitsubachi.domain.usecase.FoursquareApiClientFactory
 import blue.starry.mitsubachi.domain.usecase.FoursquareOAuth2Client
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.http.HttpHeaders
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
@@ -34,6 +29,7 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
   @ApplicationContext context: Context,
   private val httpClient: HttpClient,
   private val config: ApplicationConfig,
+  private val apiClientFactory: FoursquareApiClientFactory,
 ) : FoursquareOAuth2Client, Closeable {
   private companion object {
     const val AUTHORIZATION_ENDPOINT = "https://foursquare.com/oauth2/authorize"
@@ -92,8 +88,9 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
 
     val authState = AuthState(authorizationResponse, tokenResponse, null)
     val accessToken = checkNotNull(authState.accessToken)
-    val userDetails = getUserDetails(accessToken)
-    val user = userDetails.response.user.toDomain()
+
+    val foursquare = apiClientFactory.create { accessToken }
+    val user = foursquare.getUser()
 
     return FoursquareAccount(
       id = user.id,
@@ -141,14 +138,6 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
       .setAccessToken(data.accessToken)
       .setTokenType("Bearer")
       .build()
-  }
-
-  // TODO: このメソッドを FoursquareApiClientImpl 側に移動する
-  private suspend fun getUserDetails(accessToken: String): FoursquareApiResponse<FoursquareUserDetailsResponse> {
-    val response = httpClient.get("https://api.foursquare.com/v2/users/self?v=20251020") {
-      headers.append(HttpHeaders.Authorization, "Bearer $accessToken")
-    }
-    return response.body()
   }
 
   override fun close() {

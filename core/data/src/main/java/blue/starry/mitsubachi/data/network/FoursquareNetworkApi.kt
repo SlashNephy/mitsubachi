@@ -4,7 +4,7 @@ import blue.starry.mitsubachi.data.network.model.FoursquareAddCheckInResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareRecentCheckinsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenuesResponse
-import blue.starry.mitsubachi.data.network.model.FoursquareUserDetailsResponse
+import blue.starry.mitsubachi.data.network.model.FoursquareUserResponse
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
@@ -40,8 +40,8 @@ interface FoursquareNetworkApi {
   @POST("/checkins/{checkInId}/delete")
   suspend fun deleteCheckIn(@Path checkInId: String)
 
-  @GET("/users/self")
-  suspend fun getSelfUserDetails(): FoursquareApiResponse<FoursquareUserDetailsResponse>
+  @GET("/users/{userId}")
+  suspend fun getUser(@Path userId: String): FoursquareApiResponse<FoursquareUserResponse>
 
   @POST("/photos/add")
   suspend fun addPhoto(
