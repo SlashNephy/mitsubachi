@@ -6,6 +6,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.domain.model.FoursquareAccount
+import blue.starry.mitsubachi.domain.usecase.FoursquareApiClientFactory
 import blue.starry.mitsubachi.domain.usecase.FoursquareOAuth2Client
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.jensklingenberg.ktorfit.Ktorfit
@@ -28,6 +29,7 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
   @ApplicationContext context: Context,
   private val httpClient: HttpClient,
   private val config: ApplicationConfig,
+  private val apiClientFactory: FoursquareApiClientFactory,
 ) : FoursquareOAuth2Client, Closeable {
   private companion object {
     const val AUTHORIZATION_ENDPOINT = "https://foursquare.com/oauth2/authorize"
@@ -87,10 +89,7 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     val authState = AuthState(authorizationResponse, tokenResponse, null)
     val accessToken = checkNotNull(authState.accessToken)
 
-    val foursquare = FoursquareApiClientImpl(
-      httpClient = httpClient,
-      bearerTokenSource = StaticFoursquareBearerTokenSource(accessToken),
-    )
+    val foursquare = apiClientFactory.create { accessToken }
     val user = foursquare.getUser()
 
     return FoursquareAccount(

@@ -2,15 +2,12 @@ package blue.starry.mitsubachi.data.network
 
 import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.domain.usecase.FoursquareAccountRepository
+import blue.starry.mitsubachi.domain.usecase.FoursquareBearerTokenSource
 import javax.inject.Inject
 import javax.inject.Singleton
 
-fun interface FoursquareBearerTokenSource {
-  suspend fun load(): String
-}
-
 @Singleton
-class DatabaseFoursquareBearerTokenSource @Inject constructor(
+internal class DatabaseFoursquareBearerTokenSource @Inject constructor(
   private val repository: FoursquareAccountRepository,
 ) : FoursquareBearerTokenSource {
   override suspend fun load(): String {
@@ -18,11 +15,5 @@ class DatabaseFoursquareBearerTokenSource @Inject constructor(
     val account = repository.list().firstOrNull() ?: throw UnauthorizedError()
 
     return account.accessToken
-  }
-}
-
-class StaticFoursquareBearerTokenSource(private val token: String) : FoursquareBearerTokenSource {
-  override suspend fun load(): String {
-    return token
   }
 }

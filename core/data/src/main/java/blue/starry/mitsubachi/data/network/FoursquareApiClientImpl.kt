@@ -9,6 +9,7 @@ import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
+import blue.starry.mitsubachi.domain.usecase.FoursquareBearerTokenSource
 import blue.starry.mitsubachi.domain.usecase.FoursquareCheckInBroadcastFlag
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
