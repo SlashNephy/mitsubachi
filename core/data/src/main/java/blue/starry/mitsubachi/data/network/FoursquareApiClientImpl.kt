@@ -128,10 +128,6 @@ class FoursquareApiClientImpl @Inject constructor(
   override suspend fun likeCheckIn(checkInId: String) {
     ktorfit.likeCheckIn(checkInId)
   }
-
-  override suspend fun unlikeCheckIn(checkInId: String) {
-    ktorfit.unlikeCheckIn(checkInId)
-  }
 }
 
 private fun FoursquareCheckInBroadcastFlag.serialize(): String {
