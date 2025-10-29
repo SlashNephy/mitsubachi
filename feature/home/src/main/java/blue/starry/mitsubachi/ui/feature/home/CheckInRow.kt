@@ -113,7 +113,11 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
       isLiked = checkIn.isLiked,
       likeCount = checkIn.likeCount,
       onClick = {
-        viewModel.toggleLike(checkIn.id, checkIn.isLiked)
+        if (checkIn.isLiked) {
+          viewModel.showUnlikeNotImplemented()
+        } else {
+          viewModel.likeCheckIn(checkIn.id)
+        }
       },
       modifier = Modifier
         .size(48.dp)

@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
-import blue.starry.mitsubachi.domain.usecase.ToggleLikeCheckInUseCase
-import blue.starry.mitsubachi.domain.usecase.UnlikeNotImplementedException
+import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.SnackbarViewModel
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
@@ -21,7 +20,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
   private val fetchFeedUseCase: FetchFeedUseCase,
-  private val toggleLikeCheckInUseCase: ToggleLikeCheckInUseCase,
+  private val likeCheckInUseCase: LikeCheckInUseCase,
   private val snackbarViewModel: SnackbarViewModel,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
@@ -71,20 +70,21 @@ class HomeScreenViewModel @Inject constructor(
     _state.value = UiState.Loading
   }
 
-  fun toggleLike(checkInId: String, isLiked: Boolean): Job {
+  fun likeCheckIn(checkInId: String): Job {
     return viewModelScope.launch {
       runCatching {
-        toggleLikeCheckInUseCase(checkInId, isLiked)
+        likeCheckInUseCase(checkInId)
       }.onSuccess {
         // Refresh to get updated like status
         fetch()
       }.onFailure { e ->
-        if (e is UnlikeNotImplementedException) {
-          snackbarViewModel.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
-        }
-        // Other errors: log error but don't show error to user
+        // Log error but don't show error to user
         // The UI will remain in its current state
       }
     }
+  }
+
+  fun showUnlikeNotImplemented() {
+    snackbarViewModel.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
   }
 }
