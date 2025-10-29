@@ -100,7 +100,9 @@ coil-test = { module = "io.coil-kt.coil3:coil-test", version.ref = "coil" }
 # Google Maps SDK
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
 android-maps-ktx = { module = "com.google.maps.android:maps-ktx", version.ref = "android-maps-ktx" }
+android-maps-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "android-maps-ktx" }
 android-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "android-maps-compose" }
+android-maps-compose-utils = { module = "com.google.maps.android:maps-compose-utils", version.ref = "android-maps-compose" }
 android-places = { module = "com.google.android.libraries.places:places", version.ref = "android-places" }
 
 # Firebase
