@@ -114,7 +114,7 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
       likeCount = checkIn.likeCount,
       onClick = {
         if (checkIn.isLiked) {
-          viewModel.showUnlikeNotImplemented()
+          viewModel.unlikeCheckIn(checkIn.id)
         } else {
           viewModel.likeCheckIn(checkIn.id)
         }

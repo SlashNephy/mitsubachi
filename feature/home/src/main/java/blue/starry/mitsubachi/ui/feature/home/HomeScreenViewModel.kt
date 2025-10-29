@@ -84,7 +84,7 @@ class HomeScreenViewModel @Inject constructor(
     }
   }
 
-  fun showUnlikeNotImplemented() {
+  fun unlikeCheckIn(checkInId: String) {
     snackbarViewModel.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
   }
 }
