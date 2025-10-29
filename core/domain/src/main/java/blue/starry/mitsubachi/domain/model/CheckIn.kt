@@ -15,7 +15,7 @@ data class CheckIn(
   val timestamp: ZonedDateTime,
   val isLiked: Boolean,
   val likeCount: Int,
-  val source: Source,
+  val source: Source?,
   val isMeyer: Boolean,
 )
 

@@ -84,6 +84,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           lint {
             checkDependencies = true
             sarifReport = true
+            lintConfig = rootProject.file("android-lint.xml")
           }
 
           testOptions {

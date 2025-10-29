@@ -23,7 +23,7 @@ data class FoursquareCheckIn(
   val posts: Posts,
   val ratedAt: Long?, // 1471153590
   val shout: String?,
-  val source: Source,
+  val source: Source?,
   val sticker: Sticker?,
   val timeZoneOffset: Int, // 540
   val type: String, // checkin
@@ -191,7 +191,7 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
     timestamp = Instant.ofEpochSecond(createdAt).atZone(ZoneId.systemDefault()),
     isLiked = like,
     likeCount = likes.count,
-    source = source.toDomain(),
+    source = source?.toDomain(),
     isMeyer = isMayor,
   )
 }

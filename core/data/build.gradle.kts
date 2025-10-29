@@ -38,4 +38,5 @@ dependencies {
   implementation(libs.ktor.client.logging)
 
   implementation(libs.appauth)
+  implementation(libs.cache4k)
 }

@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.domain.usecase
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
+import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
 import java.time.ZonedDateTime
 
@@ -27,6 +28,7 @@ interface FoursquareApiClient {
 
   suspend fun updateCheckIn(checkInId: String, shout: String? = null)
   suspend fun deleteCheckIn(checkInId: String)
+  suspend fun getUser(userId: String? = null): FoursquareUser
   suspend fun addPhotoToCheckIn(
     checkInId: String,
     image: FilePart,
