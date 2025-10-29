@@ -3,12 +3,10 @@ package blue.starry.mitsubachi.data.network
 import blue.starry.mitsubachi.data.network.model.FoursquareCheckIn
 import blue.starry.mitsubachi.data.network.model.FoursquareVenue
 import blue.starry.mitsubachi.data.network.model.toDomain
-import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.Venue
-import blue.starry.mitsubachi.domain.usecase.FoursquareAccountRepository
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.domain.usecase.FoursquareCheckInBroadcastFlag
 import de.jensklingenberg.ktorfit.Ktorfit
@@ -25,7 +23,7 @@ import javax.inject.Inject
 
 class FoursquareApiClientImpl @Inject constructor(
   private val httpClient: HttpClient,
-  private val foursquareAccountRepository: FoursquareAccountRepository,
+  private val bearerTokenSource: FoursquareBearerTokenSource,
 ) : FoursquareApiClient {
   private val ktorfit = Ktorfit
     .Builder()
@@ -41,12 +39,8 @@ class FoursquareApiClientImpl @Inject constructor(
         install(Auth) {
           bearer {
             loadTokens {
-              val account = foursquareAccountRepository.list().firstOrNull() // TODO: 複数アカウント対応
-              if (account == null) {
-                throw UnauthorizedError()
-              }
-
-              BearerTokens(account.accessToken, null)
+              val token = bearerTokenSource.load()
+              BearerTokens(token, null)
             }
           }
         }
