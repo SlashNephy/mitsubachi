@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.data.network.model
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.VenueCategory
 import blue.starry.mitsubachi.domain.model.VenueLocation
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.ZoneId
@@ -10,17 +11,21 @@ import java.time.ZoneId
 @Serializable
 data class FoursquareVenue(
   val categories: List<Category>,
+  val closed: Boolean?,
   val createdAt: Long, // 1302357899
   val id: String, // 4e74d9c588775d593db096c1
   val location: Location,
+  @SerialName("private") val isPrivate: Boolean?,
   val name: String, // LIQUID LOFT
 ) {
   @Serializable
   data class Category(
     val icon: Icon,
-    val id: String, // 4bf58dd8d48988d11f941735
-    val name: String, // ナイトクラブ
+    val id: String,
+    val name: String,
+    val pluralName: String?,
     val primary: Boolean,
+    val shortName: String?,
   ) {
     @Serializable
     data class Icon(
@@ -31,19 +36,19 @@ data class FoursquareVenue(
 
   @Serializable
   data class Location(
-    val address: String?, // 東3-16-6
-    val cc: String, // JP
-    val city: String?, // 東京
-    val country: String, // 日本
-    val crossStreet: String?, // LIQUIDROOM 2F
-    val distance: Int? = null, // 19
+    val address: String?,
+    val cc: String,
+    val city: String?,
+    val country: String,
+    val crossStreet: String?,
+    val distance: Int?,
     val formattedAddress: List<String>?,
-    // val labeledLatLngs: List<LabeledLatLng>?,
-    val lat: Double, // 35.64914546007966
-    val lng: Double, // 139.71088252061986
-    val neighborhood: String?, // 恵比寿
-    val postalCode: String?, // 160-0021
-    val state: String?, // 東京都
+    val isFuzzed: Boolean?,
+    val lat: Double,
+    val lng: Double,
+    val neighborhood: String?,
+    val postalCode: String?,
+    val state: String?,
   )
 }
 
