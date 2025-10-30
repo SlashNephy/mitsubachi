@@ -424,42 +424,49 @@ private fun LoginStep(
   }
 }
 
+@Composable
+private fun OnboardingStepPreviewContainer(content: @Composable () -> Unit) {
+  MaterialTheme {
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(24.dp),
+    ) {
+      content()
+    }
+  }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun WelcomeStepPreview() {
-  MaterialTheme {
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
-      WelcomeStep(
-        onNextStep = {},
-        onSkipToLogin = {},
-      )
-    }
+  OnboardingStepPreviewContainer {
+    WelcomeStep(
+      onNextStep = {},
+      onSkipToLogin = {},
+    )
   }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PermissionsStepContentPreview() {
-  MaterialTheme {
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
-      PermissionsStepContent(
-        onRequestPermission = {},
-        onPreviousStep = {},
-        onSkip = {},
-      )
-    }
+  OnboardingStepPreviewContainer {
+    PermissionsStepContent(
+      onRequestPermission = {},
+      onPreviousStep = {},
+      onSkip = {},
+    )
   }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoginStepPreview() {
-  MaterialTheme {
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
-      LoginStep(
-        onPreviousStep = {},
-        onLogin = {},
-      )
-    }
+  OnboardingStepPreviewContainer {
+    LoginStep(
+      onPreviousStep = {},
+      onLogin = {},
+    )
   }
 }
