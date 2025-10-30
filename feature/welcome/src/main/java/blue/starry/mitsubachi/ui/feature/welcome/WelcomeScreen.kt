@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -419,6 +420,46 @@ private fun LoginStep(
       )
       Spacer(modifier = Modifier.width(8.dp))
       Text(stringResource(R.string.onboarding_back))
+    }
+  }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun WelcomeStepPreview() {
+  MaterialTheme {
+    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+      WelcomeStep(
+        onNextStep = {},
+        onSkipToLogin = {},
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PermissionsStepContentPreview() {
+  MaterialTheme {
+    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+      PermissionsStepContent(
+        onRequestPermission = {},
+        onPreviousStep = {},
+        onSkip = {},
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun LoginStepPreview() {
+  MaterialTheme {
+    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+      LoginStep(
+        onPreviousStep = {},
+        onLogin = {},
+      )
     }
   }
 }
