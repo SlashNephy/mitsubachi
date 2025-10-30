@@ -11,7 +11,7 @@ class ZoomThresholdAlgorithm<T : ClusterItem>(
   private val zoomThreshold: Float,
 ) : Algorithm<T> by baseAlgorithm {
   override fun getClusters(zoom: Float): Set<Cluster<T>> {
-    Timber.Forest.d("getClusters: zoom=$zoom, zoomThreshold=$zoomThreshold")
+    Timber.d("getClusters: zoom=$zoom, zoomThreshold=$zoomThreshold")
 
     return if (zoom < zoomThreshold) {
       baseAlgorithm.getClusters(zoom)
