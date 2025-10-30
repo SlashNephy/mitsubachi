@@ -45,7 +45,7 @@ fun VenueHistoriesMapView(histories: List<VenueHistory>) {
     }
   }
 
-  val items = remember { histories.map { VenueHistoryClusterItem(it) } }
+  val items = remember(histories) { histories.map { VenueHistoryClusterItem(it) } }
   Clustering(
     items = items,
     clusterManager = clusterManager,
