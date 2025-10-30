@@ -106,7 +106,7 @@ private fun OnboardingFlow(
     // Page indicators
     PageIndicators(
       currentStep = currentStep,
-      modifier = Modifier.padding(vertical = 16.dp)
+      modifier = Modifier.padding(vertical = 16.dp),
     )
 
     Spacer(modifier = Modifier.weight(1f))
@@ -122,7 +122,7 @@ private fun OnboardingFlow(
         slideInHorizontally { width -> width * direction } + fadeIn() togetherWith
           slideOutHorizontally { width -> -width * direction } + fadeOut()
       },
-      label = "onboarding_step_animation"
+      label = "onboarding_step_animation",
     ) { step ->
       when (step) {
         is WelcomeScreenViewModel.OnboardingStep.Welcome -> {
@@ -176,7 +176,7 @@ private fun PageIndicators(
           MaterialTheme.colorScheme.primary
         } else {
           MaterialTheme.colorScheme.surfaceVariant
-        }
+        },
       ) {}
     }
   }
@@ -261,9 +261,30 @@ private fun PermissionsStep(
     onResult = { permissions ->
       val granted = permissions.values.any { it }
       onPermissionResult(granted)
-    }
+    },
   )
 
+  PermissionsStepContent(
+    onRequestPermission = {
+      permissionLauncher.launch(
+        arrayOf(
+          android.Manifest.permission.ACCESS_FINE_LOCATION,
+          android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        ),
+      )
+    },
+    onPreviousStep = onPreviousStep,
+    onSkip = { onPermissionResult(false) },
+  )
+}
+
+@Composable
+@Suppress("LongMethod")
+private fun PermissionsStepContent(
+  onRequestPermission: () -> Unit,
+  onPreviousStep: () -> Unit,
+  onSkip: () -> Unit,
+) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth(),
@@ -305,14 +326,7 @@ private fun PermissionsStep(
     Spacer(modifier = Modifier.height(48.dp))
 
     Button(
-      onClick = {
-        permissionLauncher.launch(
-          arrayOf(
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-          )
-        )
-      },
+      onClick = onRequestPermission,
       modifier = Modifier.fillMaxWidth(),
     ) {
       Text(stringResource(R.string.onboarding_permissions_grant))
@@ -337,7 +351,7 @@ private fun PermissionsStep(
       }
 
       TextButton(
-        onClick = { onPermissionResult(false) },
+        onClick = onSkip,
       ) {
         Text(stringResource(R.string.onboarding_skip))
       }
