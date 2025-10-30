@@ -40,7 +40,7 @@ detekt-rules-compose = "0.4.27"
 ksp = "2.3.0"
 android-mapsplatform-secrets = "2.0.1"
 google-services = "4.4.4"
-firebase = "34.4.0"
+firebase = "34.5.0"
 firebase-crashlytics-gradle-plugin = "3.0.6"
 firebase-app-distribution-gradle-plugin = "5.2.0"
 
