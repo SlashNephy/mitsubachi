@@ -126,7 +126,7 @@ jobs:
       - name: Merge SARIF files
         if: always()
         run: find . -type f -name lint-results-debug.sarif -exec npx @microsoft/sarif-multitool merge --merge-runs {} +
-      - uses: github/codeql-action/upload-sarif@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
+      - uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         if: always()
         with:
           sarif_file: merged.sarif
@@ -149,7 +149,7 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: ./gradlew detekt detektMergeReports --continue
-      - uses: github/codeql-action/upload-sarif@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
+      - uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         if: always()
         with:
           sarif_file: build/reports/detekt/merged.sarif
@@ -162,13 +162,13 @@ jobs:
       security-events: write
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: github/codeql-action/init@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
+      - uses: github/codeql-action/init@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           languages: actions
           build-mode: none
           queries: security-and-quality
           dependency-caching: true
-      - uses: github/codeql-action/analyze@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
+      - uses: github/codeql-action/analyze@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           category: /language:actions
 
@@ -185,7 +185,7 @@ jobs:
           distribution: jetbrains
           cache: gradle
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
-      - uses: github/codeql-action/init@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
+      - uses: github/codeql-action/init@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           languages: java-kotlin
           build-mode: manual
@@ -195,7 +195,7 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: ./gradlew assembleDebug
-      - uses: github/codeql-action/analyze@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
+      - uses: github/codeql-action/analyze@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           category: /language:java-kotlin
 
