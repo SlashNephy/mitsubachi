@@ -11,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.usecase.BeginAuthorizationUseCase
 import blue.starry.mitsubachi.domain.usecase.FinishAuthorizationUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
+import blue.starry.mitsubachi.ui.snackbar.enqueue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +25,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val beginAuthorizationUseCase: BeginAuthorizationUseCase,
   private val finishAuthorizationUseCase: FinishAuthorizationUseCase,
+  private val snackbarHostService: SnackbarHostService,
 ) : ViewModel(), AccountEventHandler {
   sealed interface UiState {
     data object Pending : UiState
@@ -50,8 +53,10 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
         finishAuthorizationUseCase(data)
       }.onSuccess {
         _state.value = UiState.Authorized
+        snackbarHostService.enqueue(context.getString(R.string.login_succeeded))
       }.onFailure { e ->
         _state.value = UiState.Failed(e)
+        snackbarHostService.enqueue(context.getString(R.string.login_failed))
       }
     }
   }
