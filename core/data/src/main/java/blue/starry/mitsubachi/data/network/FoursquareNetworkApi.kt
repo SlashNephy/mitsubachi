@@ -5,6 +5,7 @@ import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareRecentCheckinsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenuesResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserResponse
+import blue.starry.mitsubachi.data.network.model.FoursquareUserVenueHistoriesResponse
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
@@ -42,6 +43,9 @@ interface FoursquareNetworkApi {
 
   @GET("/users/{userId}")
   suspend fun getUser(@Path userId: String): FoursquareApiResponse<FoursquareUserResponse>
+
+  @GET("/users/{userId}/venuehistory")
+  suspend fun getUserVenueHistories(@Path userId: String): FoursquareApiResponse<FoursquareUserVenueHistoriesResponse>
 
   @POST("/photos/add")
   suspend fun addPhoto(
