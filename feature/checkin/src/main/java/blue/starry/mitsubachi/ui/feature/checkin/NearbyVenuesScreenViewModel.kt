@@ -23,6 +23,11 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
+enum class NearbyVenuesSortOrder {
+  RELEVANCE,
+  DISTANCE,
+}
+
 @HiltViewModel
 @OptIn(FlowPreview::class)
 class NearbyVenuesScreenViewModel @Inject constructor(
@@ -34,12 +39,20 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     data class PermissionRequesting(val anyOf: List<String>) : UiState
     data object PermissionRequestDenied : UiState
     data object Loading : UiState
-    data class Success(val venues: List<Venue>, val isRefreshing: Boolean) : UiState
+    data class Success(
+      val venues: List<Venue>,
+      val isRefreshing: Boolean,
+      val sortOrder: NearbyVenuesSortOrder,
+    ) : UiState
+
     data class Error(val message: String) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
   val state = _state.asStateFlow()
+
+  private val _sortOrder = MutableStateFlow(NearbyVenuesSortOrder.RELEVANCE)
+  val sortOrder = _sortOrder.asStateFlow()
 
   init {
     refresh()
@@ -82,7 +95,11 @@ class NearbyVenuesScreenViewModel @Inject constructor(
         runCatching {
           searchNearVenuesUseCase(query = query)
         }.onSuccess { data ->
-          _state.value = UiState.Success(data, isRefreshing = false)
+          _state.value = UiState.Success(
+            venues = data,
+            isRefreshing = false,
+            sortOrder = _sortOrder.value,
+          )
         }.onFailure { e ->
           _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
         }
@@ -106,7 +123,23 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     _state.value = UiState.PermissionRequestDenied
   }
 
+  fun onUpdateSortOrder(order: NearbyVenuesSortOrder) {
+    _sortOrder.value = order
+    val currentState = _state.value
+    if (currentState is UiState.Success) {
+      _state.value = currentState.copy(sortOrder = order)
+    }
+  }
+
   override fun onAccountDeleted() {
     _state.value = UiState.Loading
   }
 }
+
+val NearbyVenuesScreenViewModel.UiState.Success.sortedVenues: List<Venue>
+  get() {
+    return when (sortOrder) {
+      NearbyVenuesSortOrder.RELEVANCE -> venues
+      NearbyVenuesSortOrder.DISTANCE -> venues.sortedBy { it.location.distance ?: Int.MAX_VALUE }
+    }
+  }
