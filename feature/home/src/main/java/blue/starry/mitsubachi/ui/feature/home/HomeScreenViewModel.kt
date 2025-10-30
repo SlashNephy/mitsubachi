@@ -7,8 +7,9 @@ import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
 import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
-import blue.starry.mitsubachi.ui.SnackbarViewModel
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
+import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
+import blue.starry.mitsubachi.ui.snackbar.enqueue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,7 @@ class HomeScreenViewModel @Inject constructor(
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
   private val fetchFeedUseCase: FetchFeedUseCase,
   private val likeCheckInUseCase: LikeCheckInUseCase,
-  private val snackbarViewModel: SnackbarViewModel,
+  private val snackbarHostService: SnackbarHostService,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
@@ -87,13 +88,15 @@ class HomeScreenViewModel @Inject constructor(
           }
         }
       }.onFailure { e ->
-        // Log error but don't show error to user
-        // The UI will remain in its current state
+        snackbarHostService.enqueue("いいねに失敗しました: ${e.localizedMessage}")
       }
     }
   }
 
+  @Suppress("unused")
   fun unlikeCheckIn(checkInId: String) {
-    snackbarViewModel.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
+    viewModelScope.launch {
+      snackbarHostService.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
+    }
   }
 }
