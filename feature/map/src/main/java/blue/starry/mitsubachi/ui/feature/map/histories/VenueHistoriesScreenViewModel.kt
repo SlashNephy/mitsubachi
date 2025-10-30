@@ -67,5 +67,8 @@ val VenueHistoriesScreenViewModel.UiState.Success.weightedAveragePosition: LatLn
     val longitudeTotal = data.sumOf { it.venue.location.longitude * it.count }
     val weightTotal = data.sumOf { it.count }
 
+    if (weightTotal == 0) {
+      return LatLng(0.0, 0.0)
+    }
     return LatLng(latitudeTotal / weightTotal, longitudeTotal / weightTotal)
   }
