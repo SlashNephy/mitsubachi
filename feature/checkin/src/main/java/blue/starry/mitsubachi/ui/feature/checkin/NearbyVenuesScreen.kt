@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -155,7 +155,7 @@ private fun SortButtons(
       label = { Text(stringResource(R.string.sort_by_relevance)) },
       leadingIcon = {
         Icon(
-          imageVector = Icons.Default.SortByAlpha,
+          imageVector = Icons.AutoMirrored.Filled.TrendingUp,
           contentDescription = null,
         )
       },
