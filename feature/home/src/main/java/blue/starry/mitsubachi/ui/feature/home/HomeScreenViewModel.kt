@@ -75,8 +75,17 @@ class HomeScreenViewModel @Inject constructor(
       runCatching {
         likeCheckInUseCase(checkInId)
       }.onSuccess {
-        // Refresh to get updated like status
-        fetch()
+        // 楽観的更新
+        val currentState = state.value
+        if (currentState is UiState.Success) {
+          val index = currentState.feed.indexOfFirst { it.id == checkInId }
+          if (index != -1) {
+            val newCheckIn = currentState.feed[index].copy(isLiked = true)
+            val newFeed = currentState.feed.toMutableList()
+            newFeed[index] = newCheckIn
+            _state.value = currentState.copy(feed = newFeed)
+          }
+        }
       }.onFailure { e ->
         // Log error but don't show error to user
         // The UI will remain in its current state
