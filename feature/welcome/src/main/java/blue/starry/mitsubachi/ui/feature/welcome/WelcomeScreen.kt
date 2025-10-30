@@ -13,15 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import blue.starry.mitsubachi.ui.SnackbarViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun WelcomeScreen(
   onLogin: () -> Unit,
   viewModel: WelcomeScreenViewModel = hiltViewModel(),
-  snackbarViewModel: SnackbarViewModel = hiltViewModel(),
 ) {
   Box(
     contentAlignment = Alignment.Center,
@@ -37,16 +34,7 @@ fun WelcomeScreen(
       }
 
       is WelcomeScreenViewModel.UiState.NoAccounts -> {
-        SignInWithFoursquareButton(onSuccess = {
-          onLogin()
-          scope.launch {
-            snackbarViewModel.enqueue(resources.getString(R.string.login_succeeded))
-          }
-        }, onFailure = {
-          scope.launch {
-            snackbarViewModel.enqueue(resources.getString(R.string.login_failed))
-          }
-        })
+        SignInWithFoursquareButton(onSuccess = onLogin)
       }
 
       is WelcomeScreenViewModel.UiState.HasAccount -> {

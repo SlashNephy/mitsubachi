@@ -14,7 +14,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun SignInWithFoursquareButton(
   onSuccess: () -> Unit,
-  onFailure: (Throwable) -> Unit,
   viewModel: SignInWithFoursquareButtonViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -22,10 +21,6 @@ fun SignInWithFoursquareButton(
     when (val state = state) {
       is SignInWithFoursquareButtonViewModel.UiState.Authorized -> {
         onSuccess()
-      }
-
-      is SignInWithFoursquareButtonViewModel.UiState.Failed -> {
-        onFailure(state.exception)
       }
 
       else -> {}

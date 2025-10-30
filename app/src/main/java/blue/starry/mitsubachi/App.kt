@@ -17,7 +17,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import blue.starry.mitsubachi.feature.settings.SettingsScreen
-import blue.starry.mitsubachi.ui.SnackbarViewModel
 import blue.starry.mitsubachi.ui.feature.checkin.CreateCheckInScreen
 import blue.starry.mitsubachi.ui.feature.checkin.CreateCheckInScreenTopBar
 import blue.starry.mitsubachi.ui.feature.checkin.NearbyVenuesScreen
@@ -32,13 +31,13 @@ import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
 import kotlinx.coroutines.launch
 
 @Composable
-fun App(snackbarViewModel: SnackbarViewModel = hiltViewModel()) {
+fun App(viewModel: AppViewModel = hiltViewModel()) {
   val scope = rememberCoroutineScope()
   val backStack = rememberNavBackStack(RouteKey.Welcome)
   val snackbarHostState = remember { SnackbarHostState() }
 
-  LaunchedEffect(snackbarViewModel, snackbarHostState) {
-    snackbarViewModel.messages.collect { message ->
+  LaunchedEffect(viewModel, snackbarHostState) {
+    viewModel.snackbarMessages.collect { message ->
       scope.launch {
         snackbarHostState.showSnackbar(message = message.text)
       }
