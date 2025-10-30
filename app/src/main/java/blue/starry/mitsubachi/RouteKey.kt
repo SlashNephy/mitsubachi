@@ -36,5 +36,9 @@ sealed interface RouteKey : NavKey {
 
   @Immutable
   @Serializable
+  data object VenueHistories : RouteKey
+
+  @Immutable
+  @Serializable
   data object Settings : RouteKey
 }

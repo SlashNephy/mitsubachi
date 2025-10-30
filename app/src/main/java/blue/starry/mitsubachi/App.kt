@@ -8,7 +8,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
@@ -27,20 +26,17 @@ import blue.starry.mitsubachi.ui.feature.home.HomeScreenFloatingActionButton
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.MapScreen
 import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
+import blue.starry.mitsubachi.ui.feature.map.histories.VenueHistoriesScreen
 import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
-import kotlinx.coroutines.launch
 
 @Composable
 fun App(viewModel: AppViewModel = hiltViewModel()) {
-  val scope = rememberCoroutineScope()
   val backStack = rememberNavBackStack(RouteKey.Welcome)
   val snackbarHostState = remember { SnackbarHostState() }
 
   LaunchedEffect(viewModel, snackbarHostState) {
     viewModel.snackbarMessages.collect { message ->
-      scope.launch {
-        snackbarHostState.showSnackbar(message = message.text)
-      }
+      snackbarHostState.showSnackbar(message = message.text)
     }
   }
 
@@ -100,8 +96,16 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
 @Composable
 private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
   when (backStack.last()) {
-    is RouteKey.Home -> {
-      HomeScreenBottomBar()
+    is RouteKey.Home, is RouteKey.VenueHistories -> {
+      HomeScreenBottomBar(
+        onClickHome = {
+          backStack.add(RouteKey.Home)
+        },
+        onClickSearch = {},
+        onClickMap = {
+          backStack.add(RouteKey.VenueHistories)
+        },
+      )
     }
 
     else -> {}
@@ -186,6 +190,12 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
             longitude = key.longitude,
             title = key.title,
           )
+        }
+      }
+
+      is RouteKey.VenueHistories -> {
+        NavEntry(key) {
+          VenueHistoriesScreen()
         }
       }
 
