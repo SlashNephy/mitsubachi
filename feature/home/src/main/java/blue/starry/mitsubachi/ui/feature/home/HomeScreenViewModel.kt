@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
+import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.ErrorHandler
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
+import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
+import blue.starry.mitsubachi.ui.snackbar.enqueue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +22,8 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
   private val fetchFeedUseCase: FetchFeedUseCase,
+  private val likeCheckInUseCase: LikeCheckInUseCase,
+  private val snackbarHostService: SnackbarHostService,
   private val errorHandler: ErrorHandler,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
@@ -67,5 +72,34 @@ class HomeScreenViewModel @Inject constructor(
 
   override fun onAccountDeleted() {
     _state.value = UiState.Loading
+  }
+
+  fun likeCheckIn(checkInId: String): Job {
+    return viewModelScope.launch {
+      runCatching {
+        likeCheckInUseCase(checkInId)
+      }.onSuccess {
+        // 楽観的更新
+        val currentState = state.value
+        if (currentState is UiState.Success) {
+          val index = currentState.feed.indexOfFirst { it.id == checkInId }
+          if (index != -1) {
+            val newCheckIn = currentState.feed[index].copy(isLiked = true)
+            val newFeed = currentState.feed.toMutableList()
+            newFeed[index] = newCheckIn
+            _state.value = currentState.copy(feed = newFeed)
+          }
+        }
+      }.onFailure { e ->
+        snackbarHostService.enqueue("いいねに失敗しました: ${e.localizedMessage}")
+      }
+    }
+  }
+
+  @Suppress("unused")
+  fun unlikeCheckIn(checkInId: String) {
+    viewModelScope.launch {
+      snackbarHostService.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
+    }
   }
 }

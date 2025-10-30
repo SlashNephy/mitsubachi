@@ -1,3 +1,4 @@
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -5,9 +6,12 @@ plugins {
   alias(libs.plugins.convention.android.compose.application)
   alias(libs.plugins.google.services)
   alias(libs.plugins.firebase.crashlytics)
+  alias(libs.plugins.firebase.app.distribution)
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
+
+  alias(libs.plugins.android.mapsplatform.secrets)
 }
 
 val localProperties = Properties()
@@ -40,6 +44,11 @@ android {
     )
   }
 
+  firebaseAppDistribution {
+    artifactType = "APK"
+    serviceCredentialsFile = "$rootDir/firebase-service-account.json"
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = true
@@ -47,10 +56,16 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      firebaseAppDistribution {
+        groups = "tester, tester-release"
+      }
     }
     debug {
       applicationIdSuffix = ".debug"
       isDebuggable = true
+      firebaseAppDistribution {
+        groups = "tester, tester-debug"
+      }
     }
   }
 
@@ -60,6 +75,11 @@ android {
   }
 }
 
+secrets {
+  propertiesFileName = rootProject.relativePath("secrets.properties")
+  defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
+}
+
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.data)
@@ -67,6 +87,7 @@ dependencies {
   implementation(projects.core.ui)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
+  implementation(projects.feature.map)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
 

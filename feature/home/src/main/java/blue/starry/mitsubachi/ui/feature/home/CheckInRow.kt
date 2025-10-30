@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.ui.feature.home
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,7 +62,12 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
+@Suppress("LongMethod") // TODO: リファクタリング
+fun CheckInRow(
+  checkIn: CheckIn,
+  onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
+  viewModel: HomeScreenViewModel = hiltViewModel(),
+) {
   Row(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     modifier = Modifier.fillMaxWidth(),
@@ -77,7 +83,14 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
     Column(
       modifier = Modifier
         .fillMaxHeight()
-        .weight(1f),
+        .weight(1f)
+        .clickable {
+          onClickVenue(
+            checkIn.venue.location.latitude,
+            checkIn.venue.location.longitude,
+            checkIn.venue.name,
+          )
+        },
     ) {
       Text(checkIn.user.displayName, color = Color.Gray)
       Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
@@ -111,7 +124,14 @@ fun CheckInRow(checkIn: CheckIn, viewModel: HomeScreenViewModel) {
 
     LikeIcon(
       isLiked = checkIn.isLiked,
-      onClick = {}, // TODO
+      likeCount = checkIn.likeCount,
+      onClick = {
+        if (checkIn.isLiked) {
+          viewModel.unlikeCheckIn(checkIn.id)
+        } else {
+          viewModel.likeCheckIn(checkIn.id)
+        }
+      },
       modifier = Modifier
         .size(48.dp)
         .padding(end = 16.dp),
@@ -201,10 +221,11 @@ private fun CheckInRowPreview() {
       ),
       timestamp = ZonedDateTime.now(),
       isLiked = true,
+      likeCount = 5,
       source = Source(name = "Swarm for iOS", url = "https://www.swarmapp.com"),
       isMeyer = true,
     ),
-    viewModel = hiltViewModel(),
+    onClickVenue = { _, _, _ -> },
   )
 }
 
@@ -257,19 +278,35 @@ private fun UserIconPreview() {
 }
 
 @Composable
-private fun LikeIcon(isLiked: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-  IconButton(
-    onClick = onClick,
+private fun LikeIcon(
+  isLiked: Boolean,
+  likeCount: Int,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
   ) {
-    Icon(
-      imageVector = if (isLiked) {
-        Icons.Filled.Favorite
-      } else {
-        Icons.Filled.FavoriteBorder
-      },
-      contentDescription = stringResource(R.string.like_button),
-    )
+    IconButton(
+      onClick = onClick,
+    ) {
+      Icon(
+        imageVector = if (isLiked) {
+          Icons.Filled.Favorite
+        } else {
+          Icons.Filled.FavoriteBorder
+        },
+        contentDescription = stringResource(R.string.like_button),
+        tint = if (isLiked) Color.Red else Color.Gray,
+      )
+    }
+    if (likeCount > 0) {
+      Text(
+        text = likeCount.toString(),
+        color = Color.Gray,
+      )
+    }
   }
 }
 
@@ -278,6 +315,7 @@ private fun LikeIcon(isLiked: Boolean, onClick: () -> Unit, modifier: Modifier =
 private fun BorderLikeIconPreview() {
   LikeIcon(
     isLiked = false,
+    likeCount = 10,
     onClick = {},
     modifier = Modifier.size(50.dp),
   )
@@ -288,6 +326,7 @@ private fun BorderLikeIconPreview() {
 private fun LikeIconPreview() {
   LikeIcon(
     isLiked = true,
+    likeCount = 42,
     onClick = {},
     modifier = Modifier.size(50.dp),
   )

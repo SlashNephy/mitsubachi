@@ -2,6 +2,7 @@
 <resources>
     <string name="home_bar">Home</string>
     <string name="search_bar">Search</string>
+    <string name="map_bar">Map</string>
     <string name="settings_button">Settings</string>
     <string name="check_in_button">Check-in</string>
     <string name="like_button">Like</string>
