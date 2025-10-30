@@ -84,7 +84,7 @@ fun NearbyVenuesScreen(
         VenueListContent(
           state = state,
           sortOrder = sortOrder,
-          onSortOrderChange = viewModel::setSortOrder,
+          onSortOrderChange = viewModel::onUpdateSortOrder,
           onClickVenue = onClickVenue,
         )
       }
@@ -101,8 +101,8 @@ fun NearbyVenuesScreen(
 @Composable
 private fun VenueListContent(
   state: NearbyVenuesScreenViewModel.UiState.Success,
-  sortOrder: NearbyVenuesScreenViewModel.SortOrder,
-  onSortOrderChange: (NearbyVenuesScreenViewModel.SortOrder) -> Unit,
+  sortOrder: NearbyVenuesSortOrder,
+  onSortOrderChange: (NearbyVenuesSortOrder) -> Unit,
   onClickVenue: (Venue) -> Unit,
 ) {
   if (state.venues.isEmpty()) {
@@ -124,7 +124,7 @@ private fun VenueListContent(
       // Venue list
       LazyColumn(modifier = Modifier.fillMaxSize()) {
         itemsIndexed(
-          items = state.venues,
+          items = state.sortedVenues,
           key = { _, venue -> venue.id },
         ) { index, venue ->
           VenueRow(venue, onClickVenue = onClickVenue)
@@ -140,8 +140,8 @@ private fun VenueListContent(
 
 @Composable
 private fun SortButtons(
-  sortOrder: NearbyVenuesScreenViewModel.SortOrder,
-  onSortOrderChange: (NearbyVenuesScreenViewModel.SortOrder) -> Unit,
+  sortOrder: NearbyVenuesSortOrder,
+  onSortOrderChange: (NearbyVenuesSortOrder) -> Unit,
 ) {
   Row(
     modifier = Modifier
@@ -150,8 +150,8 @@ private fun SortButtons(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     FilterChip(
-      selected = sortOrder == NearbyVenuesScreenViewModel.SortOrder.RELEVANCE,
-      onClick = { onSortOrderChange(NearbyVenuesScreenViewModel.SortOrder.RELEVANCE) },
+      selected = sortOrder == NearbyVenuesSortOrder.RELEVANCE,
+      onClick = { onSortOrderChange(NearbyVenuesSortOrder.RELEVANCE) },
       label = { Text(stringResource(R.string.sort_by_relevance)) },
       leadingIcon = {
         Icon(
@@ -161,8 +161,8 @@ private fun SortButtons(
       },
     )
     FilterChip(
-      selected = sortOrder == NearbyVenuesScreenViewModel.SortOrder.DISTANCE,
-      onClick = { onSortOrderChange(NearbyVenuesScreenViewModel.SortOrder.DISTANCE) },
+      selected = sortOrder == NearbyVenuesSortOrder.DISTANCE,
+      onClick = { onSortOrderChange(NearbyVenuesSortOrder.DISTANCE) },
       label = { Text(stringResource(R.string.sort_by_distance)) },
       leadingIcon = {
         Icon(

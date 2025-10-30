@@ -23,6 +23,11 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
+enum class NearbyVenuesSortOrder {
+  RELEVANCE,
+  DISTANCE,
+}
+
 @HiltViewModel
 @OptIn(FlowPreview::class)
 class NearbyVenuesScreenViewModel @Inject constructor(
@@ -34,41 +39,23 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     data class PermissionRequesting(val anyOf: List<String>) : UiState
     data object PermissionRequestDenied : UiState
     data object Loading : UiState
-    data class Success(val venues: List<Venue>, val isRefreshing: Boolean) : UiState
-    data class Error(val message: String) : UiState
-  }
+    data class Success(
+      val venues: List<Venue>,
+      val isRefreshing: Boolean,
+      val sortOrder: NearbyVenuesSortOrder,
+    ) : UiState
 
-  enum class SortOrder {
-    RELEVANCE,
-    DISTANCE,
+    data class Error(val message: String) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
   val state = _state.asStateFlow()
 
-  private val _sortOrder = MutableStateFlow(SortOrder.RELEVANCE)
+  private val _sortOrder = MutableStateFlow(NearbyVenuesSortOrder.RELEVANCE)
   val sortOrder = _sortOrder.asStateFlow()
-
-  private var rawVenues: List<Venue> = emptyList()
 
   init {
     refresh()
-  }
-
-  fun setSortOrder(order: SortOrder) {
-    _sortOrder.value = order
-    applySorting()
-  }
-
-  private fun applySorting() {
-    val currentState = _state.value
-    if (currentState is UiState.Success) {
-      val sortedVenues = when (_sortOrder.value) {
-        SortOrder.RELEVANCE -> rawVenues
-        SortOrder.DISTANCE -> rawVenues.sortedBy { it.location.distance ?: Int.MAX_VALUE }
-      }
-      _state.value = currentState.copy(venues = sortedVenues)
-    }
   }
 
   fun refresh(query: String? = null): Job {
@@ -108,12 +95,11 @@ class NearbyVenuesScreenViewModel @Inject constructor(
         runCatching {
           searchNearVenuesUseCase(query = query)
         }.onSuccess { data ->
-          rawVenues = data
-          val sortedVenues = when (_sortOrder.value) {
-            SortOrder.RELEVANCE -> data
-            SortOrder.DISTANCE -> data.sortedBy { it.location.distance ?: Int.MAX_VALUE }
-          }
-          _state.value = UiState.Success(sortedVenues, isRefreshing = false)
+          _state.value = UiState.Success(
+            venues = data,
+            isRefreshing = false,
+            sortOrder = _sortOrder.value,
+          )
         }.onFailure { e ->
           _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
         }
@@ -137,7 +123,23 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     _state.value = UiState.PermissionRequestDenied
   }
 
+  fun onUpdateSortOrder(order: NearbyVenuesSortOrder) {
+    _sortOrder.value = order
+    val currentState = _state.value
+    if (currentState is UiState.Success) {
+      _state.value = currentState.copy(sortOrder = order)
+    }
+  }
+
   override fun onAccountDeleted() {
     _state.value = UiState.Loading
   }
 }
+
+val NearbyVenuesScreenViewModel.UiState.Success.sortedVenues: List<Venue>
+  get() {
+    return when (sortOrder) {
+      NearbyVenuesSortOrder.RELEVANCE -> venues
+      NearbyVenuesSortOrder.DISTANCE -> venues.sortedBy { it.location.distance ?: Int.MAX_VALUE }
+    }
+  }
