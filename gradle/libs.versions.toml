@@ -42,7 +42,7 @@ android-mapsplatform-secrets = "2.0.1"
 google-services = "4.4.4"
 firebase = "34.4.0"
 firebase-crashlytics-gradle-plugin = "3.0.6"
-firebase-app-distribution-gradle-plugin = "5.1.1"
+firebase-app-distribution-gradle-plugin = "5.2.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
