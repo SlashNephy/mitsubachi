@@ -9,7 +9,7 @@ import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.CreateCheckInUseCase
 import blue.starry.mitsubachi.domain.usecase.UploadImageUseCase
-import blue.starry.mitsubachi.ui.ErrorHandler
+import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,7 @@ class CreateCheckInScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val createCheckInUseCase: CreateCheckInUseCase,
   private val uploadImageUseCase: UploadImageUseCase,
-  private val errorHandler: ErrorHandler,
+  private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel() {
   data class ShoutState(
     val value: String,
@@ -58,7 +58,7 @@ class CreateCheckInScreenViewModel @Inject constructor(
           uploadImageUseCase(checkIn.id, files, isPublic)
         }
       }.onFailure { e ->
-        errorHandler.handle(e)
+        snackbarErrorHandler.handle(e)
       }
     }
   }
