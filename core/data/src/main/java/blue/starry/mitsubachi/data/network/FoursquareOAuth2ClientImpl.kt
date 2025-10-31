@@ -11,6 +11,7 @@ import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.http.buildUrl
 import io.ktor.http.takeFrom
+import org.apache.commons.lang3.RandomStringUtils
 import java.net.URI
 import java.security.MessageDigest
 import java.util.Base64
@@ -31,8 +32,8 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     .createFoursquareOAuth2NetworkApi()
 
   override fun createAuthorizationRequest(): OAuth2AuthorizationRequest {
-    val state = generateRandomString(32)
-    val codeVerifier = generateRandomString(64)
+    val state = RandomStringUtils.randomAlphanumeric(32)
+    val codeVerifier = RandomStringUtils.randomAlphanumeric(64)
     val codeChallenge = MessageDigest.getInstance("SHA-256").run {
       val input = codeVerifier.toByteArray(Charsets.UTF_8)
       val hash = digest(input)

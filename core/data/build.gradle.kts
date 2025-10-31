@@ -38,4 +38,5 @@ dependencies {
   implementation(libs.ktor.client.logging)
 
   implementation(libs.cache4k)
+  implementation(libs.apache.commons.lang)
 }
