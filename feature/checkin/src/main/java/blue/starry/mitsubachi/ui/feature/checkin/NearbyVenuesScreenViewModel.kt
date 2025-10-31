@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -33,6 +34,7 @@ enum class NearbyVenuesSortOrder {
 class NearbyVenuesScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val searchNearVenuesUseCase: SearchNearVenuesUseCase,
+  private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel(), AccountEventHandler {
   @Immutable
   sealed interface UiState {
@@ -101,6 +103,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
             sortOrder = _sortOrder.value,
           )
         }.onFailure { e ->
+          snackbarErrorHandler.handle(e)
           _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
         }
       }

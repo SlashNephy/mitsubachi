@@ -1,3 +1,9 @@
 package blue.starry.mitsubachi.domain.error
 
-class UnauthorizedError : AppError()
+data object UnauthorizedError : AppError() {
+  @JvmField
+  @Suppress("MayBeConstant")
+  val serialVersionUID = 1L
+
+  fun readResolve(): Any = UnauthorizedError
+}

@@ -124,14 +124,16 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     //   }
     // }
 
-    val data = ktorfit.getAccessToken(
-      clientId = config.foursquareClientId,
-      clientSecret = config.foursquareClientSecret,
-      grantType = request.grantType,
-      redirectUri = request.redirectUri.toString(),
-      code = checkNotNull(request.authorizationCode),
-      codeVerifier = checkNotNull(request.codeVerifier),
-    )
+    val data = ktorfit.runNetwork {
+      getAccessToken(
+        clientId = config.foursquareClientId,
+        clientSecret = config.foursquareClientSecret,
+        grantType = request.grantType,
+        redirectUri = request.redirectUri.toString(),
+        code = checkNotNull(request.authorizationCode),
+        codeVerifier = checkNotNull(request.codeVerifier),
+      )
+    }
     return TokenResponse
       .Builder(request)
       .setRequest(request)

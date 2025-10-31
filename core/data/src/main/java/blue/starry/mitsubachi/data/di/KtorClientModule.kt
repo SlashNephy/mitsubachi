@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -22,6 +23,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -31,6 +33,12 @@ object KtorClientModule {
   fun provide(config: ApplicationConfig): HttpClient {
     return HttpClient(OkHttp) {
       expectSuccess = true
+
+      install(HttpTimeout) {
+        requestTimeoutMillis = 5.seconds.inWholeMilliseconds
+        connectTimeoutMillis = 5.seconds.inWholeMilliseconds
+        socketTimeoutMillis = 5.seconds.inWholeMilliseconds
+      }
 
       install(UserAgent) {
         agent =
