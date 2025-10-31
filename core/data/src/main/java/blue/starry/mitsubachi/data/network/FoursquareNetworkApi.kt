@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.data.network.model.FoursquareRecentCheckinsRespons
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenuesResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserVenueHistoriesResponse
+import de.jensklingenberg.ktorfit.core.NoDelegation
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
@@ -13,7 +14,7 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.request.forms.MultiPartFormDataContent
 
-interface FoursquareNetworkApi : NetworkApi {
+interface FoursquareNetworkApi : @NoDelegation NetworkApi {
   @GET("/checkins/recent")
   suspend fun getRecentCheckIns(
     @Query limit: Int?,
