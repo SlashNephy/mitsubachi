@@ -66,11 +66,16 @@ import kotlin.time.Duration.Companion.seconds
 fun CheckInRow(
   checkIn: CheckIn,
   onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
+  onClickCheckIn: (checkInId: String) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   Row(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth()
+      .clickable {
+        onClickCheckIn(checkIn.id)
+      },
   ) {
     UserIcon(
       url = checkIn.user.iconUrl,
@@ -83,14 +88,7 @@ fun CheckInRow(
     Column(
       modifier = Modifier
         .fillMaxHeight()
-        .weight(1f)
-        .clickable {
-          onClickVenue(
-            checkIn.venue.location.latitude,
-            checkIn.venue.location.longitude,
-            checkIn.venue.name,
-          )
-        },
+        .weight(1f),
     ) {
       Text(checkIn.user.displayName, color = Color.Gray)
       Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
@@ -226,6 +224,7 @@ private fun CheckInRowPreview() {
       isMeyer = true,
     ),
     onClickVenue = { _, _, _ -> },
+    onClickCheckIn = {},
   )
 }
 

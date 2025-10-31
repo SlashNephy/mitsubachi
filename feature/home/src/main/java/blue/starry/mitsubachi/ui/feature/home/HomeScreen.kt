@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun HomeScreen(
   onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
+  onClickCheckIn: (checkInId: String) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -49,7 +50,11 @@ fun HomeScreen(
             .fillMaxSize(),
         ) {
           itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
-            CheckInRow(checkIn, onClickVenue = onClickVenue)
+            CheckInRow(
+              checkIn,
+              onClickVenue = onClickVenue,
+              onClickCheckIn = onClickCheckIn,
+            )
 
             if (index < state.feed.lastIndex) {
               HorizontalDivider(modifier = Modifier.padding(12.dp))
