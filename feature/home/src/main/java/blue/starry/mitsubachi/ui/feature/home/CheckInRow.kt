@@ -62,7 +62,7 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-@Suppress("LongMethod") // TODO: リファクタリング
+@Suppress("LongMethod", "UnusedParameter") // TODO: リファクタリング
 fun CheckInRow(
   checkIn: CheckIn,
   onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,

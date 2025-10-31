@@ -23,7 +23,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun CheckInDetailScreen(
-  checkInId: String,
   viewModel: CheckInDetailScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
