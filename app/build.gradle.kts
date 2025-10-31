@@ -42,6 +42,11 @@ android {
       "FOURSQUARE_CLIENT_SECRET",
       localProperties.getProperty("foursquare.client_secret", "\"dummy\"")
     )
+    buildConfigField(
+      "String",
+      "FOURSQUARE_REDIRECT_URI",
+      localProperties.getProperty("foursquare.redirect_uri", "\"dummy\"")
+    )
   }
 
   firebaseAppDistributionDefault {

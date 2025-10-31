@@ -18,6 +18,7 @@ object AppDiModule {
       isDebugBuild = BuildConfig.DEBUG,
       foursquareClientId = BuildConfig.FOURSQUARE_CLIENT_ID,
       foursquareClientSecret = BuildConfig.FOURSQUARE_CLIENT_SECRET,
+      foursquareRedirectUri = BuildConfig.FOURSQUARE_REDIRECT_URI,
     )
   }
 }
