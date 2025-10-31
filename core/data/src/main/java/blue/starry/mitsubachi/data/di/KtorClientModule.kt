@@ -23,6 +23,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,9 +35,9 @@ object KtorClientModule {
       expectSuccess = true
 
       install(HttpTimeout) {
-        requestTimeoutMillis = 5000
-        connectTimeoutMillis = 5000
-        socketTimeoutMillis = 5000
+        requestTimeoutMillis = 5.seconds.inWholeMilliseconds
+        connectTimeoutMillis = 5.seconds.inWholeMilliseconds
+        socketTimeoutMillis = 5.seconds.inWholeMilliseconds
       }
 
       install(UserAgent) {
