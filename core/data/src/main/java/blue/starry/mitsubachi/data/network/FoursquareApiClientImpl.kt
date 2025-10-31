@@ -4,8 +4,6 @@ import blue.starry.mitsubachi.data.network.model.FoursquareCheckIn
 import blue.starry.mitsubachi.data.network.model.FoursquareUserVenueHistoriesResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareVenue
 import blue.starry.mitsubachi.data.network.model.toDomain
-import blue.starry.mitsubachi.domain.error.RequestTimeoutError
-import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
@@ -17,7 +15,6 @@ import blue.starry.mitsubachi.domain.usecase.FoursquareBearerTokenSource
 import blue.starry.mitsubachi.domain.usecase.FoursquareCheckInBroadcastFlag
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -61,15 +58,13 @@ class FoursquareApiClientImpl @Inject constructor(
     after: ZonedDateTime?,
     coordinates: Coordinates?,
   ): List<CheckIn> {
-    return try {
+    return runNetwork {
       val data = ktorfit.getRecentCheckIns(
         limit = limit,
         afterTimeStamp = after?.toEpochSecond(),
         ll = coordinates?.let { "${it.latitude},${it.longitude}" },
       )
       data.response.recent.map(FoursquareCheckIn::toDomain)
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 
@@ -77,14 +72,12 @@ class FoursquareApiClientImpl @Inject constructor(
     coordinates: Coordinates,
     query: String?,
   ): List<Venue> {
-    return try {
+    return runNetwork {
       val data = ktorfit.searchNearVenues(
         ll = "${coordinates.latitude},${coordinates.longitude}",
         query = query?.ifBlank { null },
       )
       data.response.venues.map(FoursquareVenue::toDomain)
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 
@@ -94,43 +87,41 @@ class FoursquareApiClientImpl @Inject constructor(
     broadcastFlags: List<FoursquareCheckInBroadcastFlag>?,
     stickerId: String?,
   ): CheckIn {
-    return try {
+    return runNetwork {
       val data = ktorfit.addCheckIn(
         venueId,
         shout?.ifBlank { null },
-        broadcastFlags?.joinToString(",") { it.serialize() },
+        broadcastFlags?.joinToString(",", transform = FoursquareCheckInBroadcastFlag::serialize),
         stickerId?.ifBlank { null },
       )
       data.response.checkIn.toDomain()
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 
   override suspend fun updateCheckIn(checkInId: String, shout: String?) {
-    try {
+    runNetwork {
       ktorfit.updateCheckIn(checkInId, shout?.ifBlank { null })
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 
   override suspend fun deleteCheckIn(checkInId: String) {
-    try {
+    runNetwork {
       ktorfit.deleteCheckIn(checkInId)
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 
   override suspend fun getUser(userId: String?): FoursquareUser {
-    val data = ktorfit.getUser(userId = userId ?: "self")
-    return data.response.user.toDomain()
+    return runNetwork {
+      val data = ktorfit.getUser(userId = userId ?: "self")
+      data.response.user.toDomain()
+    }
   }
 
   override suspend fun getUserVenueHistories(userId: String?): List<VenueHistory> {
-    val data = ktorfit.getUserVenueHistories(userId = userId ?: "self")
-    return data.response.venues.items.map(FoursquareUserVenueHistoriesResponse.Venues.Item::toDomain)
+    return runNetwork {
+      val data = ktorfit.getUserVenueHistories(userId = userId ?: "self")
+      data.response.venues.items.map(FoursquareUserVenueHistoriesResponse.Venues.Item::toDomain)
+    }
   }
 
   override suspend fun addPhotoToCheckIn(
@@ -138,7 +129,7 @@ class FoursquareApiClientImpl @Inject constructor(
     image: FilePart,
     isPublic: Boolean,
   ) {
-    try {
+    runNetwork {
       ktorfit.addPhoto(
         checkInId = checkInId,
         public = if (isPublic) 1 else 0,
@@ -155,16 +146,12 @@ class FoursquareApiClientImpl @Inject constructor(
           },
         ),
       )
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 
   override suspend fun likeCheckIn(checkInId: String) {
-    try {
+    runNetwork {
       ktorfit.likeCheckIn(checkInId)
-    } catch (e: HttpRequestTimeoutException) {
-      throw RequestTimeoutError()
     }
   }
 }
