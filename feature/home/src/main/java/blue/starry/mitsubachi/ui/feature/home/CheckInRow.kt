@@ -62,10 +62,9 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-@Suppress("LongMethod", "UnusedParameter") // TODO: リファクタリング
+@Suppress("LongMethod") // TODO: リファクタリング
 fun CheckInRow(
   checkIn: CheckIn,
-  onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
   onClickCheckIn: (checkInId: String) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
@@ -223,7 +222,6 @@ private fun CheckInRowPreview() {
       source = Source(name = "Swarm for iOS", url = "https://www.swarmapp.com"),
       isMeyer = true,
     ),
-    onClickVenue = { _, _, _ -> },
     onClickCheckIn = {},
   )
 }

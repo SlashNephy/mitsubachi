@@ -161,9 +161,6 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
       is RouteKey.Home -> {
         NavEntry(key) {
           HomeScreen(
-            onClickVenue = { latitude, longitude, title ->
-              backStack.add(RouteKey.Map(latitude, longitude, title))
-            },
             onClickCheckIn = { checkInId ->
               backStack.add(RouteKey.CheckIn(checkInId))
             },

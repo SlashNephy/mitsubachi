@@ -21,7 +21,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun HomeScreen(
-  onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
   onClickCheckIn: (checkInId: String) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
@@ -52,7 +51,6 @@ fun HomeScreen(
           itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
             CheckInRow(
               checkIn,
-              onClickVenue = onClickVenue,
               onClickCheckIn = onClickCheckIn,
             )
 
