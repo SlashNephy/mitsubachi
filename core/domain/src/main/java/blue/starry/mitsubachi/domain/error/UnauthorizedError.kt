@@ -1,3 +1,6 @@
 package blue.starry.mitsubachi.domain.error
 
-class UnauthorizedError : AppError()
+data object UnauthorizedError : AppError() {
+  private const val serialVersionUID = 1L
+  private fun readResolve(): Any = UnauthorizedError
+}
