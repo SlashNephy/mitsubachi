@@ -124,8 +124,8 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     //   }
     // }
 
-    val data = runNetwork {
-      ktorfit.getAccessToken(
+    val data = ktorfit.runNetwork {
+      getAccessToken(
         clientId = config.foursquareClientId,
         clientSecret = config.foursquareClientSecret,
         grantType = request.grantType,

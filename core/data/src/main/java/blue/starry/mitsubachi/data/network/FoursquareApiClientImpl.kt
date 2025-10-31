@@ -58,8 +58,8 @@ class FoursquareApiClientImpl @Inject constructor(
     after: ZonedDateTime?,
     coordinates: Coordinates?,
   ): List<CheckIn> {
-    return runNetwork {
-      val data = ktorfit.getRecentCheckIns(
+    return ktorfit.runNetwork {
+      val data = getRecentCheckIns(
         limit = limit,
         afterTimeStamp = after?.toEpochSecond(),
         ll = coordinates?.let { "${it.latitude},${it.longitude}" },
@@ -72,8 +72,8 @@ class FoursquareApiClientImpl @Inject constructor(
     coordinates: Coordinates,
     query: String?,
   ): List<Venue> {
-    return runNetwork {
-      val data = ktorfit.searchNearVenues(
+    return ktorfit.runNetwork {
+      val data = searchNearVenues(
         ll = "${coordinates.latitude},${coordinates.longitude}",
         query = query?.ifBlank { null },
       )
@@ -87,8 +87,8 @@ class FoursquareApiClientImpl @Inject constructor(
     broadcastFlags: List<FoursquareCheckInBroadcastFlag>?,
     stickerId: String?,
   ): CheckIn {
-    return runNetwork {
-      val data = ktorfit.addCheckIn(
+    return ktorfit.runNetwork {
+      val data = addCheckIn(
         venueId,
         shout?.ifBlank { null },
         broadcastFlags?.joinToString(",", transform = FoursquareCheckInBroadcastFlag::serialize),
@@ -99,27 +99,27 @@ class FoursquareApiClientImpl @Inject constructor(
   }
 
   override suspend fun updateCheckIn(checkInId: String, shout: String?) {
-    runNetwork {
-      ktorfit.updateCheckIn(checkInId, shout?.ifBlank { null })
+    ktorfit.runNetwork {
+      updateCheckIn(checkInId, shout?.ifBlank { null })
     }
   }
 
   override suspend fun deleteCheckIn(checkInId: String) {
-    runNetwork {
-      ktorfit.deleteCheckIn(checkInId)
+    ktorfit.runNetwork {
+      deleteCheckIn(checkInId)
     }
   }
 
   override suspend fun getUser(userId: String?): FoursquareUser {
-    return runNetwork {
-      val data = ktorfit.getUser(userId = userId ?: "self")
+    return ktorfit.runNetwork {
+      val data = getUser(userId = userId ?: "self")
       data.response.user.toDomain()
     }
   }
 
   override suspend fun getUserVenueHistories(userId: String?): List<VenueHistory> {
-    return runNetwork {
-      val data = ktorfit.getUserVenueHistories(userId = userId ?: "self")
+    return ktorfit.runNetwork {
+      val data = getUserVenueHistories(userId = userId ?: "self")
       data.response.venues.items.map(FoursquareUserVenueHistoriesResponse.Venues.Item::toDomain)
     }
   }
@@ -129,8 +129,8 @@ class FoursquareApiClientImpl @Inject constructor(
     image: FilePart,
     isPublic: Boolean,
   ) {
-    runNetwork {
-      ktorfit.addPhoto(
+    ktorfit.runNetwork {
+      addPhoto(
         checkInId = checkInId,
         public = if (isPublic) 1 else 0,
         body = MultiPartFormDataContent(
@@ -150,8 +150,8 @@ class FoursquareApiClientImpl @Inject constructor(
   }
 
   override suspend fun likeCheckIn(checkInId: String) {
-    runNetwork {
-      ktorfit.likeCheckIn(checkInId)
+    ktorfit.runNetwork {
+      likeCheckIn(checkInId)
     }
   }
 }

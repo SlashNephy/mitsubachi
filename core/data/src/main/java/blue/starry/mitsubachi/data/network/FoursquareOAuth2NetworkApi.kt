@@ -5,7 +5,7 @@ import de.jensklingenberg.ktorfit.http.Field
 import de.jensklingenberg.ktorfit.http.FormUrlEncoded
 import de.jensklingenberg.ktorfit.http.POST
 
-interface FoursquareOAuth2NetworkApi {
+interface FoursquareOAuth2NetworkApi : NetworkApi {
   @FormUrlEncoded
   @POST("/oauth2/access_token")
   suspend fun getAccessToken(

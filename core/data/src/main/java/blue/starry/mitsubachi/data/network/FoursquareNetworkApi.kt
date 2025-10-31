@@ -13,7 +13,7 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.request.forms.MultiPartFormDataContent
 
-interface FoursquareNetworkApi {
+interface FoursquareNetworkApi : NetworkApi {
   @GET("/checkins/recent")
   suspend fun getRecentCheckIns(
     @Query limit: Int?,
