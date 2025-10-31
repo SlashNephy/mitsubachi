@@ -1,7 +1,7 @@
 package blue.starry.mitsubachi.ui.feature.welcome
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.browser.auth.AuthTabIntent
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,8 +28,8 @@ fun SignInWithFoursquareButton(
   }
 
   val launcher = rememberLauncherForActivityResult(
-    contract = ActivityResultContracts.StartActivityForResult(),
-    onResult = viewModel::onAuthorizationActivityResult,
+    contract = AuthTabIntent.AuthenticateUserResultContract(),
+    onResult = viewModel::onAuthTabIntentResult,
   )
 
   Button(

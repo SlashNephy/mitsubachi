@@ -5,6 +5,7 @@ data class ApplicationConfig(
   val isDebugBuild: Boolean,
   val foursquareClientId: String,
   val foursquareClientSecret: String,
+  val foursquareRedirectUri: String,
 )
 
 val ApplicationConfig.isProductionBuild: Boolean
