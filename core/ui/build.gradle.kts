@@ -36,6 +36,8 @@ dependencies {
   api(libs.androidx.lifecycle.viewmodel.compose)
   api(libs.androidx.lifecycle.viewmodel.navigation3)
 
+  api(libs.androidx.browser)
+
   // Coil
   api(libs.coil.compose)
   implementation(libs.coil.network.ktor3)

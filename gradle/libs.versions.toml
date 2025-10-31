@@ -4,6 +4,7 @@ kotlin = "2.2.21"
 androidx-core-ktx = "1.17.0"
 androidx-core-splashscreen = "1.2.0-rc01"
 androidx-activity = "1.12.0-beta01"
+androidx-browser = "1.10.0-alpha02"
 androidx-compose-bom = "2025.10.01"
 androidx-compose-material3 = "1.5.0-alpha07"
 androidx-navigation3 = "1.0.0-beta01"
@@ -48,6 +49,7 @@ firebase-app-distribution-gradle-plugin = "5.2.0"
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "androidx-browser" }
 
 # androidx.compose
 # https://developer.android.com/develop/ui/compose/bom/bom-mapping
