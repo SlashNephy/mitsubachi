@@ -2,6 +2,8 @@ package blue.starry.mitsubachi.domain.error
 
 sealed class AppError : Exception() {
   companion object {
-    private const val serialVersionUID = 1L
+    @JvmField
+    @Suppress("MayBeConstant")
+    val serialVersionUID = 1L
   }
 }
