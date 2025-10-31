@@ -96,7 +96,6 @@ dependencies {
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
 
-  implementation(libs.appauth)
   implementation(libs.androidx.core.splashscreen)
 
   implementation(platform(libs.firebase.bom))

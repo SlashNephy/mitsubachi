@@ -18,7 +18,6 @@ play-services-maps = "19.2.0"
 android-maps-ktx = "5.2.1"
 android-maps-compose = "6.12.1"
 android-places = "5.0.0"
-appauth = "0.11.1"
 cache4k = "0.14.0"
 timber = "5.0.1"
 coil = "3.3.0"
@@ -112,7 +111,6 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-crashlytics-ndk = { module = "com.google.firebase:firebase-crashlytics-ndk" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 
-appauth = { module = "net.openid:appauth", version.ref = "appauth" }
 cache4k = { module = "io.github.reactivecircus.cache4k:cache4k", version.ref = "cache4k" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
