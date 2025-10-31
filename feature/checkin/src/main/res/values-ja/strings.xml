@@ -10,4 +10,6 @@
     <string name="sort_by_relevance">関連度順</string>
     <string name="sort_by_distance">距離順</string>
     <string name="checkin_detail_title">チェックイン詳細</string>
+    <string name="checkin_not_found">チェックインが見つかりませんでした</string>
+    <string name="unknown_error">不明なエラー</string>
 </resources>

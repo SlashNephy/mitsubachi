@@ -10,4 +10,6 @@
     <string name="sort_by_relevance">Relevance</string>
     <string name="sort_by_distance">Distance</string>
     <string name="checkin_detail_title">Check-in Detail</string>
+    <string name="checkin_not_found">Check-in not found</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>
