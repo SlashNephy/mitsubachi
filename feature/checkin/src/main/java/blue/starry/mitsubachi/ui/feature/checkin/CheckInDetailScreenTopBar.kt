@@ -21,7 +21,7 @@ fun CheckInDetailScreenTopBar(
       IconButton(onClick = onBack) {
         Icon(
           Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = stringResource(R.string.back_button),
+          contentDescription = stringResource(blue.starry.mitsubachi.ui.R.string.back_button),
         )
       }
     },
