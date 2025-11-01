@@ -9,6 +9,7 @@ import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
+import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.domain.usecase.FoursquareBearerTokenSource
@@ -73,11 +74,22 @@ class FoursquareApiClientImpl @Inject constructor(
     query: String?,
   ): List<Venue> {
     return ktorfit.runNetwork {
-      val data = searchNearVenues(
+      val data = searchNearbyVenues(
         ll = "${coordinates.latitude},${coordinates.longitude}",
         query = query?.ifBlank { null },
       )
       data.response.venues.map(FoursquareVenue::toDomain)
+    }
+  }
+
+  override suspend fun searchVenueRecommendations(
+    coordinates: Coordinates,
+  ): List<VenueRecommendation> {
+    return ktorfit.runNetwork {
+      val data = searchVenueRecommendations(
+        ll = "${coordinates.latitude},${coordinates.longitude}",
+      )
+      data.response.group.results.map { it.toDomain() }
     }
   }
 
@@ -89,10 +101,13 @@ class FoursquareApiClientImpl @Inject constructor(
   ): CheckIn {
     return ktorfit.runNetwork {
       val data = addCheckIn(
-        venueId,
-        shout?.ifBlank { null },
-        broadcastFlags?.joinToString(",", transform = FoursquareCheckInBroadcastFlag::serialize),
-        stickerId?.ifBlank { null },
+        venueId = venueId,
+        shout = shout?.ifBlank { null },
+        broadcast = broadcastFlags?.joinToString(
+          ",",
+          transform = FoursquareCheckInBroadcastFlag::serialize,
+        ),
+        stickerId = stickerId?.ifBlank { null },
       )
       data.response.checkIn.toDomain()
     }
@@ -100,13 +115,13 @@ class FoursquareApiClientImpl @Inject constructor(
 
   override suspend fun updateCheckIn(checkInId: String, shout: String?) {
     ktorfit.runNetwork {
-      updateCheckIn(checkInId, shout?.ifBlank { null })
+      updateCheckIn(checkInId = checkInId, shout = shout?.ifBlank { null })
     }
   }
 
   override suspend fun deleteCheckIn(checkInId: String) {
     ktorfit.runNetwork {
-      deleteCheckIn(checkInId)
+      deleteCheckIn(checkInId = checkInId)
     }
   }
 
@@ -151,7 +166,7 @@ class FoursquareApiClientImpl @Inject constructor(
 
   override suspend fun likeCheckIn(checkInId: String) {
     ktorfit.runNetwork {
-      likeCheckIn(checkInId)
+      likeCheckIn(checkInId = checkInId)
     }
   }
 }

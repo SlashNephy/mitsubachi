@@ -11,6 +11,7 @@ androidx-navigation3 = "1.0.0-beta01"
 androidx-lifecycle = "2.10.0-beta01"
 play-services-location = "21.3.0"
 kotlinx-coroutines-play-services = "1.10.2"
+accompanist-permissions = "0.37.3"
 ktor = "3.3.1"
 ktorfit = "2.6.4"
 slf4j-android = "1.7.36"
@@ -115,6 +116,7 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 cache4k = { module = "io.github.reactivecircus.cache4k:cache4k", version.ref = "cache4k" }
 apache-commons-lang = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons-lang" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }

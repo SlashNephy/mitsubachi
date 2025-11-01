@@ -5,6 +5,7 @@ import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
+import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import java.time.ZonedDateTime
 
@@ -19,6 +20,10 @@ interface FoursquareApiClient {
     coordinates: Coordinates,
     query: String? = null,
   ): List<Venue>
+
+  suspend fun searchVenueRecommendations(
+    coordinates: Coordinates,
+  ): List<VenueRecommendation>
 
   suspend fun addCheckIn(
     venueId: String,

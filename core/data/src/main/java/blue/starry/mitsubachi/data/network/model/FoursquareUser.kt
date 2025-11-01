@@ -8,12 +8,13 @@ data class FoursquareUser(
   val address: String?,
   val birthday: Int?,
   val city: String?,
-  val countryCode: String,
+  val countryCode: String?,
   val displayName: String,
+  val email: String?,
   val firstName: String,
   val followingRelationship: String?,
   val gender: String,
-  val handle: String,
+  val handle: String?,
   val id: String,
   val lastName: String?,
   val photo: Photo,
@@ -21,11 +22,6 @@ data class FoursquareUser(
   val relationship: String?,
   val state: String?,
 ) {
-  @Serializable
-  data class Checkins(
-    val count: Int,
-  )
-
   @Serializable
   data class Photo(
     val prefix: String,
