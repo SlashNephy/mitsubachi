@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FoursquareUser(
   val id: String,
-  val handle: String,
+  val handle: String?,
   val firstName: String,
   val displayName: String,
   val iconUrl: String,

@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.data.network
 import blue.starry.mitsubachi.data.network.model.FoursquareAddCheckInResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareRecentCheckinsResponse
+import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenueRecommendationsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenuesResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserVenueHistoriesResponse
@@ -23,10 +24,39 @@ interface FoursquareNetworkApi : @NoDelegation NetworkApi {
   ): FoursquareApiResponse<FoursquareRecentCheckinsResponse>
 
   @GET("/venues/search")
-  suspend fun searchNearVenues(
-    @Query ll: String,
-    @Query query: String?,
+  suspend fun searchNearbyVenues(
+    @Query query: String? = null,
+    @Query ll: String? = null,
+    @Query near: String? = null,
+    @Query radius: Int? = null,
+    @Query categoryId: String? = null,
+    @Query limit: Int? = null,
+    @Query url: String? = null,
   ): FoursquareApiResponse<FoursquareSearchVenuesResponse>
+
+  @GET("/search/recommendations")
+  suspend fun searchVenueRecommendations(
+    @Query query: String? = null,
+    @Query ll: String? = null,
+    @Query radius: Int? = null,
+    @Query sw: String? = null,
+    @Query ne: String? = null,
+    @Query near: String? = null,
+    @Query section: String? = null,
+    @Query categoryId: String? = null,
+    @Query novelty: String? = null,
+    @Query friendVisits: String? = null,
+    @Query time: String? = null,
+    @Query day: String? = null,
+    @Query lastVenue: String? = null,
+    @Query openNow: Boolean? = null,
+    @Query price: String? = null,
+    @Query saved: Boolean? = null,
+    @Query sortByDistance: Boolean? = null,
+    @Query sortByPopularity: Boolean? = null,
+    @Query limit: Int? = null,
+    @Query offset: Int? = null,
+  ): FoursquareApiResponse<FoursquareSearchVenueRecommendationsResponse>
 
   @POST("/checkins/add")
   suspend fun addCheckIn(
