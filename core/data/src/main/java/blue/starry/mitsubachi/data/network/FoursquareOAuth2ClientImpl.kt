@@ -32,8 +32,9 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     .createFoursquareOAuth2NetworkApi()
 
   override fun createAuthorizationRequest(): OAuth2AuthorizationRequest {
-    val state = RandomStringUtils.randomAlphanumeric(32)
-    val codeVerifier = RandomStringUtils.randomAlphanumeric(64)
+    val generator = RandomStringUtils.secureStrong()
+    val state = generator.nextAlphanumeric(32)
+    val codeVerifier = generator.nextAlphanumeric(64)
     val codeChallenge = MessageDigest.getInstance("SHA-256").run {
       val input = codeVerifier.toByteArray(Charsets.UTF_8)
       val hash = digest(input)
