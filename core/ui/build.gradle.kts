@@ -37,6 +37,7 @@ dependencies {
   api(libs.androidx.lifecycle.viewmodel.navigation3)
 
   api(libs.androidx.browser)
+  api(libs.accompanist.permissions)
 
   // Coil
   api(libs.coil.compose)
