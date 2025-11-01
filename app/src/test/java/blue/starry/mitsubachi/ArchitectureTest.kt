@@ -5,7 +5,6 @@ import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class ArchitectureTest {
@@ -50,7 +49,6 @@ class ArchitectureTest {
   }
 
   @Test
-  @Disabled("domain レイヤーから android.content.Intent を参照している箇所がある") // TODO
   fun domainLayerShouldNotDependOnAndroidPackages() {
     val rule = noClasses()
       .that()

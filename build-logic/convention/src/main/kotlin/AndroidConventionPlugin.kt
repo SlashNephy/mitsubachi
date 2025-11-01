@@ -54,9 +54,6 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           defaultConfig {
             minSdk = 36
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-            // 実際のスキームは AndroidManifest.xml で設定するが、テストが実行できるように埋めておく
-            manifestPlaceholders["appAuthRedirectScheme"] = ""
           }
           if (this is ApplicationExtension) {
             defaultConfig {

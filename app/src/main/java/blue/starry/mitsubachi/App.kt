@@ -144,7 +144,6 @@ private fun AppFloatingActionButtonPosition(): FabPosition {
 
 @Suppress("FunctionName", "LongMethod")
 private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> {
-  // TODO: Navigation 3 では各エントリーのことを Scene と呼んでいそう
   return { key ->
     when (key) {
       is RouteKey.Welcome -> {

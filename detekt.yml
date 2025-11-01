@@ -67,7 +67,7 @@ style:
   MaxLineLength:
     active: false
   ReturnCount:
-    max: 3
+    max: 5
   UnnecessaryAnnotationUseSiteTarget:
     # @param:ApplicationContext などで文句を言ってくる
     active: false
