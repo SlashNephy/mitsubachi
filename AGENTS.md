@@ -59,7 +59,9 @@ is not violated.
 - **:core/domain**: Business logic and use cases
     - Defines interfaces for data layer
     - Independent of Android framework and implementation details
-- **:core/data**: Implements repository and data source
+- **:core/data**: Implements repositories and data sources, including network and database implementations.
+    - Provides concrete implementations for interfaces defined in :core/domain
+    - Handles data retrieval, caching, and persistence
 - **:core/ui**: Reusable UI components
 - **:core/common**: Shared utilities and extensions
 - **:core/testing** & **:core/ui-testing**: Testing utilities and helpers
