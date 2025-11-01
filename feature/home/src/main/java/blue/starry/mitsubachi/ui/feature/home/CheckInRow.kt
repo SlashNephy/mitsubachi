@@ -65,7 +65,7 @@ import kotlin.time.Duration.Companion.seconds
 @Suppress("LongMethod") // TODO: リファクタリング
 fun CheckInRow(
   checkIn: CheckIn,
-  onClickCheckIn: (checkInId: String) -> Unit,
+  onClickCheckIn: (checkIn: CheckIn) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   Row(
@@ -73,7 +73,7 @@ fun CheckInRow(
     modifier = Modifier
       .fillMaxWidth()
       .clickable {
-        onClickCheckIn(checkIn.id)
+        onClickCheckIn(checkIn)
       },
   ) {
     UserIcon(

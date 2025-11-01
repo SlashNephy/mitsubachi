@@ -83,7 +83,7 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
       )
     }
 
-    is RouteKey.CheckIn -> {
+    is RouteKey.CheckInDetail -> {
       CheckInDetailScreenTopBar(
         onBack = {
           backStack.remove(key)
@@ -161,8 +161,8 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
       is RouteKey.Home -> {
         NavEntry(key) {
           HomeScreen(
-            onClickCheckIn = { checkInId ->
-              backStack.add(RouteKey.CheckIn(checkInId))
+            onClickCheckIn = { checkIn ->
+              backStack.add(RouteKey.CheckInDetail(checkIn))
             },
           )
         }
@@ -193,9 +193,9 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
         }
       }
 
-      is RouteKey.CheckIn -> {
+      is RouteKey.CheckInDetail -> {
         NavEntry(key) {
-          CheckInDetailScreen()
+          CheckInDetailScreen(key.checkIn)
         }
       }
 

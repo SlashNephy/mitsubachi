@@ -1,8 +1,10 @@
 package blue.starry.mitsubachi.domain.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.serialization.Serializable
 
 @Immutable
+@Serializable
 data class FoursquareUser(
   val id: String,
   val handle: String,
