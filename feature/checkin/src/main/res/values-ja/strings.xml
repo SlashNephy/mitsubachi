@@ -9,4 +9,5 @@
     <string name="no_venues_found">付近のスポットが見つかりませんでした。</string>
     <string name="sort_by_relevance">関連度順</string>
     <string name="sort_by_distance">距離順</string>
+    <string name="check_in_detail_top_bar_title">%sさんのチェックイン</string>
 </resources>

@@ -7,10 +7,8 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalResources
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -24,8 +22,6 @@ fun WelcomeScreen(
     contentAlignment = Alignment.Center,
     modifier = Modifier.fillMaxSize(),
   ) {
-    val scope = rememberCoroutineScope()
-    val resources = LocalResources.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     when (val state = state) {

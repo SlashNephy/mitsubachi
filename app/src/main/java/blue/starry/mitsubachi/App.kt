@@ -16,6 +16,8 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import blue.starry.mitsubachi.feature.settings.SettingsScreen
+import blue.starry.mitsubachi.ui.feature.checkin.CheckInDetailScreen
+import blue.starry.mitsubachi.ui.feature.checkin.CheckInDetailScreenTopBar
 import blue.starry.mitsubachi.ui.feature.checkin.CreateCheckInScreen
 import blue.starry.mitsubachi.ui.feature.checkin.CreateCheckInScreenTopBar
 import blue.starry.mitsubachi.ui.feature.checkin.NearbyVenuesScreen
@@ -75,6 +77,15 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
     is RouteKey.CreateCheckIn -> {
       CreateCheckInScreenTopBar(
         venue = key.venue,
+        onBack = {
+          backStack.remove(key)
+        },
+      )
+    }
+
+    is RouteKey.CheckInDetail -> {
+      CheckInDetailScreenTopBar(
+        checkIn = key.checkIn,
         onBack = {
           backStack.remove(key)
         },
@@ -150,8 +161,8 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
       is RouteKey.Home -> {
         NavEntry(key) {
           HomeScreen(
-            onClickVenue = { latitude, longitude, title ->
-              backStack.add(RouteKey.Map(latitude, longitude, title))
+            onClickCheckIn = { checkIn ->
+              backStack.add(RouteKey.CheckInDetail(checkIn))
             },
           )
         }
@@ -179,6 +190,12 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
               backStack.remove(key)
             },
           )
+        }
+      }
+
+      is RouteKey.CheckInDetail -> {
+        NavEntry(key) {
+          CheckInDetailScreen(key.checkIn)
         }
       }
 

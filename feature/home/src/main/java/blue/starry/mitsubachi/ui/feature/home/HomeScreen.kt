@@ -17,11 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.domain.model.CheckIn
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun HomeScreen(
-  onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
+  onClickCheckIn: (checkIn: CheckIn) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -49,7 +50,10 @@ fun HomeScreen(
             .fillMaxSize(),
         ) {
           itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
-            CheckInRow(checkIn, onClickVenue = onClickVenue)
+            CheckInRow(
+              checkIn,
+              onClickCheckIn = onClickCheckIn,
+            )
 
             if (index < state.feed.lastIndex) {
               HorizontalDivider(modifier = Modifier.padding(12.dp))
