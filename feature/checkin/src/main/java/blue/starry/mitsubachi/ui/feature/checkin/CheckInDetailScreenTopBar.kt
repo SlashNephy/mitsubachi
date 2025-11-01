@@ -9,14 +9,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import blue.starry.mitsubachi.domain.model.CheckIn
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun CheckInDetailScreenTopBar(
+  checkIn: CheckIn,
   onBack: () -> Unit,
 ) {
   TopAppBar(
-    title = { Text(stringResource(R.string.checkin_detail_title)) },
+    title = { Text(stringResource(R.string.check_in_detail_top_bar_title).format(checkIn.user.displayName)) },
     navigationIcon = {
       IconButton(onClick = onBack) {
         Icon(

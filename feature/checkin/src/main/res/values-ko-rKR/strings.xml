@@ -9,4 +9,5 @@
     <string name="no_venues_found">근처에 장소를 찾을 수 없습니다.</string>
     <string name="sort_by_relevance">관련성순</string>
     <string name="sort_by_distance">거리순</string>
+    <string name="check_in_detail_top_bar_title">%s님의 체크인</string>
 </resources>

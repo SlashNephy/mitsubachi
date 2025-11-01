@@ -85,6 +85,7 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
 
     is RouteKey.CheckInDetail -> {
       CheckInDetailScreenTopBar(
+        checkIn = key.checkIn,
         onBack = {
           backStack.remove(key)
         },
