@@ -25,6 +25,13 @@ dependencyResolutionManagement {
       }
     }
     mavenCentral()
+
+    // https://androidx.dev/
+    // maven(uri("https://androidx.dev/snapshots/builds/[buildId]/artifacts/repository")) {
+    //   content {
+    //     includeGroupByRegex("androidx.*")
+    //   }
+    // }
   }
 }
 
