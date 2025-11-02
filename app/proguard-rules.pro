@@ -23,5 +23,3 @@
 # Firebase Crashlytics のために例外クラスのマッピングを保持する
 # https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=android
 -keep public class * extends java.lang.Throwable
--keep public class * extends java.lang.Exception
--keep public class * extends java.lang.Error
