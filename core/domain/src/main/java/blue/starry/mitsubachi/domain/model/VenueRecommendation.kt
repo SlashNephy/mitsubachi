@@ -8,28 +8,28 @@ import kotlinx.serialization.Serializable
 data class VenueRecommendation(
   val id: String,
   val venue: Venue,
-  val photo: VenueRecommendationPhoto?,
-  val tips: List<VenueRecommendationTip>,
-)
-
-@Immutable
-@Serializable
-data class VenueRecommendationPhoto(
-  val id: String,
-  val prefix: String,
-  val suffix: String,
-  val width: Int,
-  val height: Int,
+  val photo: Photo?,
+  val tips: List<Tip>,
 ) {
-  fun url(size: Int = 300): String {
-    return "${prefix}${size}x${size}${suffix}"
-  }
+  @Immutable
+  @Serializable
+  data class Photo(
+    val id: String,
+    val prefix: String,
+    val suffix: String,
+    val width: Int,
+    val height: Int,
+  )
+
+  @Immutable
+  @Serializable
+  data class Tip(
+    val id: String,
+    val text: String,
+    val userName: String?,
+  )
 }
 
-@Immutable
-@Serializable
-data class VenueRecommendationTip(
-  val id: String,
-  val text: String,
-  val userName: String?,
-)
+fun VenueRecommendation.Photo.url(size: Int = 300): String {
+  return "${prefix}${size}x${size}$suffix"
+}

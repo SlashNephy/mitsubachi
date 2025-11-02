@@ -1,9 +1,6 @@
 package blue.starry.mitsubachi.data.network.model
 
-
 import blue.starry.mitsubachi.domain.model.VenueRecommendation
-import blue.starry.mitsubachi.domain.model.VenueRecommendationPhoto
-import blue.starry.mitsubachi.domain.model.VenueRecommendationTip
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,7 +23,7 @@ data class FoursquareSearchVenueRecommendationsResponse(
     data class CurrentLocation(
       val feature: Feature,
       val what: String,
-      val `where`: String,
+      val where: String,
     ) {
       @Serializable
       data class Feature(
@@ -226,7 +223,7 @@ fun FoursquareSearchVenueRecommendationsResponse.Group.Result.toDomain(): VenueR
     id = id,
     venue = venue.toDomain(),
     photo = photo.let {
-      VenueRecommendationPhoto(
+      VenueRecommendation.Photo(
         id = it.id,
         prefix = it.prefix,
         suffix = it.suffix,
@@ -236,14 +233,12 @@ fun FoursquareSearchVenueRecommendationsResponse.Group.Result.toDomain(): VenueR
     },
     tips = snippets.items.mapNotNull { item ->
       item.detail?.`object`?.let { obj ->
-        if (obj.text != null) {
-          VenueRecommendationTip(
+        obj.text?.let { text ->
+          VenueRecommendation.Tip(
             id = obj.id ?: "",
-            text = obj.text,
+            text = text,
             userName = obj.user?.firstName,
           )
-        } else {
-          null
         }
       }
     },
