@@ -1,4 +1,5 @@
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -26,32 +27,26 @@ android {
   namespace = "blue.starry.mitsubachi"
 
   defaultConfig {
-    versionCode = 1
-    versionName = "1.0"
     applicationId = "blue.starry.mitsubachi"
 
+    versionName = project.findProperty("versionName") as? String ?: "1.0"
+    versionCode = (project.findProperty("versionCode") as? String)?.toIntOrNull() ?: 1
+
     buildConfigField("String", "NAMESPACE", "\"${namespace}\"")
-    buildConfigField(
-      "String",
-      "FOURSQUARE_CLIENT_ID",
-      localProperties.getProperty("foursquare.client_id", "\"dummy\"")
-    )
-    // クライアントシークレットは製品アプリでバンドルすべきではないがストア公開しないので諦める
-    buildConfigField(
-      "String",
-      "FOURSQUARE_CLIENT_SECRET",
-      localProperties.getProperty("foursquare.client_secret", "\"dummy\"")
-    )
-    buildConfigField(
-      "String",
-      "FOURSQUARE_REDIRECT_URI",
-      localProperties.getProperty("foursquare.redirect_uri", "\"dummy\"")
-    )
   }
 
   firebaseAppDistributionDefault {
-    artifactType = "APK"
+    artifactType = "AAB"
     serviceCredentialsFile = "$rootDir/firebase-service-account.json"
+  }
+
+  signingConfigs {
+    create("default") {
+      storeFile = localProperties.getProperty("android_keystore_path")?.let { file(it) }
+      storePassword = localProperties.getProperty("android_keystore_password")
+      keyAlias = localProperties.getProperty("android_keystore_alias")
+      keyPassword = localProperties.getProperty("android_keystore_alias_password")
+    }
   }
 
   buildTypes {
@@ -61,16 +56,33 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
-      firebaseAppDistribution {
-        groups = "tester, tester-release"
+      configure<CrashlyticsExtension> {
+        mappingFileUploadEnabled = true
+        nativeSymbolUploadEnabled = true
       }
     }
     debug {
-      applicationIdSuffix = ".debug"
       isDebuggable = true
+    }
+  }
+
+  productFlavors {
+    flavorDimensions("environment")
+    create("production") {
+      dimension = "environment"
+      signingConfig = signingConfigs.getByName("default")
+    }
+    create("staging") {
+      dimension = "environment"
+      applicationIdSuffix = ".staging"
+      signingConfig = signingConfigs.getByName("default")
       firebaseAppDistribution {
-        groups = "tester, tester-debug"
+        groups = "tester"
       }
+    }
+    create("local") {
+      dimension = "environment"
+      applicationIdSuffix = ".local"
     }
   }
 
@@ -81,7 +93,7 @@ android {
 }
 
 secrets {
-  propertiesFileName = rootProject.relativePath("secrets.properties")
+  propertiesFileName = rootProject.relativePath("local.properties")
   defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
 }
 

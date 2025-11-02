@@ -43,7 +43,7 @@ object KtorClientModule {
 
       install(UserAgent) {
         agent =
-          "Mitsubachi/${config.versionName} (Android; +https://github.com/SlashNephy/mitsubachi)"
+          "Mitsubachi/${config.versionName}-${config.versionCode}-${config.buildType}-${config.flavor} (Android; +https://github.com/SlashNephy/mitsubachi)"
       }
 
       defaultRequest {
