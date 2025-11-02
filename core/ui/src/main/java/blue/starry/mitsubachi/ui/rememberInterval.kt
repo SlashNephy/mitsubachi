@@ -14,8 +14,8 @@ fun <T> rememberInterval(interval: Duration, block: () -> T): T {
   var value by remember { mutableStateOf(block()) }
   LaunchedEffect(block) {
     while (true) {
-      value = block()
       delay(interval)
+      value = block()
     }
   }
 
