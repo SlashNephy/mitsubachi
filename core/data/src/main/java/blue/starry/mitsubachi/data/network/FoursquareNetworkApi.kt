@@ -5,6 +5,7 @@ import blue.starry.mitsubachi.data.network.model.FoursquareApiResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareRecentCheckinsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenueRecommendationsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenuesResponse
+import blue.starry.mitsubachi.data.network.model.FoursquareUserCheckinsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserVenueHistoriesResponse
 import de.jensklingenberg.ktorfit.core.NoDelegation
@@ -87,4 +88,11 @@ interface FoursquareNetworkApi : @NoDelegation NetworkApi {
 
   @POST("/checkins/{checkInId}/like")
   suspend fun likeCheckIn(@Path checkInId: String)
+
+  @GET("/users/{userId}/checkins")
+  suspend fun getUserCheckIns(
+    @Path userId: String,
+    @Query limit: Int?,
+    @Query offset: Int?,
+  ): FoursquareApiResponse<FoursquareUserCheckinsResponse>
 }

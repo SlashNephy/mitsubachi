@@ -46,4 +46,8 @@ sealed interface RouteKey : NavKey {
   @Immutable
   @Serializable
   data object Settings : RouteKey
+
+  @Immutable
+  @Serializable
+  data object UserCheckIns : RouteKey
 }

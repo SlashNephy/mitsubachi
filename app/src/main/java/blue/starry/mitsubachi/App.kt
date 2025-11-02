@@ -28,6 +28,7 @@ import blue.starry.mitsubachi.ui.feature.home.HomeScreen
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenBottomBar
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenFloatingActionButton
 import blue.starry.mitsubachi.ui.feature.home.HomeScreenTopBar
+import blue.starry.mitsubachi.ui.feature.home.UserCheckInsScreen
 import blue.starry.mitsubachi.ui.feature.map.MapScreen
 import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.histories.VenueHistoriesScreen
@@ -129,7 +130,7 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
 @Composable
 private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
   when (backStack.last()) {
-    is RouteKey.Home, is RouteKey.Search, is RouteKey.VenueHistories -> {
+    is RouteKey.Home, is RouteKey.Search, is RouteKey.VenueHistories, is RouteKey.UserCheckIns -> {
       HomeScreenBottomBar(
         onClickHome = {
           backStack.add(RouteKey.Home)
@@ -139,6 +140,9 @@ private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
         },
         onClickMap = {
           backStack.add(RouteKey.VenueHistories)
+        },
+        onClickUserCheckIns = {
+          backStack.add(RouteKey.UserCheckIns)
         },
       )
     }
@@ -251,6 +255,16 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
             onSignOut = {
               backStack.clear()
               backStack.add(RouteKey.Welcome)
+            },
+          )
+        }
+      }
+
+      is RouteKey.UserCheckIns -> {
+        NavEntry(key) {
+          UserCheckInsScreen(
+            onClickCheckIn = { checkIn ->
+              backStack.add(RouteKey.CheckInDetail(checkIn))
             },
           )
         }
