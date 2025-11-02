@@ -22,8 +22,20 @@ class WelcomeScreenViewModel @Inject constructor(
     data class HasAccount(val account: FoursquareAccount) : UiState
   }
 
+  sealed interface OnboardingStep {
+    data object Welcome : OnboardingStep
+    data object Permissions : OnboardingStep
+    data object Login : OnboardingStep
+  }
+
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
   val state = _state.asStateFlow()
+
+  private val _currentStep = MutableStateFlow<OnboardingStep>(OnboardingStep.Welcome)
+  val currentStep = _currentStep.asStateFlow()
+
+  private val _permissionGranted = MutableStateFlow(false)
+  val permissionGranted = _permissionGranted.asStateFlow()
 
   init {
     refresh()
@@ -43,6 +55,33 @@ class WelcomeScreenViewModel @Inject constructor(
       _state.value = UiState.HasAccount(account)
     } else {
       _state.value = UiState.NoAccounts
+    }
+  }
+
+  fun nextStep() {
+    _currentStep.value = when (_currentStep.value) {
+      is OnboardingStep.Welcome -> OnboardingStep.Permissions
+      is OnboardingStep.Permissions -> OnboardingStep.Login
+      is OnboardingStep.Login -> OnboardingStep.Login
+    }
+  }
+
+  fun previousStep() {
+    _currentStep.value = when (_currentStep.value) {
+      is OnboardingStep.Welcome -> OnboardingStep.Welcome
+      is OnboardingStep.Permissions -> OnboardingStep.Welcome
+      is OnboardingStep.Login -> OnboardingStep.Permissions
+    }
+  }
+
+  fun skipToLogin() {
+    _currentStep.value = OnboardingStep.Login
+  }
+
+  fun onPermissionGranted(granted: Boolean) {
+    _permissionGranted.value = granted
+    if (granted) {
+      nextStep()
     }
   }
 

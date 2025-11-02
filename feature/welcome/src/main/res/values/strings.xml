@@ -3,4 +3,23 @@
     <string name="sign_in_button">Sign in with Foursquare</string>
     <string name="login_succeeded">Login succeeded.</string>
     <string name="login_failed">Login failed.</string>
+    
+    <!-- Onboarding strings -->
+    <string name="onboarding_welcome_title">Welcome to Mitsubachi</string>
+    <string name="onboarding_welcome_subtitle">Your companion for discovering and checking in to amazing places</string>
+    <string name="onboarding_welcome_description">Mitsubachi connects with Foursquare to help you discover nearby venues, share your favorite spots, and keep track of your check-in history.</string>
+    
+    <string name="onboarding_permissions_title">Location Access</string>
+    <string name="onboarding_permissions_subtitle">Discover places near you</string>
+    <string name="onboarding_permissions_description">Mitsubachi needs access to your location to find nearby venues and provide personalized recommendations. Your location data is used only to enhance your experience.</string>
+    <string name="onboarding_permissions_grant">Grant Location Access</string>
+    
+    <string name="onboarding_login_title">Connect with Foursquare</string>
+    <string name="onboarding_login_subtitle">Sign in to start exploring</string>
+    <string name="onboarding_login_description">Connect your Foursquare account to check in to venues, discover new places, and track your history.</string>
+    
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_get_started">Get Started</string>
 </resources>

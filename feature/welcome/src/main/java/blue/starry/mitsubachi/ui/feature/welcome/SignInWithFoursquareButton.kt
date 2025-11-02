@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.ui.feature.welcome
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.browser.auth.AuthTabIntent
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +44,7 @@ fun SignInWithFoursquareButton(
           val intent = viewModel.createAuthorizationIntent()
           launcher.launch(intent)
         },
+        modifier = Modifier.fillMaxWidth(),
       ) {
         Text(stringResource(R.string.sign_in_button))
       }
