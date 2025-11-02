@@ -42,3 +42,4 @@ release_notes.txt
 *.hprof
 
 .kotlin/
+app/google-services.json
