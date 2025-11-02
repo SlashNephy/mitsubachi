@@ -26,6 +26,8 @@ class LocationTrackingRepositoryImpl @Inject constructor(
 
   override suspend fun startTracking() {
     LocationTrackingService.startTracking(context)
+    // Note: State is updated optimistically. In production, consider adding
+    // service lifecycle callbacks to reflect actual service state.
     _trackingState.value = _trackingState.value.copy(isTracking = true)
   }
 

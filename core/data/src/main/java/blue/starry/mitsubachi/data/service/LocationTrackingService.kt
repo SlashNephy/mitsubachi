@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
@@ -231,11 +232,11 @@ class LocationTrackingService : Service() {
 
   private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     val earthRadiusKm = 6371.0
-    val dLat = Math.toRadians(lat2 - lat1)
-    val dLon = Math.toRadians(lon2 - lon1)
+    val dLat = (lat2 - lat1) * PI / 180
+    val dLon = (lon2 - lon1) * PI / 180
 
     val a = sin(dLat / 2).pow(2) +
-      cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+      cos(lat1 * PI / 180) * cos(lat2 * PI / 180) *
       sin(dLon / 2).pow(2)
 
     val c = 2 * atan2(sqrt(a), sqrt(1 - a))
