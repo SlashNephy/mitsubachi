@@ -121,7 +121,7 @@ private fun OnboardingFlow(
           else -> 1
         }
         slideInHorizontally { width -> width * direction } + fadeIn() togetherWith
-                slideOutHorizontally { width -> -width * direction } + fadeOut()
+          slideOutHorizontally { width -> -width * direction } + fadeOut()
       },
       label = "onboarding_step_animation",
     ) { step ->

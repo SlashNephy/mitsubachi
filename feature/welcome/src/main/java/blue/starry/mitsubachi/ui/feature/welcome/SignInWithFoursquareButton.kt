@@ -39,7 +39,6 @@ fun SignInWithFoursquareButton(
     }
 
     else -> {
-
       Button(
         onClick = {
           val intent = viewModel.createAuthorizationIntent()
