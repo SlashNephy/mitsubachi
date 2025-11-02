@@ -15,6 +15,7 @@ object AppDiModule {
   fun provideApplicationConfig(): ApplicationConfig {
     return ApplicationConfig(
       versionName = BuildConfig.VERSION_NAME,
+      versionCode = BuildConfig.VERSION_CODE,
       isDebugBuild = BuildConfig.DEBUG,
       foursquareClientId = BuildConfig.FOURSQUARE_CLIENT_ID,
       foursquareClientSecret = BuildConfig.FOURSQUARE_CLIENT_SECRET,
