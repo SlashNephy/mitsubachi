@@ -36,7 +36,7 @@ android {
   }
 
   firebaseAppDistributionDefault {
-    artifactType = "AAB"
+    artifactType = "APK" // Play Store のデベロッパーアカウントを作ったら AAB にする
     serviceCredentialsFile = "$rootDir/firebase-service-account.json"
   }
 
