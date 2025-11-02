@@ -10,12 +10,13 @@ on:
       - completed
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: { }
 
 jobs:
   firebase-app-distribution:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         include:
