@@ -47,6 +47,10 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      configure<CrashlyticsExtension> {
+        mappingFileUploadEnabled = true
+        nativeSymbolUploadEnabled = true
+      }
     }
     debug {
       isDebuggable = true
@@ -57,10 +61,6 @@ android {
     flavorDimensions("environment")
     create("production") {
       dimension = "environment"
-      configure<CrashlyticsExtension> {
-        mappingFileUploadEnabled = true
-        nativeSymbolUploadEnabled = true
-      }
     }
     create("staging") {
       dimension = "environment"
