@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
-object KtorClientModule {
+internal object KtorClientModule {
   @Provides
   @Singleton
   fun provide(config: ApplicationConfig): HttpClient {

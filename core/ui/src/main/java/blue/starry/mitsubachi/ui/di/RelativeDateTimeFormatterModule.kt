@@ -12,7 +12,7 @@ import android.icu.text.RelativeDateTimeFormatter as AndroidRelativeDateTimeForm
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RelativeDateTimeFormatterModule {
+internal abstract class RelativeDateTimeFormatterModule {
   companion object {
     @Provides
     @Singleton

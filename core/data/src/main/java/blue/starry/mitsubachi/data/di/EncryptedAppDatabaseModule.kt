@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class EncryptedAppDatabaseModule {
+internal abstract class EncryptedAppDatabaseModule {
   @Binds
   internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 

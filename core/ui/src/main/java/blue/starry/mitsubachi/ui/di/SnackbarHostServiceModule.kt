@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class SnackbarHostServiceModule {
+internal abstract class SnackbarHostServiceModule {
   @Binds
   @Singleton
   abstract fun bind(impl: SnackbarHostServiceImpl): SnackbarHostService

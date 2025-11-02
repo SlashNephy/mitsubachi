@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class FoursquareAccountRepositoryModule {
+internal abstract class FoursquareAccountRepositoryModule {
   @Binds
   @Singleton
   abstract fun bind(impl: FoursquareAccountRepositoryImpl): FoursquareAccountRepository

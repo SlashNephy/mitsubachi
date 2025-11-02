@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseMasterKeyDataStoreModule {
+internal object DatabaseMasterKeyDataStoreModule {
   @Provides
   @Singleton
   fun provide(@ApplicationContext context: Context): DataStore<DatabaseMasterKey> {
