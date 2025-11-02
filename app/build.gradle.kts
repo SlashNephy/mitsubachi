@@ -1,4 +1,5 @@
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -46,16 +47,31 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
-      firebaseAppDistribution {
-        groups = "tester, tester-release"
-      }
     }
     debug {
-      applicationIdSuffix = ".debug"
       isDebuggable = true
-      firebaseAppDistribution {
-        groups = "tester, tester-debug"
+    }
+  }
+
+  productFlavors {
+    flavorDimensions("environment")
+    create("production") {
+      dimension = "environment"
+      configure<CrashlyticsExtension> {
+        mappingFileUploadEnabled = true
+        nativeSymbolUploadEnabled = true
       }
+    }
+    create("staging") {
+      dimension = "environment"
+      applicationIdSuffix = ".staging"
+      firebaseAppDistribution {
+        groups = "tester"
+      }
+    }
+    create("local") {
+      dimension = "environment"
+      applicationIdSuffix = ".local"
     }
   }
 
