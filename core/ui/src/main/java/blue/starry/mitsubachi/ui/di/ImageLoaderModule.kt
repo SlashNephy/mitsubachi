@@ -19,7 +19,7 @@ import kotlin.time.ExperimentalTime
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ImageLoaderModule {
+internal object ImageLoaderModule {
   @Provides
   @Singleton
   @OptIn(ExperimentalTime::class, ExperimentalCoilApi::class)

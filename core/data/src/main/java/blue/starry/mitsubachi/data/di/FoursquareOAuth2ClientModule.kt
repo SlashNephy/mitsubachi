@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class FoursquareOAuth2ClientModule {
+internal abstract class FoursquareOAuth2ClientModule {
   @Binds
   @Singleton
   abstract fun bind(impl: FoursquareOAuth2ClientImpl): FoursquareOAuth2Client

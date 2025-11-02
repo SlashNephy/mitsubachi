@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class LocationRepositoryModule {
+internal abstract class LocationRepositoryModule {
   companion object {
     @Provides
     @Singleton

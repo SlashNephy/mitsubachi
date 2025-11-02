@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class ErrorFormatterModule {
+internal abstract class ErrorFormatterModule {
   @Binds
   @Singleton
   abstract fun bind(impl: ErrorFormatterImpl): ErrorFormatter
