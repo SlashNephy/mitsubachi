@@ -83,7 +83,11 @@ class UserCheckInsScreenViewModel @Inject constructor(
         if (currentState is UiState.Success) {
           val index = currentState.checkIns.indexOfFirst { it.id == checkInId }
           if (index != -1) {
-            val newCheckIn = currentState.checkIns[index].copy(isLiked = true)
+            val oldCheckIn = currentState.checkIns[index]
+            val newCheckIn = oldCheckIn.copy(
+              isLiked = true,
+              likeCount = oldCheckIn.likeCount + 1,
+            )
             val newCheckIns = currentState.checkIns.toMutableList()
             newCheckIns[index] = newCheckIn
             _state.value = currentState.copy(checkIns = newCheckIns)

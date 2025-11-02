@@ -2,11 +2,13 @@ package blue.starry.mitsubachi.ui.feature.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,11 +18,14 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,67 +43,71 @@ fun UserCheckInRow(
   onClickCheckIn: (checkIn: CheckIn) -> Unit,
   viewModel: UserCheckInsScreenViewModel = hiltViewModel(),
 ) {
-  Row(
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-    modifier = Modifier
-      .fillMaxWidth()
-      .clickable {
-        onClickCheckIn(checkIn)
-      },
+  Column(
+    modifier = Modifier.fillMaxWidth(),
   ) {
-    VenueCategoryIcon(
-      url = checkIn.venue.primaryCategory?.iconUrl,
-      contentDescription = checkIn.venue.primaryCategory?.name,
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
       modifier = Modifier
-        .size(72.dp)
-        .padding(horizontal = 8.dp, vertical = 4.dp),
-    )
-
-    Column(
-      modifier = Modifier
-        .fillMaxHeight()
-        .weight(1f),
+        .fillMaxWidth()
+        .clickable {
+          onClickCheckIn(checkIn)
+        },
     ) {
-      Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
-      Text(
-        "${checkIn.venue.primaryCategory?.name}・${
-          VenueLocationFormatter.formatAddress(
-            checkIn.venue.location,
-            includeCrossStreet = false,
-          )
-        }",
-        color = Color.Gray,
+      VenueCategoryIcon(
+        url = checkIn.venue.primaryCategory?.iconUrl,
+        contentDescription = checkIn.venue.primaryCategory?.name,
+        modifier = Modifier
+          .size(72.dp)
+          .padding(horizontal = 8.dp, vertical = 4.dp),
       )
 
-      val datetime = rememberInterval(10.seconds) {
-        viewModel.formatPastDateTime(checkIn.timestamp)
-      }
-      Text(datetime)
+      Column(
+        modifier = Modifier
+          .fillMaxHeight()
+          .weight(1f),
+      ) {
+        Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
+        Text(
+          "${checkIn.venue.primaryCategory?.name}・${
+            VenueLocationFormatter.formatAddress(
+              checkIn.venue.location,
+              includeCrossStreet = false,
+            )
+          }",
+          color = Color.Gray,
+        )
 
-      checkIn.message?.also {
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(it)
+        val datetime = rememberInterval(10.seconds) {
+          viewModel.formatPastDateTime(checkIn.timestamp)
+        }
+        Text(datetime)
+
+        checkIn.message?.also {
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(it)
+        }
       }
+
+      LikeIcon(
+        isLiked = checkIn.isLiked,
+        likeCount = checkIn.likeCount,
+        onClick = {
+          if (checkIn.isLiked) {
+            viewModel.unlikeCheckIn(checkIn.id)
+          } else {
+            viewModel.likeCheckIn(checkIn.id)
+          }
+        },
+        modifier = Modifier
+          .size(48.dp)
+          .padding(end = 16.dp),
+      )
     }
 
-    LikeIcon(
-      isLiked = checkIn.isLiked,
-      likeCount = checkIn.likeCount,
-      onClick = {
-        if (checkIn.isLiked) {
-          viewModel.unlikeCheckIn(checkIn.id)
-        } else {
-          viewModel.likeCheckIn(checkIn.id)
-        }
-      },
-      modifier = Modifier
-        .size(48.dp)
-        .padding(end = 16.dp),
-    )
-  }
-
-  if (checkIn.photos.isNotEmpty()) {
-    Photo(url = checkIn.photos.first().url)
+    if (checkIn.photos.isNotEmpty()) {
+      PhotoView(url = checkIn.photos.first().url)
+    }
   }
 }
 
@@ -113,6 +122,25 @@ private fun VenueCategoryIcon(
     contentDescription = contentDescription,
     modifier = modifier.aspectRatio(1f),
   )
+}
+
+@Composable
+private fun PhotoView(url: String) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp),
+    contentAlignment = Alignment.Center,
+  ) {
+    AsyncImage(
+      model = url,
+      contentDescription = null,
+      modifier = Modifier
+        .fillMaxSize()
+        .clip(ShapeDefaults.Medium),
+      contentScale = ContentScale.FillWidth,
+    )
+  }
 }
 
 @Composable
