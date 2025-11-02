@@ -47,7 +47,7 @@ jobs:
       - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      - run: ./gradlew testDebug
+      - run: ./gradlew testLocalDebug
 
   instrumented-test:
     runs-on: ubuntu-latest
@@ -109,7 +109,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew :app:connectedDebugAndroidTest # TODO: 他のモジュールでも実行する
+          script: ./gradlew :app:connectedLocalDebugAndroidTest # TODO: 他のモジュールでも実行する
 
   android-lint:
     runs-on: ubuntu-latest
@@ -130,7 +130,7 @@ jobs:
       - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      - run: ./gradlew lintDebug
+      - run: ./gradlew lintLocalDebug
       - name: Merge SARIF files
         if: always()
         run: find . -type f -name lint-results-debug.sarif -exec npx @microsoft/sarif-multitool merge --merge-runs {} +
@@ -223,7 +223,7 @@ jobs:
       - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      - run: ./gradlew bundleLocalDebug
+      - run: ./gradlew bundleLocalRelease
       - uses: github/codeql-action/analyze@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         continue-on-error: true # コードが変更されなかった場合に検出に失敗するので無視
         with:
