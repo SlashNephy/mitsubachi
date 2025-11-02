@@ -26,9 +26,10 @@ android {
   namespace = "blue.starry.mitsubachi"
 
   defaultConfig {
-    versionCode = 1
-    versionName = "1.0"
     applicationId = "blue.starry.mitsubachi"
+
+    versionName = project.findProperty("versionName") as? String ?: "1.0"
+    versionCode = (project.findProperty("versionCode") as? String)?.toIntOrNull() ?: 1
 
     buildConfigField("String", "NAMESPACE", "\"${namespace}\"")
     buildConfigField(

@@ -42,10 +42,7 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
       - run: git log -1 --pretty=short > release_notes.txt
-      - run: ./gradlew assemble${{ matrix.variant }} appDistributionUpload${{ matrix.variant }} --releaseNotesFile "$RELEASE_NOTES_FILE"
+      - run: ./gradlew assemble${{ matrix.variant }} appDistributionUpload${{ matrix.variant }} --releaseNotesFile "$RELEASE_NOTES_FILE" -PversionCode="$VERSION_CODE"
         env:
           RELEASE_NOTES_FILE: ${{ github.workspace }}/release_notes.txt
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: ${{ matrix.name }}-apk
-          path: app/build/outputs/apk/${{ matrix.name }}/*.apk
+          VERSION_CODE: ${{ github.run_number }}
