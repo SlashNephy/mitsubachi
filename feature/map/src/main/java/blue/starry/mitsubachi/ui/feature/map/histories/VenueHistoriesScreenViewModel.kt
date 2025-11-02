@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.FetchUserVenueHistoriesUseCase
+import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VenueHistoriesScreenViewModel @Inject constructor(
   private val fetchUserVenueHistoriesUseCase: FetchUserVenueHistoriesUseCase,
+  private val errorFormatter: ErrorFormatter,
 ) : ViewModel() {
   sealed interface UiState {
     data object Loading : UiState
@@ -54,7 +56,7 @@ class VenueHistoriesScreenViewModel @Inject constructor(
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
         _state.value = currentState.copy(isRefreshing = false)
       } else {
-        _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
+        _state.value = UiState.Error(errorFormatter.format(e))
       }
     }
   }

@@ -7,6 +7,7 @@ import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
 import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
@@ -25,6 +26,7 @@ class HomeScreenViewModel @Inject constructor(
   private val likeCheckInUseCase: LikeCheckInUseCase,
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
+  private val errorFormatter: ErrorFormatter,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
@@ -65,7 +67,7 @@ class HomeScreenViewModel @Inject constructor(
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
         _state.value = currentState.copy(isRefreshing = false)
       } else {
-        _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
+        _state.value = UiState.Error(errorFormatter.format(e))
       }
     }
   }
@@ -91,7 +93,9 @@ class HomeScreenViewModel @Inject constructor(
           }
         }
       }.onFailure { e ->
-        snackbarHostService.enqueue("いいねに失敗しました: ${e.localizedMessage}")
+        snackbarErrorHandler.handle(e) {
+          "いいねに失敗しました: $it"
+        }
       }
     }
   }

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
+import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,6 +36,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val searchNearVenuesUseCase: SearchNearVenuesUseCase,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
+  private val errorFormatter: ErrorFormatter,
 ) : ViewModel(), AccountEventHandler {
   @Immutable
   sealed interface UiState {
@@ -104,7 +106,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
           )
         }.onFailure { e ->
           snackbarErrorHandler.handle(e)
-          _state.value = UiState.Error(e.localizedMessage ?: "unknown error")
+          _state.value = UiState.Error(errorFormatter.format(e))
         }
       }
     } catch (e: TimeoutCancellationException) {
