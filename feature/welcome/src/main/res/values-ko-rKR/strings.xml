@@ -3,23 +3,22 @@
     <string name="sign_in_button">Foursquare로 로그인</string>
     <string name="login_succeeded">로그인했습니다.</string>
     <string name="login_failed">로그인에 실패했습니다.</string>
-    
+
     <!-- Onboarding strings -->
     <string name="onboarding_welcome_title">Mitsubachi에 오신 것을 환영합니다</string>
     <string name="onboarding_welcome_subtitle">멋진 장소를 발견하고 체크인하세요</string>
     <string name="onboarding_welcome_description">Mitsubachi는 Foursquare와 연동하여 근처의 장소를 발견하고, 좋아하는 장소를 공유하고, 체크인 기록을 관리할 수 있는 앱입니다.</string>
-    
+
     <string name="onboarding_permissions_title">위치 액세스</string>
     <string name="onboarding_permissions_subtitle">주변 장소를 찾으세요</string>
     <string name="onboarding_permissions_description">Mitsubachi는 위치 정보를 사용하여 주변 장소를 찾고 맞춤형 추천을 제공합니다. 위치 정보는 경험 향상을 위해서만 사용됩니다.</string>
     <string name="onboarding_permissions_grant">위치 액세스 허용</string>
-    
+
     <string name="onboarding_login_title">Foursquare와 연동</string>
     <string name="onboarding_login_subtitle">로그인하고 탐색을 시작하세요</string>
     <string name="onboarding_login_description">Foursquare 계정을 연동하여 장소에 체크인하고, 새로운 곳을 발견하고, 기록을 추적하세요.</string>
-    
+
     <string name="onboarding_next">다음</string>
     <string name="onboarding_skip">건너뛰기</string>
     <string name="onboarding_back">뒤로</string>
-    <string name="onboarding_get_started">시작하기</string>
 </resources>
