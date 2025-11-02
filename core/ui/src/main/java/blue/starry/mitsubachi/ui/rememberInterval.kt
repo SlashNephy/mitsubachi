@@ -10,12 +10,12 @@ import kotlinx.coroutines.delay
 import kotlin.time.Duration
 
 @Composable
-fun <T> rememberInterval(internal: Duration, block: () -> T): T {
+fun <T> rememberInterval(interval: Duration, block: () -> T): T {
   var value by remember { mutableStateOf(block()) }
   LaunchedEffect(block) {
     while (true) {
       value = block()
-      delay(internal)
+      delay(interval)
     }
   }
 
