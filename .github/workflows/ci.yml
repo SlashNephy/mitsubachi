@@ -133,7 +133,7 @@ jobs:
       - run: ./gradlew lintLocalDebug
       - name: Merge SARIF files
         if: always()
-        run: find . -type f -name lint-results-debug.sarif -exec npx @microsoft/sarif-multitool merge --merge-runs {} +
+        run: find . -type f -name lint-results-localDebug.sarif -exec npx @microsoft/sarif-multitool merge --merge-runs {} +
       - uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         if: always()
         with:
