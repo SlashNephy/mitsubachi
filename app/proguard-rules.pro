@@ -14,8 +14,14 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Firebase Crashlytics のために例外クラスのマッピングを保持する
+# https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=android
+-keep public class * extends java.lang.Throwable
+-keep public class * extends java.lang.Exception
+-keep public class * extends java.lang.Error
