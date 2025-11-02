@@ -1,10 +1,8 @@
 package blue.starry.mitsubachi.data.service
 
-import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -37,15 +35,20 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
+@Suppress("TooManyFunctions")
 class LocationTrackingService : Service() {
+  @Suppress("LateinitUsage")
   @Inject
   lateinit var fusedLocationClient: FusedLocationProviderClient
 
+  @Suppress("LateinitUsage")
   @Inject
   lateinit var foursquareApiClient: FoursquareApiClient
 
   private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
   private val locationExecutor = Executors.newSingleThreadExecutor()
+
+  @Suppress("LateinitUsage")
   private lateinit var notificationManager: NotificationManager
 
   private var currentLocation: DeviceLocation? = null
@@ -88,7 +91,7 @@ class LocationTrackingService : Service() {
     val serviceChannel = NotificationChannel(
       NOTIFICATION_CHANNEL_SERVICE,
       "Location Tracking Service",
-      NotificationManager.IMPORTANCE_LOW
+      NotificationManager.IMPORTANCE_LOW,
     ).apply {
       description = "Ongoing location tracking notification"
       setShowBadge(false)
@@ -97,7 +100,7 @@ class LocationTrackingService : Service() {
     val checkInChannel = NotificationChannel(
       NOTIFICATION_CHANNEL_CHECKIN,
       "Check-in Reminders",
-      NotificationManager.IMPORTANCE_HIGH
+      NotificationManager.IMPORTANCE_HIGH,
     ).apply {
       description = "Notifications to prompt venue check-ins"
       setShowBadge(true)
@@ -109,12 +112,12 @@ class LocationTrackingService : Service() {
 
   private fun startLocationTracking() {
     val notification = createServiceNotification()
-    
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       startForeground(
         NOTIFICATION_ID_SERVICE,
         notification,
-        ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION,
       )
     } else {
       startForeground(NOTIFICATION_ID_SERVICE, notification)
@@ -123,7 +126,7 @@ class LocationTrackingService : Service() {
     try {
       val locationRequest = LocationRequest.Builder(
         Priority.PRIORITY_BALANCED_POWER_ACCURACY,
-        LOCATION_UPDATE_INTERVAL_MS
+        LOCATION_UPDATE_INTERVAL_MS,
       ).apply {
         setMinUpdateIntervalMillis(LOCATION_UPDATE_FASTEST_INTERVAL_MS)
         setWaitForAccurateLocation(false)
@@ -132,7 +135,7 @@ class LocationTrackingService : Service() {
       fusedLocationClient.requestLocationUpdates(
         locationRequest,
         locationExecutor,
-        locationCallback
+        locationCallback,
       )
 
       Timber.d("Location tracking started")
@@ -170,8 +173,10 @@ class LocationTrackingService : Service() {
     }
 
     val distanceMeters = calculateDistance(
-      previousLocation.latitude, previousLocation.longitude,
-      newLocation.latitude, newLocation.longitude
+      previousLocation.latitude,
+      previousLocation.longitude,
+      newLocation.latitude,
+      newLocation.longitude,
     )
 
     if (distanceMeters < STAY_RADIUS_METERS) {
@@ -180,7 +185,7 @@ class LocationTrackingService : Service() {
 
       if (stayDuration >= STAY_DURATION_THRESHOLD_MS) {
         val timeSinceLastNotification = System.currentTimeMillis() - lastNotificationTime
-        
+
         if (timeSinceLastNotification >= NOTIFICATION_COOLDOWN_MS) {
           // User has been at this location long enough, check for nearby venues
           checkNearbyVenuesAndNotify(newLocation)
@@ -195,6 +200,7 @@ class LocationTrackingService : Service() {
 
   private fun checkNearbyVenuesAndNotify(location: DeviceLocation) {
     serviceScope.launch {
+      @Suppress("TooGenericExceptionCaught")
       try {
         val coordinates = Coordinates(location.latitude, location.longitude)
         val venues = foursquareApiClient.searchNearVenues(coordinates, query = null)

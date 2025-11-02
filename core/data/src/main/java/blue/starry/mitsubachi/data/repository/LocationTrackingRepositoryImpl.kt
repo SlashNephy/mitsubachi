@@ -19,8 +19,8 @@ class LocationTrackingRepositoryImpl @Inject constructor(
     LocationTrackingState(
       isTracking = false,
       currentLocation = null,
-      stayDurationMillis = 0L
-    )
+      stayDurationMillis = 0L,
+    ),
   )
   override val trackingState: StateFlow<LocationTrackingState> = _trackingState.asStateFlow()
 
@@ -34,7 +34,7 @@ class LocationTrackingRepositoryImpl @Inject constructor(
     _trackingState.value = LocationTrackingState(
       isTracking = false,
       currentLocation = null,
-      stayDurationMillis = 0L
+      stayDurationMillis = 0L,
     )
   }
 }
