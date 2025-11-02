@@ -36,7 +36,7 @@ android {
   }
 
   firebaseAppDistributionDefault {
-    artifactType = "APK"
+    artifactType = "AAB"
     serviceCredentialsFile = "$rootDir/firebase-service-account.json"
   }
 
