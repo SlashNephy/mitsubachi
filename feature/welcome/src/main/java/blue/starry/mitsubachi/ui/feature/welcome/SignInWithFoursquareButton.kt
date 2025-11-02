@@ -2,7 +2,6 @@ package blue.starry.mitsubachi.ui.feature.welcome
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.browser.auth.AuthTabIntent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -41,14 +40,15 @@ fun SignInWithFoursquareButton(
 
     else -> {
 
-  Button(
-    onClick = {
-      val intent = viewModel.createAuthorizationIntent()
-      launcher.launch(intent)
-    },
-    modifier = Modifier.fillMaxWidth(),
-  ) {
-    Text(stringResource(R.string.sign_in_button))}
+      Button(
+        onClick = {
+          val intent = viewModel.createAuthorizationIntent()
+          launcher.launch(intent)
+        },
+        modifier = Modifier.fillMaxWidth(),
+      ) {
+        Text(stringResource(R.string.sign_in_button))
+      }
     }
   }
 }
