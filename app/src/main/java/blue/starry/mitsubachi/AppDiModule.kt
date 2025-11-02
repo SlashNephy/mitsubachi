@@ -17,9 +17,9 @@ object AppDiModule {
       versionName = BuildConfig.VERSION_NAME,
       versionCode = BuildConfig.VERSION_CODE,
       isDebugBuild = BuildConfig.DEBUG,
-      foursquareClientId = BuildConfig.FOURSQUARE_CLIENT_ID,
-      foursquareClientSecret = BuildConfig.FOURSQUARE_CLIENT_SECRET,
-      foursquareRedirectUri = BuildConfig.FOURSQUARE_REDIRECT_URI,
+      foursquareClientId = BuildConfig.foursquare_client_id,
+      foursquareClientSecret = BuildConfig.foursquare_client_secret,
+      foursquareRedirectUri = BuildConfig.foursquare_redirect_uri,
     )
   }
 }

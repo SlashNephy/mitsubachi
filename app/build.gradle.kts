@@ -32,22 +32,6 @@ android {
     versionCode = (project.findProperty("versionCode") as? String)?.toIntOrNull() ?: 1
 
     buildConfigField("String", "NAMESPACE", "\"${namespace}\"")
-    buildConfigField(
-      "String",
-      "FOURSQUARE_CLIENT_ID",
-      localProperties.getProperty("foursquare.client_id", "\"dummy\"")
-    )
-    // クライアントシークレットは製品アプリでバンドルすべきではないがストア公開しないので諦める
-    buildConfigField(
-      "String",
-      "FOURSQUARE_CLIENT_SECRET",
-      localProperties.getProperty("foursquare.client_secret", "\"dummy\"")
-    )
-    buildConfigField(
-      "String",
-      "FOURSQUARE_REDIRECT_URI",
-      localProperties.getProperty("foursquare.redirect_uri", "\"dummy\"")
-    )
   }
 
   firebaseAppDistributionDefault {
@@ -82,7 +66,7 @@ android {
 }
 
 secrets {
-  propertiesFileName = rootProject.relativePath("secrets.properties")
+  propertiesFileName = rootProject.relativePath("local.properties")
   defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
 }
 
