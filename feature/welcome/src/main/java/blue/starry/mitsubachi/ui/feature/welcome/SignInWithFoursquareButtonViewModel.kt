@@ -32,7 +32,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
     data object Pending : UiState
     data class Authorizing(val request: OAuth2AuthorizationRequest) : UiState
     data class Authorized(val account: FoursquareAccount) : UiState
-    data class Failed(val exception: Throwable) : UiState
+    data object Failed : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Pending)
@@ -70,7 +70,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
         _state.value = UiState.Authorized(it)
         snackbarHostService.enqueue(context.getString(R.string.login_succeeded))
       }.onFailure { e ->
-        _state.value = UiState.Failed(e)
+        _state.value = UiState.Failed
         snackbarHostService.enqueue(context.getString(R.string.login_failed))
       }
     }

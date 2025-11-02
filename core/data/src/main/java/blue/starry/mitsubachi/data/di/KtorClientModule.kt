@@ -35,9 +35,10 @@ object KtorClientModule {
       expectSuccess = true
 
       install(HttpTimeout) {
-        requestTimeoutMillis = 5.seconds.inWholeMilliseconds
-        connectTimeoutMillis = 5.seconds.inWholeMilliseconds
-        socketTimeoutMillis = 5.seconds.inWholeMilliseconds
+        val timeout = 10.seconds.inWholeMilliseconds
+        requestTimeoutMillis = timeout
+        connectTimeoutMillis = timeout
+        socketTimeoutMillis = timeout
       }
 
       install(UserAgent) {

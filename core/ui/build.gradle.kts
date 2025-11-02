@@ -37,12 +37,15 @@ dependencies {
   api(libs.androidx.lifecycle.viewmodel.navigation3)
 
   api(libs.androidx.browser)
+  api(libs.accompanist.permissions)
 
   // Coil
   api(libs.coil.compose)
   implementation(libs.coil.network.ktor3)
   implementation(libs.coil.network.cache.control)
   testImplementation(libs.coil.test)
+
+  api(libs.advanced.bottomsheet.material3)
 
   testImplementation(projects.core.testing)
   androidTestImplementation(projects.core.uiTesting)

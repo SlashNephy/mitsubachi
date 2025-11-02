@@ -7,6 +7,8 @@ config:
 comments:
   AbsentOrWrongFileLicense:
     active: false
+  EndOfSentenceFormat:
+    active: false
   UndocumentedPublicClass:
     active: false
   UndocumentedPublicFunction:

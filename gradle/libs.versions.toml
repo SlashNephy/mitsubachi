@@ -7,10 +7,12 @@ androidx-activity = "1.12.0-beta01"
 androidx-browser = "1.10.0-alpha02"
 androidx-compose-bom = "2025.10.01"
 androidx-compose-material3 = "1.5.0-alpha07"
+advanced-bottomsheet-material3 = "0.1.0"
 androidx-navigation3 = "1.0.0-beta01"
 androidx-lifecycle = "2.10.0-beta01"
 play-services-location = "21.3.0"
 kotlinx-coroutines-play-services = "1.10.2"
+accompanist-permissions = "0.37.3"
 ktor = "3.3.1"
 ktorfit = "2.6.4"
 slf4j-android = "1.7.36"
@@ -66,6 +68,8 @@ androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 
+advanced-bottomsheet-material3 = { module = "io.morfly.compose:advanced-bottomsheet-material3", version.ref = "advanced-bottomsheet-material3" }
+
 # androidx.navigation3
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidx-navigation3" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidx-navigation3" }
@@ -115,6 +119,7 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 cache4k = { module = "io.github.reactivecircus.cache4k:cache4k", version.ref = "cache4k" }
 apache-commons-lang = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons-lang" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }

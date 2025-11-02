@@ -1,6 +1,8 @@
 package blue.starry.mitsubachi
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -29,9 +31,11 @@ import blue.starry.mitsubachi.ui.feature.home.HomeScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.MapScreen
 import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.histories.VenueHistoriesScreen
+import blue.starry.mitsubachi.ui.feature.map.search.SearchMapScreen
 import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun App(viewModel: AppViewModel = hiltViewModel()) {
   val backStack = rememberNavBackStack(RouteKey.Welcome)
   val snackbarHostState = remember { SnackbarHostState() }
@@ -51,9 +55,27 @@ fun App(viewModel: AppViewModel = hiltViewModel()) {
   ) { padding ->
     NavDisplay(
       backStack = backStack,
-      modifier = Modifier.padding(padding),
+      modifier = Modifier.padding(scaffoldPadding(padding, backStack)),
       entryProvider = AppEntryProvider(backStack = backStack),
     )
+  }
+}
+
+private fun scaffoldPadding(
+  padding: PaddingValues,
+  backStack: NavBackStack<NavKey>,
+): PaddingValues {
+  return when (backStack.last()) {
+    is RouteKey.Search -> {
+      // ステータスバー (top) の padding を除外する
+      PaddingValues(
+        bottom = padding.calculateBottomPadding(),
+      )
+    }
+
+    else -> {
+      padding
+    }
   }
 }
 
@@ -107,12 +129,14 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
 @Composable
 private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
   when (backStack.last()) {
-    is RouteKey.Home, is RouteKey.VenueHistories -> {
+    is RouteKey.Home, is RouteKey.Search, is RouteKey.VenueHistories -> {
       HomeScreenBottomBar(
         onClickHome = {
           backStack.add(RouteKey.Home)
         },
-        onClickSearch = {},
+        onClickSearch = {
+          backStack.add(RouteKey.Search)
+        },
         onClickMap = {
           backStack.add(RouteKey.VenueHistories)
         },
@@ -212,6 +236,12 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
       is RouteKey.VenueHistories -> {
         NavEntry(key) {
           VenueHistoriesScreen()
+        }
+      }
+
+      is RouteKey.Search -> {
+        NavEntry(key) {
+          SearchMapScreen()
         }
       }
 

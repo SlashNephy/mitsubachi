@@ -12,7 +12,7 @@ internal class DatabaseFoursquareBearerTokenSource @Inject constructor(
 ) : FoursquareBearerTokenSource {
   override suspend fun load(): String {
     // TODO: 複数アカウント対応
-    val account = repository.list().firstOrNull() ?: throw UnauthorizedError
+    val account = repository.list().firstOrNull() ?: throw UnauthorizedError()
 
     return account.accessToken
   }

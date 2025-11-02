@@ -1,6 +1,9 @@
 package blue.starry.mitsubachi.domain.error
 
-class UnauthorizedError : AppError() {
+/**
+ * AppError のうち、再試行が可能なエラーであることを表す型。
+ */
+sealed class RetryableAppError : AppError() {
   companion object {
     @JvmField
     @Suppress("MayBeConstant")
