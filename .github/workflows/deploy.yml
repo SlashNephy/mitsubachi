@@ -10,19 +10,17 @@ on:
       - completed
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: { }
 
 jobs:
   firebase-app-distribution:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
-        include:
-          - name: release
-            variant: Release
-          - name: debug
-            variant: Debug
+        variant:
+          - StagingRelease
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
@@ -30,6 +28,8 @@ jobs:
           java-version-file: .java-version
           distribution: jetbrains
           cache: gradle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
       - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
       - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
@@ -38,11 +38,31 @@ jobs:
       - run: echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > firebase-service-account.json
         env:
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+      - run: echo "$ANDROID_KEYSTORE" | base64 --decode > local.jks
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+      - run: |
+          cat >> local.properties << EOF
+          foursquare_client_id=$FOURSQUARE_CLIENT_ID
+          foursquare_client_secret=$FOURSQUARE_CLIENT_SECRET
+          foursquare_redirect_uri=$FOURSQUARE_REDIRECT_URI
+          google_maps_api_key=$GOOGLE_MAPS_API_KEY
+          android_keystore_path=$ANDROID_KEYSTORE_PATH
+          android_keystore_password=$ANDROID_KEYSTORE_PASSWORD
+          android_keystore_alias=$ANDROID_KEYSTORE_ALIAS
+          android_keystore_alias_password=$ANDROID_KEYSTORE_ALIAS_PASSWORD
+          EOF
+        env:
+          FOURSQUARE_CLIENT_ID: ${{ secrets.FOURSQUARE_CLIENT_ID }}
+          FOURSQUARE_CLIENT_SECRET: ${{ secrets.FOURSQUARE_CLIENT_SECRET }}
+          FOURSQUARE_REDIRECT_URI: ${{ secrets.FOURSQUARE_REDIRECT_URI }}
+          GOOGLE_MAPS_API_KEY: ${{ secrets.STAGING_GOOGLE_MAPS_API_KEY }}
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/local.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          ANDROID_KEYSTORE_ALIAS_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }}
       - run: git log -1 --pretty=short > release_notes.txt
-      - run: ./gradlew assemble${{ matrix.variant }} appDistributionUpload${{ matrix.variant }} --releaseNotesFile "$RELEASE_NOTES_FILE"
+      - run: ./gradlew assemble${{ matrix.variant }} appDistributionUpload${{ matrix.variant }} --releaseNotesFile "$RELEASE_NOTES_FILE" -PversionCode="$VERSION_CODE"
         env:
           RELEASE_NOTES_FILE: ${{ github.workspace }}/release_notes.txt
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: ${{ matrix.name }}-apk
-          path: app/build/outputs/apk/${{ matrix.name }}/*.apk
+          VERSION_CODE: ${{ github.run_number }}

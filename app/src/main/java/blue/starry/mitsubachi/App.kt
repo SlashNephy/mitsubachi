@@ -1,6 +1,8 @@
 package blue.starry.mitsubachi
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -16,6 +18,8 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import blue.starry.mitsubachi.feature.settings.SettingsScreen
+import blue.starry.mitsubachi.ui.feature.checkin.CheckInDetailScreen
+import blue.starry.mitsubachi.ui.feature.checkin.CheckInDetailScreenTopBar
 import blue.starry.mitsubachi.ui.feature.checkin.CreateCheckInScreen
 import blue.starry.mitsubachi.ui.feature.checkin.CreateCheckInScreenTopBar
 import blue.starry.mitsubachi.ui.feature.checkin.NearbyVenuesScreen
@@ -27,9 +31,11 @@ import blue.starry.mitsubachi.ui.feature.home.HomeScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.MapScreen
 import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.histories.VenueHistoriesScreen
+import blue.starry.mitsubachi.ui.feature.map.search.SearchMapScreen
 import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun App(viewModel: AppViewModel = hiltViewModel()) {
   val backStack = rememberNavBackStack(RouteKey.Welcome)
   val snackbarHostState = remember { SnackbarHostState() }
@@ -49,9 +55,27 @@ fun App(viewModel: AppViewModel = hiltViewModel()) {
   ) { padding ->
     NavDisplay(
       backStack = backStack,
-      modifier = Modifier.padding(padding),
+      modifier = Modifier.padding(scaffoldPadding(padding, backStack)),
       entryProvider = AppEntryProvider(backStack = backStack),
     )
+  }
+}
+
+private fun scaffoldPadding(
+  padding: PaddingValues,
+  backStack: NavBackStack<NavKey>,
+): PaddingValues {
+  return when (backStack.last()) {
+    is RouteKey.Search -> {
+      // ステータスバー (top) の padding を除外する
+      PaddingValues(
+        bottom = padding.calculateBottomPadding(),
+      )
+    }
+
+    else -> {
+      padding
+    }
   }
 }
 
@@ -81,6 +105,15 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
       )
     }
 
+    is RouteKey.CheckInDetail -> {
+      CheckInDetailScreenTopBar(
+        checkIn = key.checkIn,
+        onBack = {
+          backStack.remove(key)
+        },
+      )
+    }
+
     is RouteKey.Map -> {
       MapScreenTopBar(
         onBack = {
@@ -96,12 +129,14 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
 @Composable
 private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
   when (backStack.last()) {
-    is RouteKey.Home, is RouteKey.VenueHistories -> {
+    is RouteKey.Home, is RouteKey.Search, is RouteKey.VenueHistories -> {
       HomeScreenBottomBar(
         onClickHome = {
           backStack.add(RouteKey.Home)
         },
-        onClickSearch = {},
+        onClickSearch = {
+          backStack.add(RouteKey.Search)
+        },
         onClickMap = {
           backStack.add(RouteKey.VenueHistories)
         },
@@ -134,7 +169,6 @@ private fun AppFloatingActionButtonPosition(): FabPosition {
 
 @Suppress("FunctionName", "LongMethod")
 private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> {
-  // TODO: Navigation 3 では各エントリーのことを Scene と呼んでいそう
   return { key ->
     when (key) {
       is RouteKey.Welcome -> {
@@ -151,8 +185,8 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
       is RouteKey.Home -> {
         NavEntry(key) {
           HomeScreen(
-            onClickVenue = { latitude, longitude, title ->
-              backStack.add(RouteKey.Map(latitude, longitude, title))
+            onClickCheckIn = { checkIn ->
+              backStack.add(RouteKey.CheckInDetail(checkIn))
             },
           )
         }
@@ -183,6 +217,12 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
         }
       }
 
+      is RouteKey.CheckInDetail -> {
+        NavEntry(key) {
+          CheckInDetailScreen(key.checkIn)
+        }
+      }
+
       is RouteKey.Map -> {
         NavEntry(key) {
           MapScreen(
@@ -196,6 +236,12 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
       is RouteKey.VenueHistories -> {
         NavEntry(key) {
           VenueHistoriesScreen()
+        }
+      }
+
+      is RouteKey.Search -> {
+        NavEntry(key) {
+          SearchMapScreen()
         }
       }
 

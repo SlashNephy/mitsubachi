@@ -22,11 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,8 +51,8 @@ import blue.starry.mitsubachi.domain.model.VenueCategory
 import blue.starry.mitsubachi.domain.model.VenueLocation
 import blue.starry.mitsubachi.domain.model.primaryCategory
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.rememberInterval
 import coil3.compose.AsyncImage
-import kotlinx.coroutines.delay
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
@@ -65,12 +61,16 @@ import kotlin.time.Duration.Companion.seconds
 @Suppress("LongMethod") // TODO: リファクタリング
 fun CheckInRow(
   checkIn: CheckIn,
-  onClickVenue: (latitude: Double, longitude: Double, title: String?) -> Unit,
+  onClickCheckIn: (checkIn: CheckIn) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   Row(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth()
+      .clickable {
+        onClickCheckIn(checkIn)
+      },
   ) {
     UserIcon(
       url = checkIn.user.iconUrl,
@@ -83,14 +83,7 @@ fun CheckInRow(
     Column(
       modifier = Modifier
         .fillMaxHeight()
-        .weight(1f)
-        .clickable {
-          onClickVenue(
-            checkIn.venue.location.latitude,
-            checkIn.venue.location.longitude,
-            checkIn.venue.name,
-          )
-        },
+        .weight(1f),
     ) {
       Text(checkIn.user.displayName, color = Color.Gray)
       Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
@@ -104,17 +97,10 @@ fun CheckInRow(
         color = Color.Gray,
       )
 
-      // なんかいまいち
-      var datetime by remember { mutableStateOf("") }
-      LaunchedEffect(checkIn.timestamp) {
-        while (true) {
-          datetime = viewModel.formatPastDateTime(checkIn.timestamp)
-          delay(10.seconds)
-        }
+      val datetime = rememberInterval(10.seconds) {
+        viewModel.formatPastDateTime(checkIn.timestamp)
       }
-      if (datetime.isNotEmpty()) {
-        Text(datetime)
-      }
+      Text(datetime)
 
       checkIn.message?.also {
         Spacer(modifier = Modifier.height(8.dp))
@@ -225,7 +211,7 @@ private fun CheckInRowPreview() {
       source = Source(name = "Swarm for iOS", url = "https://www.swarmapp.com"),
       isMeyer = true,
     ),
-    onClickVenue = { _, _, _ -> },
+    onClickCheckIn = {},
   )
 }
 

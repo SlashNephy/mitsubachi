@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -22,6 +23,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,9 +34,16 @@ object KtorClientModule {
     return HttpClient(OkHttp) {
       expectSuccess = true
 
+      install(HttpTimeout) {
+        val timeout = 10.seconds.inWholeMilliseconds
+        requestTimeoutMillis = timeout
+        connectTimeoutMillis = timeout
+        socketTimeoutMillis = timeout
+      }
+
       install(UserAgent) {
         agent =
-          "Mitsubachi/${config.versionName} (Android; +https://github.com/SlashNephy/mitsubachi)"
+          "Mitsubachi/${config.versionName}-${config.versionCode}-${config.buildType}-${config.flavor} (Android; +https://github.com/SlashNephy/mitsubachi)"
       }
 
       defaultRequest {

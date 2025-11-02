@@ -6,4 +6,8 @@
     <string name="check_in_button">チェックイン</string>
     <string name="like_button">いいね</string>
     <string name="location_permission_missing">位置情報へのアクセスが許可されていません。</string>
+    <string name="no_venues_found">付近のスポットが見つかりませんでした。</string>
+    <string name="sort_by_relevance">関連度順</string>
+    <string name="sort_by_distance">距離順</string>
+    <string name="check_in_detail_top_bar_title">%sさんのチェックイン</string>
 </resources>

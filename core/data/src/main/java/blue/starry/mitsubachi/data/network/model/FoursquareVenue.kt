@@ -13,15 +13,22 @@ data class FoursquareVenue(
   val categories: List<Category>,
   val closed: Boolean?,
   val createdAt: Long, // 1302357899
+  val dislike: Boolean?,
   val id: String, // 4e74d9c588775d593db096c1
+  val like: Boolean?,
   val location: Location,
   @SerialName("private") val isPrivate: Boolean?,
   val name: String, // LIQUID LOFT
+  val ok: Boolean?,
 ) {
   @Serializable
   data class Category(
+    val categoryCode: Int,
     val icon: Icon,
     val id: String,
+    val mapDarkTextColor: String, // #d5d7da
+    val mapIcon: String, // fsq-default
+    val mapTextColor: String, // #72767f
     val name: String,
     val pluralName: String?,
     val primary: Boolean,

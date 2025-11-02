@@ -9,13 +9,14 @@ import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.CreateCheckInUseCase
 import blue.starry.mitsubachi.domain.usecase.UploadImageUseCase
+import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.flow.ResettableMutableStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class CreateCheckInScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val createCheckInUseCase: CreateCheckInUseCase,
   private val uploadImageUseCase: UploadImageUseCase,
+  private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel() {
   data class ShoutState(
     val value: String,
@@ -37,9 +39,9 @@ class CreateCheckInScreenViewModel @Inject constructor(
       get() = value.ifBlank { null }
   }
 
-  private val _state = MutableStateFlow(
-    ShoutState(value = "", remainingLength = SHOUT_MAX_LENGTH, hasError = false),
-  )
+  private val _state = ResettableMutableStateFlow {
+    ShoutState(value = "", remainingLength = SHOUT_MAX_LENGTH, hasError = false)
+  }
   val state = _state.asStateFlow()
 
   fun createCheckIn(
@@ -49,16 +51,21 @@ class CreateCheckInScreenViewModel @Inject constructor(
     imageUris: List<Uri> = emptyList(),
   ): Job {
     return viewModelScope.launch {
-      val checkIn = createCheckInUseCase(venue, shout, isPublic)
-      if (imageUris.isNotEmpty()) {
-        val files = loadImages(imageUris)
-        uploadImageUseCase(checkIn.id, files, isPublic)
+      runCatching {
+        val checkIn = createCheckInUseCase(venue, shout, isPublic)
+        if (imageUris.isNotEmpty()) {
+          val files = loadImages(imageUris)
+          uploadImageUseCase(checkIn.id, files, isPublic)
+        }
+        _state.reset()
+      }.onFailure { e ->
+        snackbarErrorHandler.handle(e)
       }
     }
   }
 
   private fun loadImage(uri: Uri): FilePart? {
-    val stream = context.contentResolver.openInputStream(uri) ?: return null
+    val data = context.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return null
 
     val projection = arrayOf(OpenableColumns.DISPLAY_NAME)
     val cursor = context.contentResolver.query(uri, projection, null, null, null) ?: return null
@@ -76,7 +83,7 @@ class CreateCheckInScreenViewModel @Inject constructor(
     }
 
     return FilePart(
-      data = stream.use { it.readBytes() },
+      data = data,
       fileName = filename ?: "image.jpg",
       contentType = context.contentResolver.getType(uri),
     )

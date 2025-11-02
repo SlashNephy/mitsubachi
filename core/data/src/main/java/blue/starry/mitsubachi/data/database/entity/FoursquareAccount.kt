@@ -11,7 +11,6 @@ data class FoursquareAccount(
   @ColumnInfo(name = "display_name") val displayName: String,
   @ColumnInfo(name = "icon_url") val iconUrl: String,
   @ColumnInfo(name = "access_token") val accessToken: String,
-  @ColumnInfo(name = "auth_state_json") val authStateJson: String,
 ) {
   companion object
 }
@@ -22,7 +21,6 @@ internal fun FoursquareAccount.toDomain(): DomainFoursquareAccount {
     displayName = displayName,
     iconUrl = iconUrl,
     accessToken = accessToken,
-    authStateJson = authStateJson,
   )
 }
 
@@ -32,6 +30,5 @@ internal fun FoursquareAccount.Companion.fromDomain(domain: DomainFoursquareAcco
     displayName = domain.displayName,
     iconUrl = domain.iconUrl,
     accessToken = domain.accessToken,
-    authStateJson = domain.authStateJson,
   )
 }

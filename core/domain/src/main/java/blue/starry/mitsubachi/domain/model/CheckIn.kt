@@ -1,9 +1,12 @@
 package blue.starry.mitsubachi.domain.model
 
 import androidx.compose.runtime.Immutable
+import blue.starry.mitsubachi.common.ZonedDateTimeSerializer
+import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
 
 @Immutable
+@Serializable
 data class CheckIn(
   val id: String,
   val venue: Venue,
@@ -12,7 +15,7 @@ data class CheckIn(
   val sticker: String?,
   val message: String?,
   val photos: List<Photo>,
-  val timestamp: ZonedDateTime,
+  @Serializable(with = ZonedDateTimeSerializer::class) val timestamp: ZonedDateTime,
   val isLiked: Boolean,
   val likeCount: Int,
   val source: Source?,
@@ -20,6 +23,7 @@ data class CheckIn(
 )
 
 @Immutable
+@Serializable
 data class Photo(
   val id: String,
   val url: String,

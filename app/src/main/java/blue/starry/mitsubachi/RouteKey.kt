@@ -2,6 +2,7 @@ package blue.starry.mitsubachi
 
 import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
+import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.Venue
 import kotlinx.serialization.Serializable
 
@@ -24,7 +25,7 @@ sealed interface RouteKey : NavKey {
 
   @Immutable
   @Serializable
-  data class CheckIn(val id: Int) : RouteKey
+  data class CheckInDetail(val checkIn: CheckIn) : RouteKey
 
   @Immutable
   @Serializable
@@ -37,6 +38,10 @@ sealed interface RouteKey : NavKey {
   @Immutable
   @Serializable
   data object VenueHistories : RouteKey
+
+  @Immutable
+  @Serializable
+  data object Search : RouteKey
 
   @Immutable
   @Serializable

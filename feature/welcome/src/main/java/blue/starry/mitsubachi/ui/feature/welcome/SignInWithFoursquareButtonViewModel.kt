@@ -1,13 +1,14 @@
 package blue.starry.mitsubachi.ui.feature.welcome
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.component1
-import androidx.activity.result.component2
+import androidx.browser.auth.AuthTabIntent
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import blue.starry.mitsubachi.domain.model.FoursquareAccount
+import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationRequest
+import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationResponse
 import blue.starry.mitsubachi.domain.usecase.BeginAuthorizationUseCase
 import blue.starry.mitsubachi.domain.usecase.FinishAuthorizationUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
@@ -29,33 +30,47 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
 ) : ViewModel(), AccountEventHandler {
   sealed interface UiState {
     data object Pending : UiState
-    data object Authorized : UiState
-    data class Failed(val exception: Throwable) : UiState
+    data class Authorizing(val request: OAuth2AuthorizationRequest) : UiState
+    data class Authorized(val account: FoursquareAccount) : UiState
+    data object Failed : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Pending)
   val state = _state.asStateFlow()
 
   fun createAuthorizationIntent(): Intent {
-    return beginAuthorizationUseCase()
+    val request = beginAuthorizationUseCase()
+    _state.value = UiState.Authorizing(request)
+
+    val authorizeUri = request.authorizeUrl.toUri()
+    return AuthTabIntent.Builder().build().apply {
+      intent.setData(authorizeUri)
+      intent.putExtra(AuthTabIntent.EXTRA_REDIRECT_SCHEME, request.redirectScheme)
+    }.intent
   }
 
-  fun onAuthorizationActivityResult(result: ActivityResult) {
-    val (resultCode, data) = result
-
+  fun onAuthTabIntentResult(result: AuthTabIntent.AuthResult) {
     // なんらかの理由で Activity が異常終了した場合は無視
-    if (data == null || resultCode != Activity.RESULT_OK) {
+    if (result.resultCode != AuthTabIntent.RESULT_OK) {
       return
     }
 
+    val uri = result.resultUri ?: return
+    val (request) = state.value as? UiState.Authorizing ?: return
+    val response = OAuth2AuthorizationResponse(
+      code = uri.getQueryParameter("code") ?: return,
+      state = uri.getQueryParameter("state") ?: return,
+      request = request,
+    )
+
     viewModelScope.launch {
       runCatching {
-        finishAuthorizationUseCase(data)
+        finishAuthorizationUseCase(response)
       }.onSuccess {
-        _state.value = UiState.Authorized
+        _state.value = UiState.Authorized(it)
         snackbarHostService.enqueue(context.getString(R.string.login_succeeded))
       }.onFailure { e ->
-        _state.value = UiState.Failed(e)
+        _state.value = UiState.Failed
         snackbarHostService.enqueue(context.getString(R.string.login_failed))
       }
     }

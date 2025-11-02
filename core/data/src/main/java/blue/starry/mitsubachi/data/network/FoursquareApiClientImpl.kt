@@ -9,6 +9,7 @@ import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
+import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.domain.usecase.FoursquareBearerTokenSource
@@ -58,23 +59,38 @@ class FoursquareApiClientImpl @Inject constructor(
     after: ZonedDateTime?,
     coordinates: Coordinates?,
   ): List<CheckIn> {
-    val data = ktorfit.getRecentCheckIns(
-      limit = limit,
-      afterTimeStamp = after?.toEpochSecond(),
-      ll = coordinates?.let { "${it.latitude},${it.longitude}" },
-    )
-    return data.response.recent.map(FoursquareCheckIn::toDomain)
+    return ktorfit.runNetwork {
+      val data = getRecentCheckIns(
+        limit = limit,
+        afterTimeStamp = after?.toEpochSecond(),
+        ll = coordinates?.let { "${it.latitude},${it.longitude}" },
+      )
+      data.response.recent.map(FoursquareCheckIn::toDomain)
+    }
   }
 
   override suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String?,
   ): List<Venue> {
-    val data = ktorfit.searchNearVenues(
-      ll = "${coordinates.latitude},${coordinates.longitude}",
-      query = query?.ifBlank { null },
-    )
-    return data.response.venues.map(FoursquareVenue::toDomain)
+    return ktorfit.runNetwork {
+      val data = searchNearbyVenues(
+        ll = "${coordinates.latitude},${coordinates.longitude}",
+        query = query?.ifBlank { null },
+      )
+      data.response.venues.map(FoursquareVenue::toDomain)
+    }
+  }
+
+  override suspend fun searchVenueRecommendations(
+    coordinates: Coordinates,
+  ): List<VenueRecommendation> {
+    return ktorfit.runNetwork {
+      val data = searchVenueRecommendations(
+        ll = "${coordinates.latitude},${coordinates.longitude}",
+      )
+      data.response.group.results.map { it.toDomain() }
+    }
   }
 
   override suspend fun addCheckIn(
@@ -83,31 +99,44 @@ class FoursquareApiClientImpl @Inject constructor(
     broadcastFlags: List<FoursquareCheckInBroadcastFlag>?,
     stickerId: String?,
   ): CheckIn {
-    val data = ktorfit.addCheckIn(
-      venueId,
-      shout?.ifBlank { null },
-      broadcastFlags?.joinToString(",") { it.serialize() },
-      stickerId?.ifBlank { null },
-    )
-    return data.response.checkIn.toDomain()
+    return ktorfit.runNetwork {
+      val data = addCheckIn(
+        venueId = venueId,
+        shout = shout?.ifBlank { null },
+        broadcast = broadcastFlags?.joinToString(
+          ",",
+          transform = FoursquareCheckInBroadcastFlag::serialize,
+        ),
+        stickerId = stickerId?.ifBlank { null },
+      )
+      data.response.checkIn.toDomain()
+    }
   }
 
   override suspend fun updateCheckIn(checkInId: String, shout: String?) {
-    ktorfit.updateCheckIn(checkInId, shout?.ifBlank { null })
+    ktorfit.runNetwork {
+      updateCheckIn(checkInId = checkInId, shout = shout?.ifBlank { null })
+    }
   }
 
   override suspend fun deleteCheckIn(checkInId: String) {
-    ktorfit.deleteCheckIn(checkInId)
+    ktorfit.runNetwork {
+      deleteCheckIn(checkInId = checkInId)
+    }
   }
 
   override suspend fun getUser(userId: String?): FoursquareUser {
-    val data = ktorfit.getUser(userId = userId ?: "self")
-    return data.response.user.toDomain()
+    return ktorfit.runNetwork {
+      val data = getUser(userId = userId ?: "self")
+      data.response.user.toDomain()
+    }
   }
 
   override suspend fun getUserVenueHistories(userId: String?): List<VenueHistory> {
-    val data = ktorfit.getUserVenueHistories(userId = userId ?: "self")
-    return data.response.venues.items.map(FoursquareUserVenueHistoriesResponse.Venues.Item::toDomain)
+    return ktorfit.runNetwork {
+      val data = getUserVenueHistories(userId = userId ?: "self")
+      data.response.venues.items.map(FoursquareUserVenueHistoriesResponse.Venues.Item::toDomain)
+    }
   }
 
   override suspend fun addPhotoToCheckIn(
@@ -115,26 +144,30 @@ class FoursquareApiClientImpl @Inject constructor(
     image: FilePart,
     isPublic: Boolean,
   ) {
-    ktorfit.addPhoto(
-      checkInId = checkInId,
-      public = if (isPublic) 1 else 0,
-      body = MultiPartFormDataContent(
-        formData {
-          append(
-            "file",
-            image.data,
-            Headers.build {
-              image.contentType?.also { append(HttpHeaders.ContentType, it) }
-              append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
-            },
-          )
-        },
-      ),
-    )
+    ktorfit.runNetwork {
+      addPhoto(
+        checkInId = checkInId,
+        public = if (isPublic) 1 else 0,
+        body = MultiPartFormDataContent(
+          formData {
+            append(
+              "file",
+              image.data,
+              Headers.build {
+                image.contentType?.also { append(HttpHeaders.ContentType, it) }
+                append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
+              },
+            )
+          },
+        ),
+      )
+    }
   }
 
   override suspend fun likeCheckIn(checkInId: String) {
-    ktorfit.likeCheckIn(checkInId)
+    ktorfit.runNetwork {
+      likeCheckIn(checkInId = checkInId)
+    }
   }
 }
 
