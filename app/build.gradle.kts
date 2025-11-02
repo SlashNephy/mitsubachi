@@ -40,6 +40,15 @@ android {
     serviceCredentialsFile = "$rootDir/firebase-service-account.json"
   }
 
+  signingConfigs {
+    create("default") {
+      storeFile = localProperties.getProperty("android_keystore_path")?.let { file(it) }
+      storePassword = localProperties.getProperty("android_keystore_password")
+      keyAlias = localProperties.getProperty("android_keystore_alias")
+      keyPassword = localProperties.getProperty("android_keystore_alias_password")
+    }
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = true
@@ -61,10 +70,12 @@ android {
     flavorDimensions("environment")
     create("production") {
       dimension = "environment"
+      signingConfig = signingConfigs.getByName("default")
     }
     create("staging") {
       dimension = "environment"
       applicationIdSuffix = ".staging"
+      signingConfig = signingConfigs.getByName("default")
       firebaseAppDistribution {
         groups = "tester"
       }
