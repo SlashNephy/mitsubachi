@@ -23,6 +23,7 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
   @ApplicationScope applicationScope: CoroutineScope,
   deviceLocaleRepository: DeviceLocaleRepository,
 ) : RelativeDateTimeFormatter {
+  @Volatile
   private var underlyingFormatter = factory.create()
 
   init {
