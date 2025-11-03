@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.url
+import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
 import coil3.compose.AsyncImage
 
@@ -114,7 +115,7 @@ fun VenueRecommendationCard(
         val distance = recommendation.venue.location.distance ?: 0
         Text(
           text = buildString {
-            append(VenueLocationFormatter.formatDistance(distance))
+            append(LengthUnitFormatter.formatMeters(distance))
             append('・')
             append(VenueLocationFormatter.formatAddress(recommendation.venue.location))
           },
