@@ -61,7 +61,18 @@ jobs:
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
           ANDROID_KEYSTORE_ALIAS_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }}
       - run: git log -1 --pretty=short > release_notes.txt
-      - run: ./gradlew assemble${{ matrix.variant }} appDistributionUpload${{ matrix.variant }} --releaseNotesFile "$RELEASE_NOTES_FILE" -PversionCode="$VERSION_CODE"
+      - id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION_NAME="${{ github.event.release.tag_name }}"
+            # v プレフィックスを除去
+            VERSION_NAME="${VERSION_NAME#v}"
+          else
+            VERSION_NAME="1.0"
+          fi
+          echo "version_name=${VERSION_NAME}" >> $GITHUB_OUTPUT
+      - run: ./gradlew assemble${{ matrix.variant }} appDistributionUpload${{ matrix.variant }} --releaseNotesFile "$RELEASE_NOTES_FILE" -PversionName="$VERSION_NAME" -PversionCode="$VERSION_CODE"
         env:
           RELEASE_NOTES_FILE: ${{ github.workspace }}/release_notes.txt
+          VERSION_NAME: ${{ steps.version.outputs.version_name }}
           VERSION_CODE: ${{ github.run_number }}
