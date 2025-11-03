@@ -58,14 +58,14 @@ fun VenueRow(
     ) {
       Text(venue.name, fontWeight = FontWeight.Bold)
       Text(
-        text = buildString {
-          venue.location.distance?.let {
-            LocaleAware {
+        text = LocaleAware {
+          buildString {
+            venue.location.distance?.also {
               append(LengthUnitFormatter.formatMeters(it))
+              append('・')
             }
-            append('・')
+            append(VenueLocationFormatter.formatAddress(venue.location))
           }
-          append(VenueLocationFormatter.formatAddress(venue.location))
         },
         color = Color.Gray,
       )
