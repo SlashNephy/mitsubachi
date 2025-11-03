@@ -19,8 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant:
-          - StagingRelease
+        include:
+          - variant: StagingRelease
+            google_maps_api_key_name: STAGING_GOOGLE_MAPS_API_KEY
+          # - variant: ProductionRelease
+          #   google_maps_api_key_name: PRODUCTION_GOOGLE_MAPS_API_KEY
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
@@ -56,7 +59,7 @@ jobs:
           FOURSQUARE_CLIENT_ID: ${{ secrets.FOURSQUARE_CLIENT_ID }}
           FOURSQUARE_CLIENT_SECRET: ${{ secrets.FOURSQUARE_CLIENT_SECRET }}
           FOURSQUARE_REDIRECT_URI: ${{ secrets.FOURSQUARE_REDIRECT_URI }}
-          GOOGLE_MAPS_API_KEY: ${{ secrets.STAGING_GOOGLE_MAPS_API_KEY }}
+          GOOGLE_MAPS_API_KEY: ${{ secrets[matrix.google_maps_api_key_name] }}
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/local.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
