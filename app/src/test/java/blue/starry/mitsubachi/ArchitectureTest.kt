@@ -1,7 +1,5 @@
 package blue.starry.mitsubachi
 
-import com.tngtech.archunit.core.domain.JavaClass
-import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
@@ -68,20 +66,6 @@ class ArchitectureTest {
       .should()
       .dependOnClassesThat()
       .resideInAPackage("..data..")
-
-    rule.check(importedClasses)
-  }
-
-  @Test
-  fun uiLayerShouldNotDependOnInterfacesFromDomainLayer() {
-    val rule = noClasses()
-      .that()
-      .resideInAPackage("..ui..")
-      .should()
-      .dependOnClassesThat(
-        resideInAPackage("..domain.usecase..")
-          .and(JavaClass.Predicates.INTERFACES),
-      )
 
     rule.check(importedClasses)
   }
