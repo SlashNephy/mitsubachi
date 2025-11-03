@@ -1,4 +1,3 @@
-import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.io.FileInputStream
 import java.util.Properties
@@ -38,6 +37,7 @@ android {
   firebaseAppDistributionDefault {
     artifactType = "APK" // Play Store のデベロッパーアカウントを作ったら AAB にする
     serviceCredentialsFile = "$rootDir/firebase-service-account.json"
+    groups = "tester"
   }
 
   signingConfigs {
@@ -77,9 +77,6 @@ android {
       dimension = "environment"
       applicationIdSuffix = ".staging"
       signingConfig = signingConfigs.getByName("default")
-      firebaseAppDistribution {
-        groups = "tester"
-      }
     }
     create("local") {
       dimension = "environment"
