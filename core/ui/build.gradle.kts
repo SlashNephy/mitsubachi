@@ -46,6 +46,7 @@ dependencies {
   testImplementation(libs.coil.test)
 
   api(libs.advanced.bottomsheet.material3)
+  implementation(libs.indriya)
 
   testImplementation(projects.core.testing)
   androidTestImplementation(projects.core.uiTesting)

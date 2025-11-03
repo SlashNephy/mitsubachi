@@ -1,11 +1,10 @@
 package blue.starry.mitsubachi.ui.formatter
 
 import blue.starry.mitsubachi.domain.model.VenueLocation
-import java.util.Locale
 
 object VenueLocationFormatter {
-  fun formatAddress(location: VenueLocation, includeCrossStreet: Boolean = true): String =
-    buildString {
+  fun formatAddress(location: VenueLocation, includeCrossStreet: Boolean = true): String {
+    return buildString {
       val base = when {
         location.neighborhood != null -> {
           location.neighborhood
@@ -44,16 +43,6 @@ object VenueLocationFormatter {
         append(location.crossStreet)
         append(')')
       }
-    }
-
-  fun formatDistance(meters: Int): String {
-    // 10m 単位で丸める
-    val meters = (meters / 10.0).toInt() * 10
-
-    return if (meters < 1000) {
-      "${meters}m"
-    } else {
-      String.format(Locale.getDefault(), "%.1fkm", meters / 1000.0)
     }
   }
 }
