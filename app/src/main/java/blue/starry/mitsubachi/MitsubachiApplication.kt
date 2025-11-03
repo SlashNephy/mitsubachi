@@ -1,10 +1,18 @@
 package blue.starry.mitsubachi
 
 import android.app.Application
+import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -14,11 +22,34 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
   @Inject
   lateinit var imageLoader: ImageLoader
 
+  @Suppress("LateinitUsage")
+  @Inject
+  lateinit var appSettingsRepository: AppSettingsRepository
+
+  private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
   override fun onCreate() {
     super.onCreate()
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
+    }
+
+    // Initialize Firebase Crashlytics based on user settings
+    configureCrashlytics()
+
+    // Observe settings changes
+    applicationScope.launch {
+      appSettingsRepository.crashlyticsEnabled.collect { enabled ->
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
+      }
+    }
+  }
+
+  private fun configureCrashlytics() {
+    runBlocking {
+      val enabled = appSettingsRepository.crashlyticsEnabled.first()
+      FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
     }
   }
 
@@ -26,3 +57,4 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
     return imageLoader
   }
 }
+
