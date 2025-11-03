@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.io.Closeable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,21 +19,27 @@ import javax.inject.Singleton
 internal class DeviceLocaleRepositoryImpl @Inject constructor(
   @param:ApplicationContext private val context: Context,
   @param:ApplicationScope private val coroutineScope: CoroutineScope,
-) : DeviceLocaleRepository {
+) : DeviceLocaleRepository, Closeable {
   private val _onLocaleChanged = MutableSharedFlow<Unit>()
   override val onLocaleChanged = _onLocaleChanged.asSharedFlow()
 
+  private val receiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+      coroutineScope.launch {
+        _onLocaleChanged.emit(Unit)
+      }
+    }
+  }
+
   init {
     context.registerReceiver(
-      object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-          coroutineScope.launch {
-            _onLocaleChanged.emit(Unit)
-          }
-        }
-      },
+      receiver,
       IntentFilter(Intent.ACTION_LOCALE_CHANGED),
       Context.RECEIVER_NOT_EXPORTED,
     )
+  }
+
+  override fun close() {
+    context.unregisterReceiver(receiver)
   }
 }
