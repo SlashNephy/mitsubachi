@@ -21,7 +21,7 @@ fun <T> LocaleAware(
     }
   }
 
-  return key(version) {
+  return key(version.intValue) {
     block()
   }
 }
