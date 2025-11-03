@@ -1,5 +1,6 @@
-package blue.starry.mitsubachi
+package blue.starry.mitsubachi.di
 
+import blue.starry.mitsubachi.BuildConfig
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import dagger.Module
 import dagger.Provides
@@ -9,10 +10,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object AppDiModule {
+internal object ApplicationConfigModule {
   @Provides
   @Singleton
-  fun provideApplicationConfig(): ApplicationConfig {
+  fun provide(): ApplicationConfig {
     return ApplicationConfig(
       versionName = BuildConfig.VERSION_NAME,
       versionCode = BuildConfig.VERSION_CODE,
