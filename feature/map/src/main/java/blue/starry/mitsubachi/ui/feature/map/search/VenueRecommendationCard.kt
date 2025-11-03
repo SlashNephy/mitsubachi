@@ -115,7 +115,9 @@ fun VenueRecommendationCard(
         val distance = recommendation.venue.location.distance ?: 0
         Text(
           text = buildString {
-            append(LengthUnitFormatter.formatMeters(distance))
+            LocaleAware {
+              append(LengthUnitFormatter.formatMeters(distance))
+            }
             append('・')
             append(VenueLocationFormatter.formatAddress(recommendation.venue.location))
           },
