@@ -29,7 +29,7 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
   init {
     applicationScope.launch {
       deviceLocaleRepository.onLocaleChanged.collect {
-        underlyingFormatter = AndroidRelativeDateTimeFormatter.getInstance()
+        underlyingFormatter = factory.create()
       }
     }
   }
