@@ -41,7 +41,7 @@ object LengthUnitFormatter {
   }
 
   private fun format(quantity: Quantity<Length>, uLocale: ULocale): String {
-    val system = LocaleData.getMeasurementSystem(uLocale)
+    val system = uLocale.getDesiredMeasurementSystem()
     val desiredQuantity = quantity.toDesiredQuantity(system)
 
     val measure = desiredQuantity.toMeasure()
@@ -54,6 +54,30 @@ object LengthUnitFormatter {
       .roundingMode(RoundingMode.HALF_UP)
       .format(measure)
       .toString()
+  }
+
+  private fun ULocale.getDesiredMeasurementSystem(): LocaleData.MeasurementSystem {
+    // Android 16 でユーザーが変更した測定単位はキーワードに格納されているようだった
+    // API があるといいんだけど見つけられなかった。UnitPreferences というやつがあるっぽいが...
+    // https://android.googlesource.com/platform/prebuilts/fullsdk/sources/+/refs/heads/androidx-tv-material-release/android-34/android/icu/impl/units/UnitPreferences.java
+    val keyword = getKeywordValue("measure")
+    return when (keyword) {
+      "metric" -> {
+        LocaleData.MeasurementSystem.SI
+      }
+
+      "ussystem" -> {
+        LocaleData.MeasurementSystem.US
+      }
+
+      "imperial" -> {
+        LocaleData.MeasurementSystem.UK
+      }
+
+      else -> {
+        LocaleData.getMeasurementSystem(this)
+      }
+    }
   }
 
   // https://belief-driven-design.com/java-measurement-jsr-385-210f2/
