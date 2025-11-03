@@ -26,6 +26,7 @@ import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.url
 import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.locale.LocaleAware
 import coil3.compose.AsyncImage
 
 @Composable
