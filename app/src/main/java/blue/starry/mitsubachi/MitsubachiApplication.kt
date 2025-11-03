@@ -10,9 +10,7 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,21 +33,11 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
       Timber.plant(Timber.DebugTree())
     }
 
-    // Initialize Firebase Crashlytics based on user settings
-    configureCrashlytics()
-
-    // Observe settings changes
+    // Configure Firebase Crashlytics based on user settings
     applicationScope.launch {
       appSettingsRepository.crashlyticsEnabled.collect { enabled ->
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
       }
-    }
-  }
-
-  private fun configureCrashlytics() {
-    runBlocking {
-      val enabled = appSettingsRepository.crashlyticsEnabled.first()
-      FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
     }
   }
 
