@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.primaryCategory
+import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
 import coil3.compose.AsyncImage
 
@@ -50,13 +51,15 @@ fun VenueRow(
     )
 
     Column(
-      modifier = Modifier.fillMaxSize().padding(vertical = 8.dp),
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(vertical = 8.dp),
     ) {
       Text(venue.name, fontWeight = FontWeight.Bold)
       Text(
         buildString {
           venue.location.distance?.let {
-            append(VenueLocationFormatter.formatDistance(it))
+            append(LengthUnitFormatter.formatMeters(it))
             append('・')
           }
           append(VenueLocationFormatter.formatAddress(venue.location))
