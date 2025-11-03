@@ -3,8 +3,11 @@ package blue.starry.mitsubachi.ui
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import blue.starry.mitsubachi.domain.usecase.DeviceLocaleRepository
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatterImpl
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.SharedFlow
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -27,7 +30,12 @@ class RelativeDateTimeFormatterTest {
     context = ApplicationProvider.getApplicationContext()
     formatter = RelativeDateTimeFormatterImpl(
       context,
-      AndroidRelativeDateTimeFormatter.getInstance(Locale.ENGLISH),
+      { AndroidRelativeDateTimeFormatter.getInstance(Locale.ENGLISH) },
+      MainScope(),
+      object : DeviceLocaleRepository {
+        override val onLocaleChanged: SharedFlow<Unit>
+          get() = error("not implemented")
+      },
     )
   }
 
