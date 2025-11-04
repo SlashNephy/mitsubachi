@@ -34,7 +34,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 import io.morfly.compose.bottomsheet.material3.rememberBottomSheetScaffoldState
 import io.morfly.compose.bottomsheet.material3.rememberBottomSheetState
 import kotlinx.coroutines.delay
@@ -92,6 +94,7 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
     viewModel.updateCurrentLocation(cameraPositionState.position.target)
   }
 
+  val state by viewModel.state.collectAsStateWithLifecycle()
   GoogleMap(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState,
@@ -102,7 +105,28 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
     properties = MapProperties(
       isMyLocationEnabled = locationPermissionState.status.isGranted,
     ),
-  )
+  ) {
+    // ベニューのマーカーを表示
+    val recommendations =
+      (state as? SearchMapScreenViewModel.UiState.Success)?.venueRecommendations.orEmpty()
+    recommendations.forEach { recommendation ->
+      val state = rememberUpdatedMarkerState(
+        position = LatLng(
+          recommendation.venue.location.latitude,
+          recommendation.venue.location.longitude,
+        ),
+      )
+      Marker(
+        state = state,
+        title = recommendation.venue.name,
+        snippet = recommendation.venue.location.address,
+        onClick = {
+          viewModel.selectVenue(recommendation)
+          true
+        },
+      )
+    }
+  }
 }
 
 @Composable
