@@ -36,6 +36,10 @@ dependencies {
   api(libs.androidx.lifecycle.viewmodel.compose)
   api(libs.androidx.lifecycle.viewmodel.navigation3)
 
+  // Firebase
+  implementation(platform(libs.firebase.bom))
+  api(libs.firebase.crashlytics)
+
   api(libs.androidx.browser)
   api(libs.accompanist.permissions)
 
