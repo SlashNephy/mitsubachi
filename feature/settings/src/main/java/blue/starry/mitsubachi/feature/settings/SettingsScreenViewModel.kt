@@ -34,8 +34,8 @@ class SettingsScreenViewModel @Inject constructor(
     }
   }
 
-  fun setFirebaseCrashlyticsEnabled(isEnabled: Boolean) {
-    viewModelScope.launch {
+  fun setFirebaseCrashlyticsEnabled(isEnabled: Boolean): Job {
+    return viewModelScope.launch {
       runCatching {
         appSettingsRepository.setFirebaseCrashlyticsEnabled(isEnabled)
       }.onFailure { e ->
