@@ -9,7 +9,7 @@ permissions: { }
 
 jobs:
   enable-auto-merge:
-    if: github.event.pull_request.user.login == 'SlashNephy'
+    if: github.event.pull_request.user.login == "SlashNephy" || github.actor == "SlashNephy"
     runs-on: ubuntu-latest
     steps:
       - run: gh pr merge --merge --auto "${{ github.event.pull_request.number }}"

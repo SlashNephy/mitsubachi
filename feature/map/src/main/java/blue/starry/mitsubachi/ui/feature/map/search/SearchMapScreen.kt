@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.ui.feature.map.search
 
 import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -34,7 +36,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 import io.morfly.compose.bottomsheet.material3.rememberBottomSheetScaffoldState
 import io.morfly.compose.bottomsheet.material3.rememberBottomSheetState
 import kotlinx.coroutines.delay
@@ -92,75 +96,120 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
     viewModel.updateCurrentLocation(cameraPositionState.position.target)
   }
 
+  val state by viewModel.state.collectAsStateWithLifecycle()
   GoogleMap(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState,
     uiSettings = MapUiSettings(
-      myLocationButtonEnabled = locationPermissionState.status.isGranted,
       mapToolbarEnabled = false,
+      myLocationButtonEnabled = false,
+      zoomControlsEnabled = false,
     ),
     properties = MapProperties(
       isMyLocationEnabled = locationPermissionState.status.isGranted,
     ),
-  )
+  ) {
+    // ベニューのマーカーを表示
+    val recommendations =
+      (state as? SearchMapScreenViewModel.UiState.Success)?.venueRecommendations.orEmpty()
+    recommendations.forEach { recommendation ->
+      val markerState = rememberUpdatedMarkerState(
+        position = LatLng(
+          recommendation.venue.location.latitude,
+          recommendation.venue.location.longitude,
+        ),
+      )
+      Marker(
+        state = markerState,
+        title = recommendation.venue.name,
+        snippet = recommendation.venue.location.address,
+        onClick = {
+          viewModel.selectVenue(recommendation)
+          true
+        },
+      )
+    }
+  }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Suppress("LongMethod") // TODO: リファクタリング
 private fun BottomSheetContent(
   modifier: Modifier = Modifier,
   viewModel: SearchMapScreenViewModel = hiltViewModel(),
 ) {
+  val state by viewModel.state.collectAsStateWithLifecycle()
+  val selectedVenue by viewModel.selectedVenue.collectAsStateWithLifecycle()
+
   Column(
     modifier = modifier.fillMaxWidth(),
   ) {
-    // 固定ヘッダー
-    Text(
-      text = "この地域の情報",
-      fontWeight = FontWeight.Bold,
-    )
+    // 選択されたベニューがある場合は詳細を表示、ない場合はリストを表示
+    val selectedVenue = selectedVenue
+    if (selectedVenue != null) {
+      // 固定ヘッダー（戻るボタン付き）
+      Text(
+        text = "← 戻る",
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+          .padding(bottom = 8.dp)
+          .clickable(role = Role.Button) { viewModel.selectVenue(null) },
+      )
 
-    Spacer(modifier = Modifier.padding(vertical = 8.dp))
+      // 選択されたベニューの詳細を表示
+      VenueRecommendationCard(
+        recommendation = selectedVenue,
+        modifier = Modifier.padding(vertical = 8.dp),
+      )
+    } else {
+      // 固定ヘッダー
+      Text(
+        text = "この地域の情報",
+        fontWeight = FontWeight.Bold,
+      )
 
-    // スクロール可能なコンテンツ
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    when (val state = state) {
-      is SearchMapScreenViewModel.UiState.Loading -> {
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-          contentAlignment = Alignment.Center,
-        ) {
-          LoadingIndicator()
-        }
-      }
+      Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
-      is SearchMapScreenViewModel.UiState.Success -> {
-        LazyColumn(
-          modifier = Modifier
-            .fillMaxWidth(),
-        ) {
-          items(state.venueRecommendations) { recommendation ->
-            VenueRecommendationCard(
-              recommendation = recommendation,
-              modifier = Modifier.padding(vertical = 8.dp),
-            )
+      // スクロール可能なコンテンツ
+      when (val state = state) {
+        is SearchMapScreenViewModel.UiState.Loading -> {
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(200.dp),
+            contentAlignment = Alignment.Center,
+          ) {
+            LoadingIndicator()
           }
-          item {
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        is SearchMapScreenViewModel.UiState.Success -> {
+          LazyColumn(
+            modifier = Modifier
+              .fillMaxWidth(),
+          ) {
+            items(state.venueRecommendations) { recommendation ->
+              VenueRecommendationCard(
+                recommendation = recommendation,
+                modifier = Modifier.padding(vertical = 8.dp),
+              )
+            }
+            item {
+              Spacer(modifier = Modifier.height(16.dp))
+            }
           }
         }
-      }
 
-      is SearchMapScreenViewModel.UiState.Error -> {
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-          contentAlignment = Alignment.Center,
-        ) {
-          Text(state.message)
+        is SearchMapScreenViewModel.UiState.Error -> {
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(200.dp),
+            contentAlignment = Alignment.Center,
+          ) {
+            Text(state.message)
+          }
         }
       }
     }
