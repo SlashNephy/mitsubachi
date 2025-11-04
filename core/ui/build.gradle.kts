@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
+  alias(libs.plugins.kover)
 }
 
 android {
