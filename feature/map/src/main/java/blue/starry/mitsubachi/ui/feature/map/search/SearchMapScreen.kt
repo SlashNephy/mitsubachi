@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.ui.feature.map.search
 
 import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -136,56 +137,77 @@ private fun BottomSheetContent(
   modifier: Modifier = Modifier,
   viewModel: SearchMapScreenViewModel = hiltViewModel(),
 ) {
+  val state by viewModel.state.collectAsStateWithLifecycle()
+  val selectedVenue by viewModel.selectedVenue.collectAsStateWithLifecycle()
+
   Column(
     modifier = modifier.fillMaxWidth(),
   ) {
-    // 固定ヘッダー
-    Text(
-      text = "この地域の情報",
-      fontWeight = FontWeight.Bold,
-    )
+    // 選択されたベニューがある場合は詳細を表示、ない場合はリストを表示
+    val selectedVenue = selectedVenue
+    if (selectedVenue != null) {
+      // 固定ヘッダー（戻るボタン付き）
+      Text(
+        text = "← 戻る",
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+          .padding(bottom = 8.dp)
+          .clickable { viewModel.selectVenue(null) },
+      )
 
-    Spacer(modifier = Modifier.padding(vertical = 8.dp))
+      // 選択されたベニューの詳細を表示
+      VenueRecommendationCard(
+        recommendation = selectedVenue,
+        modifier = Modifier.padding(vertical = 8.dp),
+      )
+    } else {
+      // 固定ヘッダー
+      Text(
+        text = "この地域の情報",
+        fontWeight = FontWeight.Bold,
+      )
 
-    // スクロール可能なコンテンツ
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    when (val state = state) {
-      is SearchMapScreenViewModel.UiState.Loading -> {
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-          contentAlignment = Alignment.Center,
-        ) {
-          LoadingIndicator()
-        }
-      }
+      Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
-      is SearchMapScreenViewModel.UiState.Success -> {
-        LazyColumn(
-          modifier = Modifier
-            .fillMaxWidth(),
-        ) {
-          items(state.venueRecommendations) { recommendation ->
-            VenueRecommendationCard(
-              recommendation = recommendation,
-              modifier = Modifier.padding(vertical = 8.dp),
-            )
+      // スクロール可能なコンテンツ
+      when (val state = state) {
+        is SearchMapScreenViewModel.UiState.Loading -> {
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(200.dp),
+            contentAlignment = Alignment.Center,
+          ) {
+            LoadingIndicator()
           }
-          item {
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        is SearchMapScreenViewModel.UiState.Success -> {
+          LazyColumn(
+            modifier = Modifier
+              .fillMaxWidth(),
+          ) {
+            items(state.venueRecommendations) { recommendation ->
+              VenueRecommendationCard(
+                recommendation = recommendation,
+                modifier = Modifier.padding(vertical = 8.dp),
+              )
+            }
+            item {
+              Spacer(modifier = Modifier.height(16.dp))
+            }
           }
         }
-      }
 
-      is SearchMapScreenViewModel.UiState.Error -> {
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-          contentAlignment = Alignment.Center,
-        ) {
-          Text(state.message)
+        is SearchMapScreenViewModel.UiState.Error -> {
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(200.dp),
+            contentAlignment = Alignment.Center,
+          ) {
+            Text(state.message)
+          }
         }
       }
     }

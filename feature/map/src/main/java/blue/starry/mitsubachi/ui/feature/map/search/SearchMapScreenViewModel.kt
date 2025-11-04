@@ -34,6 +34,9 @@ class SearchMapScreenViewModel @Inject constructor(
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
   val state: StateFlow<UiState> = _state.asStateFlow()
 
+  private val _selectedVenue = MutableStateFlow<VenueRecommendation?>(null)
+  val selectedVenue: StateFlow<VenueRecommendation?> = _selectedVenue.asStateFlow()
+
   fun updateCurrentLocation(location: LatLng) {
     viewModelScope.launch {
       val currentState = state.value
@@ -60,5 +63,9 @@ class SearchMapScreenViewModel @Inject constructor(
         }
       }
     }
+  }
+
+  fun selectVenue(venue: VenueRecommendation?) {
+    _selectedVenue.value = venue
   }
 }
