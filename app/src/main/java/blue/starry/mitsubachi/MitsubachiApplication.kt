@@ -27,6 +27,8 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
   private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
   override fun onCreate() {
+    super.onCreate()
+
     applicationScope.launch {
       appSettingsRepository.isFirebaseCrashlyticsEnabled.collect { enabled ->
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
@@ -36,8 +38,6 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }
-
-    super.onCreate()
   }
 
   override fun newImageLoader(context: PlatformContext): ImageLoader {
