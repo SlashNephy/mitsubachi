@@ -25,7 +25,7 @@ fun SettingsScreen(
   onSignOut: () -> Unit,
   viewModel: SettingsScreenViewModel = hiltViewModel(),
 ) {
-  val crashlyticsEnabled by viewModel.crashlyticsEnabled.collectAsStateWithLifecycle()
+  val crashlyticsEnabled by viewModel.isFirebaseCrashlyticsEnabled.collectAsStateWithLifecycle()
 
   Column(
     modifier = Modifier
@@ -39,7 +39,7 @@ fun SettingsScreen(
       trailingContent = {
         Switch(
           checked = crashlyticsEnabled,
-          onCheckedChange = { viewModel.setCrashlyticsEnabled(it) },
+          onCheckedChange = { viewModel.setFirebaseCrashlyticsEnabled(it) },
         )
       },
     )
@@ -69,4 +69,3 @@ fun SettingsScreen(
     )
   }
 }
-

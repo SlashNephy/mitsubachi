@@ -12,8 +12,7 @@ import javax.inject.Singleton
 internal class AppSettingsRepositoryImpl @Inject constructor(
   private val dataStore: DataStore<AppSettings>,
 ) : AppSettingsRepository {
-  override val crashlyticsEnabled: Flow<Boolean> = dataStore.data.map { settings ->
-    // Default to true if not set (using optional field)
+  override val isFirebaseCrashlyticsEnabled: Flow<Boolean> = dataStore.data.map { settings ->
     if (settings.hasCrashlyticsEnabled()) {
       settings.crashlyticsEnabled
     } else {
@@ -21,10 +20,10 @@ internal class AppSettingsRepositoryImpl @Inject constructor(
     }
   }
 
-  override suspend fun setCrashlyticsEnabled(enabled: Boolean) {
+  override suspend fun setFirebaseCrashlyticsEnabled(isEnabled: Boolean) {
     dataStore.updateData { settings ->
       settings.toBuilder()
-        .setCrashlyticsEnabled(enabled)
+        .setCrashlyticsEnabled(isEnabled)
         .build()
     }
   }

@@ -18,7 +18,7 @@ class SettingsScreenViewModel @Inject constructor(
   private val appSettingsRepository: AppSettingsRepository,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel() {
-  val crashlyticsEnabled = appSettingsRepository.crashlyticsEnabled.stateIn(
+  val isFirebaseCrashlyticsEnabled = appSettingsRepository.isFirebaseCrashlyticsEnabled.stateIn(
     scope = viewModelScope,
     started = SharingStarted.WhileSubscribed(5000),
     initialValue = true,
@@ -34,10 +34,10 @@ class SettingsScreenViewModel @Inject constructor(
     }
   }
 
-  fun setCrashlyticsEnabled(enabled: Boolean) {
+  fun setFirebaseCrashlyticsEnabled(isEnabled: Boolean) {
     viewModelScope.launch {
       runCatching {
-        appSettingsRepository.setCrashlyticsEnabled(enabled)
+        appSettingsRepository.setFirebaseCrashlyticsEnabled(isEnabled)
       }.onFailure { e ->
         snackbarErrorHandler.handle(e)
       }
