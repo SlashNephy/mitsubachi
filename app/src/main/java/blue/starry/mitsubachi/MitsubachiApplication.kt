@@ -29,7 +29,7 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
   override fun onCreate() {
     applicationScope.launch {
       appSettingsRepository.isFirebaseCrashlyticsEnabled.collect { enabled ->
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = enabled
+        Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
       }
     }
 
