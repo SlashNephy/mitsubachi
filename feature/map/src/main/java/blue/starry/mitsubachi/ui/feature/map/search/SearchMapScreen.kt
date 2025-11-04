@@ -112,14 +112,14 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
     val recommendations =
       (state as? SearchMapScreenViewModel.UiState.Success)?.venueRecommendations.orEmpty()
     recommendations.forEach { recommendation ->
-      val state = rememberUpdatedMarkerState(
+      val markerState = rememberUpdatedMarkerState(
         position = LatLng(
           recommendation.venue.location.latitude,
           recommendation.venue.location.longitude,
         ),
       )
       Marker(
-        state = state,
+        state = markerState,
         title = recommendation.venue.name,
         snippet = recommendation.venue.location.address,
         onClick = {
