@@ -41,6 +41,7 @@ sqlcipher-android = "4.11.0"
 androidx-sqlite = "2.6.1"
 detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.4.27"
+kover = "0.9.3"
 ksp = "2.3.1"
 android-mapsplatform-secrets = "2.0.1"
 google-services = "4.4.4"
@@ -184,6 +185,7 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobuf-gradle-plugin" 
 room = { id = "androidx.room", version.ref = "room" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 android-mapsplatform-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "android-mapsplatform-secrets" }
 
 convention-android-compose-application = { id = "blue.starry.mitsubachi.buildlogic.convention.android.compose.application" }
