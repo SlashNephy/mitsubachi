@@ -13,8 +13,8 @@ internal class AppSettingsRepositoryImpl @Inject constructor(
   private val dataStore: DataStore<AppSettings>,
 ) : AppSettingsRepository {
   override val isFirebaseCrashlyticsEnabled: Flow<Boolean> = dataStore.data.map { settings ->
-    if (settings.hasCrashlyticsEnabled()) {
-      settings.crashlyticsEnabled
+    if (settings.hasIsFirebaseCrashlyticsEnabled()) {
+      settings.isFirebaseCrashlyticsEnabled
     } else {
       true
     }
@@ -23,7 +23,7 @@ internal class AppSettingsRepositoryImpl @Inject constructor(
   override suspend fun setFirebaseCrashlyticsEnabled(isEnabled: Boolean) {
     dataStore.updateData { settings ->
       settings.toBuilder()
-        .setCrashlyticsEnabled(isEnabled)
+        .setIsFirebaseCrashlyticsEnabled(isEnabled)
         .build()
     }
   }
