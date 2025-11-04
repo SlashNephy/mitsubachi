@@ -10,6 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,6 +34,10 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
     super.onCreate()
 
     applicationScope.launch {
+      // 起動時にオプトアウトを設定
+      Firebase.crashlytics.isCrashlyticsCollectionEnabled =
+        appSettingsRepository.isFirebaseCrashlyticsEnabled.first()
+
       appSettingsRepository.isFirebaseCrashlyticsEnabled.collect { enabled ->
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
       }
