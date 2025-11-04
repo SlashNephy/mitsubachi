@@ -34,7 +34,7 @@ data class FoursquareSearchVenueRecommendationsResponse(
         val id: String, // maponics:10004320
         val longId: String, // 10004320
         val name: String, // 品川区
-        val slug: String, // shinagawa-tokyo-to-japan
+        val slug: String?, // shinagawa-tokyo-to-japan
         val woeType: Int, // 22
       ) {
         @Serializable
