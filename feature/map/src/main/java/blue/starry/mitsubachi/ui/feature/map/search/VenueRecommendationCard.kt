@@ -26,6 +26,7 @@ import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.url
 import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.locale.LocaleAware
 import coil3.compose.AsyncImage
 
 @Composable
@@ -114,10 +115,12 @@ fun VenueRecommendationCard(
         // 距離・住所
         val distance = recommendation.venue.location.distance ?: 0
         Text(
-          text = buildString {
-            append(LengthUnitFormatter.formatMeters(distance))
-            append('・')
-            append(VenueLocationFormatter.formatAddress(recommendation.venue.location))
+          text = LocaleAware {
+            buildString {
+              append(LengthUnitFormatter.formatMeters(distance))
+              append('・')
+              append(VenueLocationFormatter.formatAddress(recommendation.venue.location))
+            }
           },
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.onSurfaceVariant,

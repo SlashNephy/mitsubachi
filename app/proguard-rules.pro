@@ -30,3 +30,7 @@
 -keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite {
   <fields>;
 }
+
+# Indriya
+-dontwarn org.apiguardian.api.API
+-keep class tech.units.indriya.function.DefaultNumberSystem

@@ -26,6 +26,7 @@ import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.primaryCategory
 import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.locale.LocaleAware
 import coil3.compose.AsyncImage
 
 @Composable
@@ -57,12 +58,14 @@ fun VenueRow(
     ) {
       Text(venue.name, fontWeight = FontWeight.Bold)
       Text(
-        buildString {
-          venue.location.distance?.let {
-            append(LengthUnitFormatter.formatMeters(it))
-            append('・')
+        text = LocaleAware {
+          buildString {
+            venue.location.distance?.also {
+              append(LengthUnitFormatter.formatMeters(it))
+              append('・')
+            }
+            append(VenueLocationFormatter.formatAddress(venue.location))
           }
-          append(VenueLocationFormatter.formatAddress(venue.location))
         },
         color = Color.Gray,
       )
