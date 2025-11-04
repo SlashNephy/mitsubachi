@@ -99,8 +99,9 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState,
     uiSettings = MapUiSettings(
-      myLocationButtonEnabled = locationPermissionState.status.isGranted,
       mapToolbarEnabled = false,
+      myLocationButtonEnabled = false,
+      zoomControlsEnabled = false,
     ),
     properties = MapProperties(
       isMyLocationEnabled = locationPermissionState.status.isGranted,
