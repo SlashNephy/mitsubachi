@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -152,7 +153,7 @@ private fun BottomSheetContent(
         fontWeight = FontWeight.Bold,
         modifier = Modifier
           .padding(bottom = 8.dp)
-          .clickable { viewModel.selectVenue(null) },
+          .clickable(role = Role.Button) { viewModel.selectVenue(null) },
       )
 
       // 選択されたベニューの詳細を表示
