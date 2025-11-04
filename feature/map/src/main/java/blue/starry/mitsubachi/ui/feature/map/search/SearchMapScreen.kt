@@ -134,6 +134,7 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Suppress("LongMethod") // TODO: リファクタリング
 private fun BottomSheetContent(
   modifier: Modifier = Modifier,
   viewModel: SearchMapScreenViewModel = hiltViewModel(),
