@@ -3,6 +3,7 @@ name: Enable Auto-Merge
 on:
   pull_request:
     types:
+      - opened
       - ready_for_review
 
 permissions: { }
@@ -15,3 +16,4 @@ jobs:
       - run: gh pr merge --merge --auto "${{ github.event.pull_request.number }}"
         env:
           GH_TOKEN: ${{ secrets.SLASHNEPHY_GITHUB_TOKEN }}
+        continue-on-error: true
