@@ -18,7 +18,11 @@ fun CheckInDetailScreenTopBar(
   onBack: () -> Unit,
 ) {
   TopAppBar(
-    title = { Text(stringResource(R.string.check_in_detail_top_bar_title).format(checkIn.user.displayName)) },
+    title = {
+      checkIn.user?.also {
+        Text(stringResource(R.string.check_in_detail_top_bar_title).format(it.displayName))
+      }
+    },
     navigationIcon = {
       IconButton(onClick = onBack) {
         Icon(

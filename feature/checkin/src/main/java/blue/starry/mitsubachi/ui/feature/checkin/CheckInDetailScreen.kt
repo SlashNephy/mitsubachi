@@ -29,10 +29,12 @@ fun CheckInDetailScreen(checkIn: CheckIn) {
       modifier = Modifier.fillMaxWidth(),
     )
     Spacer(modifier = Modifier.height(8.dp))
-    Text(
-      text = "by ${checkIn.user.displayName}",
-      modifier = Modifier.fillMaxWidth(),
-    )
+    checkIn.user?.also {
+      Text(
+        text = "by ${it.displayName}",
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
     checkIn.message?.also { message ->
       Spacer(modifier = Modifier.height(16.dp))
       Text(

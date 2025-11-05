@@ -65,6 +65,8 @@ fun CheckInRow(
   onClickCheckIn: (checkIn: CheckIn) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
+  val checkInUser = checkIn.user ?: return
+
   Row(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     modifier = Modifier
@@ -74,8 +76,8 @@ fun CheckInRow(
       },
   ) {
     UserIcon(
-      url = checkIn.user.iconUrl,
-      contentDescription = checkIn.user.handle,
+      url = checkInUser.iconUrl,
+      contentDescription = checkInUser.handle,
       modifier = Modifier
         .size(72.dp)
         .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -86,7 +88,7 @@ fun CheckInRow(
         .fillMaxHeight()
         .weight(1f),
     ) {
-      Text(checkIn.user.displayName, color = Color.Gray)
+      Text(checkInUser.displayName, color = Color.Gray)
       Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
       Text(
         "${checkIn.venue.primaryCategory?.name}・${
