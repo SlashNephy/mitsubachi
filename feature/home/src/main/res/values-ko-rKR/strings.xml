@@ -3,6 +3,7 @@
     <string name="home_bar">홈</string>
     <string name="search_bar">검색</string>
     <string name="map_bar">지도</string>
+    <string name="user_checkins_bar">이력</string>
     <string name="settings_button">설정</string>
     <string name="check_in_button">체크인</string>
     <string name="like_button">좋아요</string>
