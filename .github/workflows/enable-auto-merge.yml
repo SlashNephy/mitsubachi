@@ -1,0 +1,22 @@
+name: Enable Auto-Merge
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+
+permissions: { }
+
+jobs:
+  enable-auto-merge:
+    if: github.event.pull_request.user.login == 'SlashNephy' || github.actor == 'SlashNephy'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - run: gh pr merge --merge --auto "${{ github.event.pull_request.number }}"
+        env:
+          GH_TOKEN: ${{ secrets.SLASHNEPHY_GITHUB_TOKEN }}
+        continue-on-error: true

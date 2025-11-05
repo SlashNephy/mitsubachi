@@ -51,6 +51,7 @@ import blue.starry.mitsubachi.domain.model.VenueCategory
 import blue.starry.mitsubachi.domain.model.VenueLocation
 import blue.starry.mitsubachi.domain.model.primaryCategory
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.locale.LocaleAware
 import blue.starry.mitsubachi.ui.rememberInterval
 import coil3.compose.AsyncImage
 import java.time.ZonedDateTime
@@ -97,8 +98,10 @@ fun CheckInRow(
         color = Color.Gray,
       )
 
-      val datetime = rememberInterval(10.seconds) {
-        viewModel.formatPastDateTime(checkIn.timestamp)
+      val datetime = LocaleAware {
+        rememberInterval(10.seconds) {
+          viewModel.formatPastDateTime(checkIn.timestamp)
+        }
       }
       Text(datetime)
 

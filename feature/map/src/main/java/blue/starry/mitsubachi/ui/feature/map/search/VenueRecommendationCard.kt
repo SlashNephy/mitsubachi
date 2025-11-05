@@ -24,7 +24,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.model.url
+import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.locale.LocaleAware
 import coil3.compose.AsyncImage
 
 @Composable
@@ -111,12 +113,16 @@ fun VenueRecommendationCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         // 距離・住所
-        val distance = recommendation.venue.location.distance ?: 0
+        val distance = recommendation.venue.location.distance
         Text(
-          text = buildString {
-            append(VenueLocationFormatter.formatDistance(distance))
-            append('・')
-            append(VenueLocationFormatter.formatAddress(recommendation.venue.location))
+          text = LocaleAware {
+            buildString {
+              distance?.also {
+                append(LengthUnitFormatter.formatMeters(it))
+                append('・')
+              }
+              append(VenueLocationFormatter.formatAddress(recommendation.venue.location))
+            }
           },
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.onSurfaceVariant,

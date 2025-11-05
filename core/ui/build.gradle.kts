@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.convention.kotlin.serialization)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
+  alias(libs.plugins.kover)
 }
 
 android {
@@ -36,6 +37,10 @@ dependencies {
   api(libs.androidx.lifecycle.viewmodel.compose)
   api(libs.androidx.lifecycle.viewmodel.navigation3)
 
+  // Firebase
+  implementation(platform(libs.firebase.bom))
+  api(libs.firebase.crashlytics)
+
   api(libs.androidx.browser)
   api(libs.accompanist.permissions)
 
@@ -46,6 +51,7 @@ dependencies {
   testImplementation(libs.coil.test)
 
   api(libs.advanced.bottomsheet.material3)
+  implementation(libs.indriya)
 
   testImplementation(projects.core.testing)
   androidTestImplementation(projects.core.uiTesting)

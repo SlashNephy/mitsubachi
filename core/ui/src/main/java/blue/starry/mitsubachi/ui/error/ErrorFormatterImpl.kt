@@ -5,6 +5,8 @@ import blue.starry.mitsubachi.domain.error.AppError
 import blue.starry.mitsubachi.domain.error.NetworkTimeoutError
 import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.ui.R
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +25,9 @@ class ErrorFormatterImpl @Inject constructor(
       }
 
       is Exception -> {
+        // 未知の例外だったら Firebase Crashlytics に報告
+        Firebase.crashlytics.recordException(throwable)
+
         throwable.localizedMessage ?: context.getString(R.string.unknown_error)
       }
 
