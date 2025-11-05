@@ -38,6 +38,7 @@ import coil3.compose.AsyncImage
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
+@Suppress("LongMethod") // TODO: リファクタリング
 fun UserCheckInRow(
   checkIn: CheckIn,
   onClickCheckIn: (checkIn: CheckIn) -> Unit,
