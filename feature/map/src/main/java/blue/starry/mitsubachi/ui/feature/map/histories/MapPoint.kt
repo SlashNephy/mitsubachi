@@ -6,15 +6,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-
-private val SwarmColor = Color(0xffffa633)
+import blue.starry.mitsubachi.ui.MitsubachiColors
 
 @Composable
 internal fun MapPoint(modifier: Modifier = Modifier) {
   Box(
     modifier = modifier
       .clip(CircleShape)
-      .background(SwarmColor),
+      .background(MitsubachiColors.SwarmOrange),
   )
 }

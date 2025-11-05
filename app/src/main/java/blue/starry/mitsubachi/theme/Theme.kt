@@ -8,13 +8,14 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import blue.starry.mitsubachi.ui.MitsubachiColors
 
 private val DarkColorScheme = darkColorScheme(
-  primary = SwarmOrange,
+  primary = MitsubachiColors.SwarmOrange,
 )
 
 private val LightColorScheme = lightColorScheme(
-  primary = SwarmOrange,
+  primary = MitsubachiColors.SwarmOrange,
 )
 
 @Composable

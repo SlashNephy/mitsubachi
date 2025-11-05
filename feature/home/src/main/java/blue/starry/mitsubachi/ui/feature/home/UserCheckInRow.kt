@@ -1,5 +1,6 @@
 package blue.starry.mitsubachi.ui.feature.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.primaryCategory
+import blue.starry.mitsubachi.ui.MitsubachiColors
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
 import blue.starry.mitsubachi.ui.rememberInterval
 import coil3.compose.AsyncImage
@@ -118,11 +121,20 @@ private fun VenueCategoryIcon(
   modifier: Modifier = Modifier,
   contentDescription: String? = null,
 ) {
-  AsyncImage(
-    model = url,
-    contentDescription = contentDescription,
-    modifier = modifier.aspectRatio(1f),
-  )
+  Box(
+    modifier = modifier
+      .aspectRatio(1f)
+      .clip(CircleShape)
+      .background(MitsubachiColors.SwarmOrange),
+  ) {
+    AsyncImage(
+      model = url,
+      contentDescription = contentDescription,
+      modifier = Modifier
+        .align(Alignment.Center)
+        .fillMaxSize(0.7f),
+    )
+  }
 }
 
 @Composable

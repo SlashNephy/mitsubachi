@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.primaryCategory
+import blue.starry.mitsubachi.ui.MitsubachiColors
 import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
 import blue.starry.mitsubachi.ui.locale.LocaleAware
@@ -83,7 +84,7 @@ internal fun VenueCategoryIcon(
     modifier = modifier
       .aspectRatio(1f)
       .clip(CircleShape)
-      .background(Color.Gray),
+      .background(MitsubachiColors.SwarmOrange),
   ) {
     AsyncImage(
       model = model,
