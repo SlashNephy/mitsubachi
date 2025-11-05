@@ -27,7 +27,7 @@ data class FoursquareCheckIn(
   val sticker: Sticker?,
   val timeZoneOffset: Int, // 540
   val type: String, // checkin
-  val user: FoursquareUser,
+  val user: FoursquareUser?,
   val venue: FoursquareVenue,
   val visibility: String?, // closeFriends
   val with: List<FoursquareUser>?,
@@ -183,7 +183,7 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
   return CheckIn(
     id = id,
     venue = venue.toDomain(),
-    user = user.toDomain(),
+    user = user?.toDomain(),
     coin = 0, // TODO: API で取得できない？
     sticker = null,
     message = shout,

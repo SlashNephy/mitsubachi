@@ -10,7 +10,7 @@ import java.time.ZonedDateTime
 data class CheckIn(
   val id: String,
   val venue: Venue,
-  val user: FoursquareUser,
+  val user: FoursquareUser?,
   val coin: Int,
   val sticker: String?,
   val message: String?,

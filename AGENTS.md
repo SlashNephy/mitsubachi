@@ -59,7 +59,7 @@ is not violated.
 - **:core/domain**: Business logic and use cases
     - Defines interfaces for data layer
     - Independent of Android framework and implementation details
-- **:core/data**: Implements repositories and data sources, including network and database implementations.
+- **:core/data**: Data sources such as network or database implementations.
     - Provides concrete implementations for interfaces defined in :core/domain
     - Handles data retrieval, caching, and persistence
 - **:core/ui**: Reusable UI components
@@ -81,3 +81,16 @@ UI (Composable) → ViewModel → UseCase → Repository → Network/Database
      ↑                                                      ↓
      └──────────────── Flow/State ←───────────────────────┘
 ```
+
+## Commands
+
+The following are typical commands used for local development.
+
+- **Build**: `./gradlew assembleLocalDebug`
+- **Unit Test**: `./gradlew testLocalDebug`
+- **Instrumented Test**: `./gradlew connectedLocalDebugAndroidTest`
+- **Lint (Android Lint)**: `./gradlew lintLocalDebug`
+- **Lint (detekt)**: `./gradlew detekt`
+
+If desired, you can restrict the target by prefixing the module name like
+`./gradlew :core:ui:assembleLocalDebug`.

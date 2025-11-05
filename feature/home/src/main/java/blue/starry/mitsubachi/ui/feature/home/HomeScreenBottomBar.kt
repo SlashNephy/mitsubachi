@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -21,6 +22,7 @@ private enum class NavigationItem(@param:StringRes val labelId: Int, val icon: I
   Home(R.string.home_bar, Icons.Filled.Home),
   Search(R.string.search_bar, Icons.Filled.Search),
   Map(R.string.map_bar, Icons.Filled.Map),
+  UserCheckIns(R.string.user_checkins_bar, Icons.Filled.Person),
 }
 
 @Composable
@@ -28,6 +30,7 @@ fun HomeScreenBottomBar(
   onClickHome: () -> Unit,
   onClickSearch: () -> Unit,
   onClickMap: () -> Unit,
+  onClickUserCheckIns: () -> Unit,
 ) {
   var selectedItem by remember { mutableStateOf(NavigationItem.Home) }
 
@@ -50,6 +53,7 @@ fun HomeScreenBottomBar(
             NavigationItem.Home -> onClickHome()
             NavigationItem.Search -> onClickSearch()
             NavigationItem.Map -> onClickMap()
+            NavigationItem.UserCheckIns -> onClickUserCheckIns()
           }
         },
         selected = selectedItem == item,

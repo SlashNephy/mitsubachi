@@ -43,4 +43,9 @@ interface FoursquareApiClient {
   )
 
   suspend fun likeCheckIn(checkInId: String)
+  suspend fun getUserCheckIns(
+    userId: String? = null,
+    limit: Int? = null,
+    offset: Int? = null,
+  ): List<CheckIn>
 }

@@ -169,6 +169,21 @@ class FoursquareApiClientImpl @Inject constructor(
       likeCheckIn(checkInId = checkInId)
     }
   }
+
+  override suspend fun getUserCheckIns(
+    userId: String?,
+    limit: Int?,
+    offset: Int?,
+  ): List<CheckIn> {
+    return ktorfit.runNetwork {
+      val data = getUserCheckIns(
+        userId = userId ?: "self",
+        limit = limit,
+        offset = offset,
+      )
+      data.response.checkins.items.map(FoursquareCheckIn::toDomain)
+    }
+  }
 }
 
 private fun FoursquareCheckInBroadcastFlag.serialize(): String {
