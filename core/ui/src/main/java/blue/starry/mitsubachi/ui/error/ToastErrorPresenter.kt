@@ -12,10 +12,12 @@ import javax.inject.Singleton
 class ToastErrorPresenter @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val formatter: ErrorFormatter,
+  private val reporter: ErrorReporter,
 ) : ErrorPresenter {
   override suspend fun handle(throwable: Throwable, template: (String) -> String) {
-    val message = formatter.format(throwable, template)
+    reporter.report(throwable)
 
+    val message = formatter.format(throwable, template)
     withContext(Dispatchers.Main) {
       Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }

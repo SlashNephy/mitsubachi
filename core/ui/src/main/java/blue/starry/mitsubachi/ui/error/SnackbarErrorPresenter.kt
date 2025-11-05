@@ -8,11 +8,13 @@ import javax.inject.Singleton
 @Singleton
 class SnackbarErrorPresenter @Inject constructor(
   private val formatter: ErrorFormatter,
+  private val reporter: ErrorReporter,
   private val snackbarHostService: SnackbarHostService,
 ) : ErrorPresenter {
   override suspend fun handle(throwable: Throwable, template: (String) -> String) {
-    val message = formatter.format(throwable, template)
+    reporter.report(throwable)
 
+    val message = formatter.format(throwable, template)
     snackbarHostService.enqueue(message)
   }
 }
