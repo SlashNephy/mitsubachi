@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.ui.di
 
 import android.content.Context
+import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import coil3.ImageLoader
 import coil3.annotation.ExperimentalCoilApi
 import coil3.memory.MemoryCache
@@ -8,6 +9,7 @@ import coil3.network.cachecontrol.CacheControlCacheStrategy
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.crossfade
+import coil3.util.DebugLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,7 @@ internal object ImageLoaderModule {
   @Singleton
   @OptIn(ExperimentalTime::class, ExperimentalCoilApi::class)
   fun provide(
+    applicationConfig: ApplicationConfig,
     @ApplicationContext context: Context,
     httpClient: HttpClient,
   ): ImageLoader {
@@ -47,6 +50,11 @@ internal object ImageLoaderModule {
           .build(),
       )
       .crossfade(true)
+      .apply {
+        if (applicationConfig.isDebugBuild) {
+          logger(DebugLogger())
+        }
+      }
       .build()
   }
 }
