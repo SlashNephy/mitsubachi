@@ -5,4 +5,5 @@
     <string name="network_timeout_error">Request timed out. Please try again.</string>
     <string name="unauthorized_error">Session expired. Please log in again.</string>
     <string name="unknown_error">An error occurred.</string>
+    <string name="retry_button">Retry</string>
 </resources>

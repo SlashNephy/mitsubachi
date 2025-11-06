@@ -9,19 +9,19 @@ import javax.inject.Singleton
 
 @Singleton
 internal class ErrorReporterImpl @Inject constructor() : ErrorReporter {
-  override fun report(throwable: Throwable) {
-    when (throwable) {
+  override fun report(exception: Exception) {
+    when (exception) {
       is AppError -> {
-        Timber.d(throwable, "AppError reported")
+        Timber.d(exception, "AppError reported")
 
         // AppError はハンドリングする前提なので Firebase Crashlytics に記録しない
       }
 
       is Exception -> {
-        Timber.e(throwable, "unknown exception reported")
+        Timber.e(exception, "unknown exception reported")
 
         // 未知の例外だったら Firebase Crashlytics に報告
-        Firebase.crashlytics.recordException(throwable)
+        Firebase.crashlytics.recordException(exception)
       }
     }
   }

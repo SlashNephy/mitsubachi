@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.FetchUserVenueHistoriesUseCase
-import blue.starry.mitsubachi.ui.error.ErrorFormatter
+import blue.starry.mitsubachi.ui.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,12 +17,11 @@ import javax.inject.Inject
 @HiltViewModel
 class VenueHistoriesScreenViewModel @Inject constructor(
   private val fetchUserVenueHistoriesUseCase: FetchUserVenueHistoriesUseCase,
-  private val errorFormatter: ErrorFormatter,
 ) : ViewModel() {
   sealed interface UiState {
     data object Loading : UiState
     data class Success(val data: List<VenueHistory>, val isRefreshing: Boolean) : UiState
-    data class Error(val message: String) : UiState
+    data class Error(val exception: Exception) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -51,12 +50,12 @@ class VenueHistoriesScreenViewModel @Inject constructor(
       fetchUserVenueHistoriesUseCase()
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
-    }.onFailure { e ->
+    }.onException { e ->
       if (currentState is UiState.Success) {
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
         _state.value = currentState.copy(isRefreshing = false)
       } else {
-        _state.value = UiState.Error(errorFormatter.format(e))
+        _state.value = UiState.Error(e)
       }
     }
   }

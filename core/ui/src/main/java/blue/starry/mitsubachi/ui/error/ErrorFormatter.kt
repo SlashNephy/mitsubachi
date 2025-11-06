@@ -1,9 +1,9 @@
 package blue.starry.mitsubachi.ui.error
 
 interface ErrorFormatter {
-  fun format(throwable: Throwable): String
+  fun format(exception: Exception): String
 }
 
-fun ErrorFormatter.format(throwable: Throwable, template: (String) -> String): String {
-  return template(format(throwable))
+fun ErrorFormatter.format(exception: Exception, template: (String) -> String): String {
+  return template(format(exception))
 }

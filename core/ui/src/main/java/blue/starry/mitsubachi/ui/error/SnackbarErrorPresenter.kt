@@ -11,10 +11,10 @@ class SnackbarErrorPresenter @Inject constructor(
   private val reporter: ErrorReporter,
   private val snackbarHostService: SnackbarHostService,
 ) : ErrorPresenter {
-  override suspend fun handle(throwable: Throwable, template: (String) -> String) {
-    reporter.report(throwable)
+  override suspend fun handle(exception: Exception, template: (String) -> String) {
+    reporter.report(exception)
 
-    val message = formatter.format(throwable, template)
+    val message = formatter.format(exception, template)
     snackbarHostService.enqueue(message)
   }
 }

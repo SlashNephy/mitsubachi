@@ -7,8 +7,8 @@ import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchFeedUseCase
 import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
-import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.ui.snackbar.enqueue
@@ -26,13 +26,12 @@ class HomeScreenViewModel @Inject constructor(
   private val likeCheckInUseCase: LikeCheckInUseCase,
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
-  private val errorFormatter: ErrorFormatter,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
     data object Loading : UiState
     data class Success(val feed: List<CheckIn>, val isRefreshing: Boolean) : UiState
-    data class Error(val message: String) : UiState
+    data class Error(val exception: Exception) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -61,13 +60,12 @@ class HomeScreenViewModel @Inject constructor(
       fetchFeedUseCase()
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
-    }.onFailure { e ->
-      snackbarErrorHandler.handle(e)
+    }.onException { e ->
       if (currentState is UiState.Success) {
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
         _state.value = currentState.copy(isRefreshing = false)
       } else {
-        _state.value = UiState.Error(errorFormatter.format(e))
+        _state.value = UiState.Error(e)
       }
     }
   }
@@ -92,7 +90,7 @@ class HomeScreenViewModel @Inject constructor(
             _state.value = currentState.copy(feed = newFeed)
           }
         }
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorHandler.handle(e) {
           "いいねに失敗しました: $it"
         }
