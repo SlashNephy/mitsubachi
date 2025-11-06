@@ -15,11 +15,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -33,9 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.domain.model.Venue
+import blue.starry.mitsubachi.ui.screen.ErrorScreen
+import blue.starry.mitsubachi.ui.screen.LoadingScreen
 
 @Composable
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun NearbyVenuesScreen(
   onClickVenue: (Venue) -> Unit,
   viewModel: NearbyVenuesScreenViewModel = hiltViewModel(),
@@ -79,9 +78,7 @@ fun NearbyVenuesScreen(
       }
 
       is NearbyVenuesScreenViewModel.UiState.Loading -> {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-          LoadingIndicator()
-        }
+        LoadingScreen()
       }
 
       is NearbyVenuesScreenViewModel.UiState.Success -> {
@@ -94,9 +91,7 @@ fun NearbyVenuesScreen(
       }
 
       is NearbyVenuesScreenViewModel.UiState.Error -> {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-          Text(state.message, modifier = Modifier.padding(16.dp))
-        }
+        ErrorScreen(state.exception)
       }
     }
   }

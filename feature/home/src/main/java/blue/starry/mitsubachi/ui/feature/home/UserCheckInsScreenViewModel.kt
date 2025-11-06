@@ -7,7 +7,6 @@ import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchUserCheckInsUseCase
 import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
-import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
@@ -27,13 +26,12 @@ class UserCheckInsScreenViewModel @Inject constructor(
   private val likeCheckInUseCase: LikeCheckInUseCase,
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
-  private val errorFormatter: ErrorFormatter,
 ) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
     data object Loading : UiState
     data class Success(val checkIns: List<CheckIn>, val isRefreshing: Boolean) : UiState
-    data class Error(val message: String) : UiState
+    data class Error(val exception: Exception) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -62,11 +60,10 @@ class UserCheckInsScreenViewModel @Inject constructor(
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
     }.onException { e ->
-      snackbarErrorHandler.handle(e)
       if (currentState is UiState.Success) {
         _state.value = currentState.copy(isRefreshing = false)
       } else {
-        _state.value = UiState.Error(errorFormatter.format(e))
+        _state.value = UiState.Error(e)
       }
     }
   }

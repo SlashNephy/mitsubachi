@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.Coordinates
 import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.usecase.SearchVenueRecommendationsUseCase
-import blue.starry.mitsubachi.ui.error.ErrorFormatter
-import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.ui.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchMapScreenViewModel @Inject constructor(
   private val searchVenueRecommendationsUseCase: SearchVenueRecommendationsUseCase,
-  private val snackbarErrorPresenter: SnackbarErrorPresenter,
-  private val errorFormatter: ErrorFormatter,
 ) : ViewModel() {
   sealed interface UiState {
     data object Loading : UiState
@@ -29,7 +25,7 @@ class SearchMapScreenViewModel @Inject constructor(
       val isBottomSheetVisible: Boolean,
     ) : UiState
 
-    data class Error(val message: String) : UiState
+    data class Error(val exception: Exception) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -55,12 +51,11 @@ class SearchMapScreenViewModel @Inject constructor(
           isBottomSheetVisible = true,
         )
       }.onException { e ->
-        snackbarErrorPresenter.handle(e)
         if (currentState is UiState.Success) {
           // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
           _state.value = currentState
         } else {
-          _state.value = UiState.Error(errorFormatter.format(e))
+          _state.value = UiState.Error(e)
         }
       }
     }

@@ -9,7 +9,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,9 +26,7 @@ import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -48,9 +45,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.ui.screen.LoadingScreen
 
 @Composable
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun WelcomeScreen(
   onLogin: () -> Unit,
   viewModel: WelcomeScreenViewModel = hiltViewModel(),
@@ -60,12 +57,7 @@ fun WelcomeScreen(
 
   when (val state = state) {
     is WelcomeScreenViewModel.UiState.Loading -> {
-      Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize(),
-      ) {
-        LoadingIndicator()
-      }
+      LoadingScreen()
     }
 
     is WelcomeScreenViewModel.UiState.NoAccounts -> {

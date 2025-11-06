@@ -1,19 +1,14 @@
 package blue.starry.mitsubachi.ui.feature.map.histories
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LoadingIndicator
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.ui.screen.ErrorScreen
+import blue.starry.mitsubachi.ui.screen.LoadingScreen
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
@@ -26,7 +21,7 @@ internal const val DEFAULT_ZOOM_LEVEL = 5f
 internal const val DEFAULT_CLUSTERING_THRESHOLD_ZOOM_LEVEL = 0f // デフォルト無効
 
 @Composable
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, MapsComposeExperimentalApi::class)
+@OptIn(MapsComposeExperimentalApi::class)
 fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewModel()) {
   val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -39,13 +34,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
   ) {
     when (val state = state) {
       is VenueHistoriesScreenViewModel.UiState.Loading -> {
-        Box(
-          modifier = Modifier
-            .fillMaxSize(),
-          contentAlignment = Alignment.Center,
-        ) {
-          LoadingIndicator()
-        }
+        LoadingScreen()
       }
 
       is VenueHistoriesScreenViewModel.UiState.Success -> {
@@ -68,12 +57,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
       }
 
       is VenueHistoriesScreenViewModel.UiState.Error -> {
-        Box(
-          modifier = Modifier.fillMaxSize(),
-          contentAlignment = Alignment.Center,
-        ) {
-          Text(state.message, modifier = Modifier.padding(16.dp))
-        }
+        ErrorScreen(state.exception)
       }
     }
   }

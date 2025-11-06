@@ -10,8 +10,6 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
-import blue.starry.mitsubachi.ui.error.ErrorFormatter
-import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.ui.error.onException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -36,8 +34,6 @@ enum class NearbyVenuesSortOrder {
 class NearbyVenuesScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val searchNearVenuesUseCase: SearchNearVenuesUseCase,
-  private val snackbarErrorHandler: SnackbarErrorPresenter,
-  private val errorFormatter: ErrorFormatter,
 ) : ViewModel(), AccountEventHandler {
   @Immutable
   sealed interface UiState {
@@ -50,7 +46,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
       val sortOrder: NearbyVenuesSortOrder,
     ) : UiState
 
-    data class Error(val message: String) : UiState
+    data class Error(val exception: Exception) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -106,8 +102,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
             sortOrder = _sortOrder.value,
           )
         }.onException { e ->
-          snackbarErrorHandler.handle(e)
-          _state.value = UiState.Error(errorFormatter.format(e))
+          _state.value = UiState.Error(e)
         }
       }
     } catch (e: TimeoutCancellationException) {
