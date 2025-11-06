@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.FetchUserVenueHistoriesUseCase
 import blue.starry.mitsubachi.ui.error.ErrorFormatter
+import blue.starry.mitsubachi.ui.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -51,7 +52,7 @@ class VenueHistoriesScreenViewModel @Inject constructor(
       fetchUserVenueHistoriesUseCase()
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
-    }.onFailure { e ->
+    }.onException { e ->
       if (currentState is UiState.Success) {
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
         _state.value = currentState.copy(isRefreshing = false)

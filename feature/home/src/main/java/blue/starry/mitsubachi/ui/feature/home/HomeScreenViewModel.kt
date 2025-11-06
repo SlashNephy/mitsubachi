@@ -9,6 +9,7 @@ import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.ui.snackbar.enqueue
@@ -61,7 +62,7 @@ class HomeScreenViewModel @Inject constructor(
       fetchFeedUseCase()
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
-    }.onFailure { e ->
+    }.onException { e ->
       snackbarErrorHandler.handle(e)
       if (currentState is UiState.Success) {
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
@@ -92,7 +93,7 @@ class HomeScreenViewModel @Inject constructor(
             _state.value = currentState.copy(feed = newFeed)
           }
         }
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorHandler.handle(e) {
           "いいねに失敗しました: $it"
         }

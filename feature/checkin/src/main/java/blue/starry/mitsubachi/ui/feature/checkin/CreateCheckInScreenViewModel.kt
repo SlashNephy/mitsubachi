@@ -10,6 +10,7 @@ import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.CreateCheckInUseCase
 import blue.starry.mitsubachi.domain.usecase.UploadImageUseCase
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.flow.ResettableMutableStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,7 +59,7 @@ class CreateCheckInScreenViewModel @Inject constructor(
           uploadImageUseCase(checkIn.id, files, isPublic)
         }
         _state.reset()
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorHandler.handle(e)
       }
     }

@@ -9,6 +9,7 @@ import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
 import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.ui.snackbar.enqueue
@@ -60,7 +61,7 @@ class UserCheckInsScreenViewModel @Inject constructor(
       fetchUserCheckInsUseCase()
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
-    }.onFailure { e ->
+    }.onException { e ->
       snackbarErrorHandler.handle(e)
       if (currentState is UiState.Success) {
         _state.value = currentState.copy(isRefreshing = false)
@@ -93,7 +94,7 @@ class UserCheckInsScreenViewModel @Inject constructor(
             _state.value = currentState.copy(checkIns = newCheckIns)
           }
         }
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorHandler.handle(e) {
           "いいねに失敗しました: $it"
         }

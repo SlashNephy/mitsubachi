@@ -12,6 +12,7 @@ import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -104,7 +105,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
             isRefreshing = false,
             sortOrder = _sortOrder.value,
           )
-        }.onFailure { e ->
+        }.onException { e ->
           snackbarErrorHandler.handle(e)
           _state.value = UiState.Error(errorFormatter.format(e))
         }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
 import blue.starry.mitsubachi.domain.usecase.SignOutUseCase
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,7 +29,7 @@ class SettingsScreenViewModel @Inject constructor(
     return viewModelScope.launch {
       runCatching {
         signOutUseCase()
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorHandler.handle(e)
       }
     }
@@ -38,7 +39,7 @@ class SettingsScreenViewModel @Inject constructor(
     return viewModelScope.launch {
       runCatching {
         appSettingsRepository.setFirebaseCrashlyticsEnabled(isEnabled)
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorHandler.handle(e)
       }
     }

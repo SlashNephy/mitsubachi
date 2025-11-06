@@ -7,6 +7,7 @@ import blue.starry.mitsubachi.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.domain.usecase.SearchVenueRecommendationsUseCase
 import blue.starry.mitsubachi.ui.error.ErrorFormatter
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.ui.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +54,7 @@ class SearchMapScreenViewModel @Inject constructor(
           venueRecommendations = venues,
           isBottomSheetVisible = true,
         )
-      }.onFailure { e ->
+      }.onException { e ->
         snackbarErrorPresenter.handle(e)
         if (currentState is UiState.Success) {
           // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
