@@ -13,22 +13,17 @@ import javax.inject.Singleton
 internal class ErrorFormatterImpl @Inject constructor(
   @param:ApplicationContext private val context: Context,
 ) : ErrorFormatter {
-  override fun format(throwable: Throwable): String {
-    return when (throwable) {
+  override fun format(exception: Exception): String {
+    return when (exception) {
       is AppError -> {
-        when (throwable) {
+        when (exception) {
           is UnauthorizedError -> context.getString(R.string.unauthorized_error)
           is NetworkTimeoutError -> context.getString(R.string.network_timeout_error)
         }
       }
 
       is Exception -> {
-        throwable.localizedMessage ?: context.getString(R.string.unknown_error)
-      }
-
-      else -> {
-        // Error は回復不能とみなして再スロー
-        throw throwable
+        exception.localizedMessage ?: context.getString(R.string.unknown_error)
       }
     }
   }

@@ -14,10 +14,10 @@ class ToastErrorPresenter @Inject constructor(
   private val formatter: ErrorFormatter,
   private val reporter: ErrorReporter,
 ) : ErrorPresenter {
-  override suspend fun handle(throwable: Throwable, template: (String) -> String) {
-    reporter.report(throwable)
+  override suspend fun handle(exception: Exception, template: (String) -> String) {
+    reporter.report(exception)
 
-    val message = formatter.format(throwable, template)
+    val message = formatter.format(exception, template)
     withContext(Dispatchers.Main) {
       Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }

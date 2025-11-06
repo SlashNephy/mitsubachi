@@ -1,5 +1,5 @@
 package blue.starry.mitsubachi.ui.error
 
 interface ErrorPresenter {
-  suspend fun handle(throwable: Throwable, template: (String) -> String = { it })
+  suspend fun handle(exception: Exception, template: (String) -> String = { it })
 }
