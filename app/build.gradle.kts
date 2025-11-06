@@ -115,13 +115,4 @@ dependencies {
   implementation(libs.firebase.crashlytics)
   implementation(libs.firebase.crashlytics.ndk)
   implementation(libs.firebase.analytics)
-
-  debugImplementation(libs.slf4j.android)
-  debugImplementation(libs.androidx.compose.ui.tooling)
-  debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-  testImplementation(projects.core.testing)
-  testRuntimeOnly(libs.junit.jupiter.engine)
-  testRuntimeOnly(libs.junit.platform.launcher)
-  androidTestImplementation(projects.core.uiTesting)
 }

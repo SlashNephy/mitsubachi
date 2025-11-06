@@ -4,7 +4,9 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -98,6 +100,38 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           tasks.withType<Test>().configureEach {
             failOnNoDiscoveredTests.set(false)
           }
+        }
+      }
+
+      dependencies {
+        // Convention Plugin では全モジュールで共通の依存のみを定義する
+
+        // Unit Testing
+        "testImplementation"(kotlin("test"))
+        "testImplementation"(versions.library("junit-jupiter"))
+        "testRuntimeOnly"(versions.library("junit-jupiter-engine"))
+        "testRuntimeOnly"(versions.library("junit-platform-launcher"))
+        "implementation"(versions.library("mockk")) // testImplementation で十分だけど @Preview でモックしたいことがある
+        "testImplementation"(versions.library("archunit"))
+
+        // Instrumented Testing
+        "androidTestImplementation"(kotlin("test"))
+        "androidTestImplementation"(versions.library("androidx-test-core"))
+        "androidTestImplementation"(versions.library("androidx-test-ext-junit"))
+        "androidTestImplementation"(versions.library("androidx-test-espresso-core"))
+
+        if (projectType.enableCompose) {
+          // BOM
+          "implementation"(platform(versions.library("androidx-compose-bom")))
+          "androidTestImplementation"(platform(versions.library("androidx-compose-bom")))
+
+          // @Preview
+          "implementation"(versions.library("androidx-compose-ui-tooling-preview"))
+          "debugImplementation"(versions.library("androidx-compose-ui-tooling"))
+
+          // Test
+          "androidTestImplementation"(versions.library("androidx-compose-ui-test-junit4"))
+          "debugImplementation"(versions.library("androidx-compose-ui-test-manifest"))
         }
       }
     }
