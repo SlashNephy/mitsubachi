@@ -20,10 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Firebase Crashlytics のために例外クラスのマッピングを保持する
-# https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=android
--keep public class * extends java.lang.Throwable
-
 # Protobuf
 # https://github.com/protocolbuffers/protobuf/blob/e2ddebe709ae045df876a93b0268cf459817a067/java/lite/proguard.pgcfg
 -assumevalues class com.google.protobuf.Android { static boolean ASSUME_ANDROID return true; }
