@@ -84,7 +84,7 @@ private fun ErrorScreenPreview() {
   ErrorScreen(
     exception = Exception("Something went wrong"),
     onClickRetry = {},
-    viewModel = ErrorScreenViewModel(mockk()),
+    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
   )
 }
 
@@ -131,7 +131,7 @@ private fun UnauthorizedErrorScreenPreview() {
   ErrorScreen(
     exception = UnauthorizedError(),
     onClickRetry = {},
-    viewModel = ErrorScreenViewModel(mockk()),
+    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
   )
 }
 
@@ -141,7 +141,7 @@ private fun NetworkTimeoutErrorScreenPreview() {
   ErrorScreen(
     exception = NetworkTimeoutError(mockk()),
     onClickRetry = {},
-    viewModel = ErrorScreenViewModel(mockk()),
+    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
   )
 }
 

@@ -93,4 +93,4 @@ The following are typical commands used for local development.
 - **Lint (detekt)**: `./gradlew detekt`
 
 If desired, you can restrict the target by prefixing the module name like
-`./gradlew :core:ui:assembleLocalDebug`.
+`./gradlew :core:ui:assembleLocalDebug` for speed-up.

@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import blue.starry.mitsubachi.feature.settings.SettingsScreen
 import blue.starry.mitsubachi.ui.feature.checkin.CheckInDetailScreen
@@ -34,11 +32,12 @@ import blue.starry.mitsubachi.ui.feature.map.MapScreenTopBar
 import blue.starry.mitsubachi.ui.feature.map.histories.VenueHistoriesScreen
 import blue.starry.mitsubachi.ui.feature.map.search.SearchMapScreen
 import blue.starry.mitsubachi.ui.feature.welcome.WelcomeScreen
+import blue.starry.mitsubachi.ui.navigation.rememberNavBackStack
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun App(viewModel: AppViewModel = hiltViewModel()) {
-  val backStack = rememberNavBackStack(RouteKey.Welcome)
+  val backStack = rememberNavBackStack<RouteKey>(RouteKey.Welcome)
   val snackbarHostState = remember { SnackbarHostState() }
 
   LaunchedEffect(viewModel, snackbarHostState) {
@@ -64,7 +63,7 @@ fun App(viewModel: AppViewModel = hiltViewModel()) {
 
 private fun scaffoldPadding(
   padding: PaddingValues,
-  backStack: NavBackStack<NavKey>,
+  backStack: NavBackStack<RouteKey>,
 ): PaddingValues {
   return when (backStack.last()) {
     is RouteKey.Search -> {
@@ -81,7 +80,7 @@ private fun scaffoldPadding(
 }
 
 @Composable
-private fun AppTopBar(backStack: NavBackStack<NavKey>) {
+private fun AppTopBar(backStack: NavBackStack<RouteKey>) {
   when (val key = backStack.last()) {
     is RouteKey.Home -> {
       HomeScreenTopBar(onClickSettingsButton = {
@@ -128,7 +127,7 @@ private fun AppTopBar(backStack: NavBackStack<NavKey>) {
 }
 
 @Composable
-private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
+private fun AppBottomBar(backStack: NavBackStack<RouteKey>) {
   when (backStack.last()) {
     is RouteKey.Home, is RouteKey.Search, is RouteKey.VenueHistories, is RouteKey.UserCheckIns -> {
       HomeScreenBottomBar(
@@ -152,7 +151,7 @@ private fun AppBottomBar(backStack: NavBackStack<NavKey>) {
 }
 
 @Composable
-private fun AppFloatingActionButton(backStack: NavBackStack<NavKey>) {
+private fun AppFloatingActionButton(backStack: NavBackStack<RouteKey>) {
   when (backStack.last()) {
     is RouteKey.Home -> {
       HomeScreenFloatingActionButton(
@@ -172,7 +171,7 @@ private fun AppFloatingActionButtonPosition(): FabPosition {
 }
 
 @Suppress("FunctionName", "LongMethod")
-private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> {
+private fun AppEntryProvider(backStack: NavBackStack<RouteKey>): (RouteKey) -> NavEntry<RouteKey> {
   return { key ->
     when (key) {
       is RouteKey.Welcome -> {
@@ -227,6 +226,10 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
         }
       }
 
+      is RouteKey.User -> {
+        error("TODO: not implemented")
+      }
+
       is RouteKey.Map -> {
         NavEntry(key) {
           MapScreen(
@@ -268,10 +271,6 @@ private fun AppEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEn
             },
           )
         }
-      }
-
-      else -> {
-        TODO("route $key not implemented")
       }
     }
   }

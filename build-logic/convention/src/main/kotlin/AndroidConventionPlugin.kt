@@ -81,10 +81,16 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
 
           lint {
+            checkReleaseBuilds = true
             checkTestSources = true
             checkDependencies = true
+            checkAllWarnings = true
+            ignoreWarnings = false
+            showAll = true
+            explainIssues = true
             sarifReport = true
             lintConfig = rootProject.file("android-lint.xml")
+            baseline = rootProject.file("android-lint-baseline.xml")
           }
 
           testOptions {

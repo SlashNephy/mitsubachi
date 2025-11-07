@@ -55,7 +55,7 @@ fun HomeScreen(
       }
 
       is HomeScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception, {})
+        ErrorScreen(state.exception, viewModel::refresh)
       }
     }
   }

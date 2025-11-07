@@ -192,7 +192,9 @@ private fun BottomSheetContent(
         }
 
         is SearchMapScreenViewModel.UiState.Error -> {
-          ErrorScreen(state.exception)
+          ErrorScreen(state.exception, {
+            viewModel.updateCurrentLocation(state.lastLocation)
+          })
         }
       }
     }
