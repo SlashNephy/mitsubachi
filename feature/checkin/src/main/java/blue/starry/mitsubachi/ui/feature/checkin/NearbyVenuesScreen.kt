@@ -91,7 +91,12 @@ fun NearbyVenuesScreen(
       }
 
       is NearbyVenuesScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception)
+        ErrorScreen(
+          state.exception,
+          onClickRetry = {
+            viewModel.refresh(query)
+          },
+        )
       }
     }
   }

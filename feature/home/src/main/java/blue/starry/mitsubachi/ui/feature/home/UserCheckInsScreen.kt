@@ -53,7 +53,7 @@ fun UserCheckInsScreen(
       }
 
       is UserCheckInsScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception)
+        ErrorScreen(state.exception, viewModel::refresh)
       }
     }
   }

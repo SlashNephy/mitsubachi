@@ -57,7 +57,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
       }
 
       is VenueHistoriesScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception)
+        ErrorScreen(state.exception, viewModel::refresh)
       }
     }
   }

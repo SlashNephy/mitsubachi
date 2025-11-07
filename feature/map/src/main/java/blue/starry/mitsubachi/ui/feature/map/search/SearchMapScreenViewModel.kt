@@ -25,7 +25,7 @@ class SearchMapScreenViewModel @Inject constructor(
       val isBottomSheetVisible: Boolean,
     ) : UiState
 
-    data class Error(val exception: Exception) : UiState
+    data class Error(val exception: Exception, val lastLocation: LatLng) : UiState
   }
 
   private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -55,7 +55,7 @@ class SearchMapScreenViewModel @Inject constructor(
           // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
           _state.value = currentState
         } else {
-          _state.value = UiState.Error(e)
+          _state.value = UiState.Error(e, location)
         }
       }
     }
