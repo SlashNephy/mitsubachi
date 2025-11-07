@@ -203,11 +203,11 @@ class RelativeDateTimeFormatterTest {
   }
 }
 
-private val Int.years: Duration
+internal val Int.years: Duration
   get() = 365.days * this
 
-private val Int.months: Duration
+internal val Int.months: Duration
   get() = 30.days * this
 
-private val Int.weeks: Duration
+internal val Int.weeks: Duration
   get() = 7.days * this

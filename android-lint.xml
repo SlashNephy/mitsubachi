@@ -4,4 +4,19 @@
         <!-- https://github.com/bumptech/glide/issues/4940 -->
         <ignore regexp="com.bumptech.glide.request.target.NotificationTarget" />
     </issue>
+
+    <issue id="InvalidPackage">
+        <ignore
+            regexp="in Android: `java.util.spi`. Referenced from `tech.units.indriya.spi.UnitNameProvider`." />
+        <ignore
+            regexp="in Android: `java.lang.management`. Referenced from `io.ktor.util.debug.IntellijIdeaDebugDetector`." />
+        <ignore
+            regexp="in Android: `java.lang.instrument`. Referenced from `io.mockk.proxy.jvm.JvmMockKAgentFactory`." />
+    </issue>
+
+    <issue id="StopShip" severity="ignore" />
+
+    <issue id="Typos" severity="informational">
+        <ignore path="app/src/main/res/values/font_certs.xml" />
+    </issue>
 </lint>
