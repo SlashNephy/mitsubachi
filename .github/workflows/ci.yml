@@ -126,14 +126,11 @@ jobs:
       - run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      - run: ./gradlew lint
-      - name: Merge SARIF files
-        if: always()
-        run: find . -type f -name lint-results-\*.sarif -exec npx @microsoft/sarif-multitool merge --merge-runs {} +
+      - run: ./gradlew lintLocalDebug
       - uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         if: always()
         with:
-          sarif_file: merged.sarif
+          sarif_file: app/build/reports/lint-results-localDebug.sarif
           category: android-lint
 
   detekt:

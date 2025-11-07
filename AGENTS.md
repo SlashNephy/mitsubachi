@@ -89,7 +89,7 @@ The following are typical commands used for local development.
 - **Build**: `./gradlew assembleLocalDebug`
 - **Unit Test**: `./gradlew testLocalDebug`
 - **Instrumented Test**: `./gradlew connectedLocalDebugAndroidTest`
-- **Lint (Android Lint)**: `./gradlew lint`
+- **Lint (Android Lint)**: `./gradlew lintLocalDebug`
 - **Lint (detekt)**: `./gradlew detekt`
 
 If desired, you can restrict the target by prefixing the module name like

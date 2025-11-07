@@ -11,7 +11,7 @@
       <option name="taskNames">
         <list>
           <option value="detekt" />
-          <option value="lint" />
+          <option value="lintLocalDebug" />
         </list>
       </option>
       <option name="vmOptions" />
