@@ -6,5 +6,7 @@
     <string name="unauthorized_error">ログイン状態が失効しました。再度ログインしてください。</string>
     <string name="unknown_error">エラーが発生しました。</string>
     <string name="retry_button">もう一度試す</string>
+    <string name="location_permission_missing">位置情報へのアクセスが許可されていません。改めて許可したい場合は端末の設定画面から許可してください。</string>
+    <string name="open_device_settings_button">端末の設定を開く</string>
     <string name="network_unavailable_error">インターネットに接続されていません。もう一度お試しください。</string>
 </resources>

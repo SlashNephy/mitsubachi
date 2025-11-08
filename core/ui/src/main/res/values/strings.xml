@@ -6,5 +6,7 @@
     <string name="unauthorized_error">Session expired. Please log in again.</string>
     <string name="unknown_error">An error occurred.</string>
     <string name="retry_button">Retry</string>
+    <string name="location_permission_missing">Location access is not permitted. To grant permission again, please do so from your device\'s settings screen.</string>
+    <string name="open_device_settings_button">Open device settings</string>
     <string name="network_unavailable_error">No network available.</string>
 </resources>
