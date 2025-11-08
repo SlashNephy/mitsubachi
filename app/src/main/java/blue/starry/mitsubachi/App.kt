@@ -66,7 +66,7 @@ private fun scaffoldPadding(
   backStack: NavBackStack<RouteKey>,
 ): PaddingValues {
   return when (backStack.last()) {
-    is RouteKey.Search -> {
+    is RouteKey.Search, is RouteKey.VenueHistories -> {
       // ステータスバー (top) の padding を除外する
       PaddingValues(
         bottom = padding.calculateBottomPadding(),

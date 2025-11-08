@@ -1,16 +1,24 @@
 package blue.starry.mitsubachi.ui.locale
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
-@SuppressLint("ComposableNaming")
-fun <T> LocaleAware(
+fun <T> LocaleAware(block: @Composable () -> T): T {
+  if (LocalInspectionMode.current) {
+    return block()
+  }
+
+  return LocaleAwareActual(block = block)
+}
+
+@Composable
+private fun <T> LocaleAwareActual(
   viewModel: LocaleAwareViewModel = hiltViewModel(),
   block: @Composable () -> T,
 ): T {

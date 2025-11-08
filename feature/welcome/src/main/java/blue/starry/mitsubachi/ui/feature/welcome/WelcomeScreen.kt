@@ -114,7 +114,7 @@ private fun OnboardingFlow(
           else -> 1
         }
         slideInHorizontally { width -> width * direction } + fadeIn() togetherWith
-          slideOutHorizontally { width -> -width * direction } + fadeOut()
+                slideOutHorizontally { width -> -width * direction } + fadeOut()
       },
       label = "onboarding_step_animation",
     ) { step ->
@@ -251,7 +251,7 @@ private fun PermissionsStep(
   onPermissionResult: (Boolean) -> Unit,
 ) {
   val permissionState = rememberPermissionState(AndroidPermission.Location)
-  LaunchedEffect(permissionState.status) {
+  LaunchedEffect(Unit) {
     onPermissionResult(permissionState.status == PermissionStatus.Granted)
   }
 
