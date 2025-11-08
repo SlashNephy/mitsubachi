@@ -95,7 +95,7 @@ data class FoursquareSearchVenueRecommendationsResponse(
 
   @Serializable
   data class Group(
-    val results: List<Result>,
+    val results: List<Result>?,
     val totalResults: Int, // 194
   ) {
     @Serializable
