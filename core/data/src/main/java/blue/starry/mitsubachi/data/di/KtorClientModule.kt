@@ -1,7 +1,10 @@
 package blue.starry.mitsubachi.data.di
 
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.core.os.ConfigurationCompat
+import blue.starry.mitsubachi.domain.error.NetworkUnavailableError
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import dagger.Module
 import dagger.Provides
@@ -18,6 +21,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.LoggingFormat
+import io.ktor.client.request.HttpSendPipeline
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
@@ -30,7 +34,10 @@ import kotlin.time.Duration.Companion.seconds
 internal object KtorClientModule {
   @Provides
   @Singleton
-  fun provide(config: ApplicationConfig): HttpClient {
+  fun provide(
+    config: ApplicationConfig,
+    connectivityManager: ConnectivityManager,
+  ): HttpClient {
     return HttpClient(OkHttp) {
       expectSuccess = true
 
@@ -73,6 +80,16 @@ internal object KtorClientModule {
           sanitizeHeader(predicate = sensitiveHeaders::contains)
         }
       }
+
+      install("PreRequestCheck") {
+        sendPipeline.intercept(HttpSendPipeline.Monitoring) {
+          if (!connectivityManager.isNetworkAvailable()) {
+            throw NetworkUnavailableError()
+          }
+
+          proceed()
+        }
+      }
     }
   }
 
@@ -81,5 +98,13 @@ internal object KtorClientModule {
     val primaryLocale = locales.get(0)
 
     return primaryLocale?.toLanguageTag() ?: "en-US"
+  }
+
+  private fun ConnectivityManager.isNetworkAvailable(): Boolean {
+    val network = activeNetwork ?: return false
+    val capabilities = getNetworkCapabilities(network) ?: return false
+
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
   }
 }
