@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.usecase.FetchUserCheckInsUseCase
 import blue.starry.mitsubachi.domain.usecase.LikeCheckInUseCase
-import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.formatter.RelativeDateTimeFormatter
@@ -26,7 +25,7 @@ class UserCheckInsScreenViewModel @Inject constructor(
   private val likeCheckInUseCase: LikeCheckInUseCase,
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
-) : ViewModel(), AccountEventHandler, RelativeDateTimeFormatter by relativeDateTimeFormatter {
+) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
   @Immutable
   sealed interface UiState {
     data object Loading : UiState
@@ -66,10 +65,6 @@ class UserCheckInsScreenViewModel @Inject constructor(
         _state.value = UiState.Error(e)
       }
     }
-  }
-
-  override fun onAccountDeleted() {
-    _state.value = UiState.Loading
   }
 
   fun likeCheckIn(checkInId: String): Job {

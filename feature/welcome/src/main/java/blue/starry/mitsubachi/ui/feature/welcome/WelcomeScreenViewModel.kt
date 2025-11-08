@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.domain.usecase.FindFoursquareAccountUseCase
-import blue.starry.mitsubachi.ui.AccountEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WelcomeScreenViewModel @Inject constructor(
   private val findFoursquareAccountUseCase: FindFoursquareAccountUseCase,
-) : ViewModel(), AccountEventHandler {
+) : ViewModel() {
   sealed interface UiState {
     data object Loading : UiState
     data object NoAccounts : UiState
@@ -83,9 +82,5 @@ class WelcomeScreenViewModel @Inject constructor(
     if (granted) {
       nextStep()
     }
-  }
-
-  override fun onAccountDeleted() {
-    _state.value = UiState.Loading
   }
 }

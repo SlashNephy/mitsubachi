@@ -12,8 +12,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import blue.starry.mitsubachi.feature.settings.SettingsScreen
 import blue.starry.mitsubachi.ui.feature.checkin.CheckInDetailScreen
@@ -56,6 +58,10 @@ fun App(viewModel: AppViewModel = hiltViewModel()) {
     NavDisplay(
       backStack = backStack,
       modifier = Modifier.padding(scaffoldPadding(padding, backStack)),
+      entryDecorators = listOf(
+        rememberSaveableStateHolderNavEntryDecorator(),
+        rememberViewModelStoreNavEntryDecorator(),
+      ),
       entryProvider = AppEntryProvider(backStack = backStack),
     )
   }
