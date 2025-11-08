@@ -181,7 +181,7 @@ private fun GenericErrorScreenPreview() {
 @Composable
 private fun NetworkTimeoutErrorScreenPreview() {
   ErrorScreen(
-    exception = NetworkTimeoutError(Exception()),
+    exception = NetworkTimeoutError(Exception("network timeout")),
     onClickRetry = {},
     viewModel = rememberPreviewViewModel(),
   )
