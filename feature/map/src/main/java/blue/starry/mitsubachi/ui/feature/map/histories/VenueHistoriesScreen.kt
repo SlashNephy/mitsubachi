@@ -100,24 +100,26 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
             verticalArrangement = Arrangement.spacedBy(8.dp),
           ) {
             // 現在地へ移動ボタン
-            SmallFloatingActionButton(
-              onClick = {
-                coroutineScope.launch {
-                  viewModel.findCurrentLocation()?.also {
-                    cameraPositionState.animate(
-                      CameraUpdateFactory.newLatLngZoom(
-                        it,
-                        15f,
-                      ),
-                    )
+            if (permissionState.status == PermissionStatus.Granted) {
+              SmallFloatingActionButton(
+                onClick = {
+                  coroutineScope.launch {
+                    viewModel.findCurrentLocation()?.also {
+                      cameraPositionState.animate(
+                        CameraUpdateFactory.newLatLngZoom(
+                          it,
+                          15f,
+                        ),
+                      )
+                    }
                   }
-                }
-              },
-            ) {
-              Icon(
-                imageVector = Icons.Filled.MyLocation,
-                contentDescription = "現在地へ移動",
-              )
+                },
+              ) {
+                Icon(
+                  imageVector = Icons.Filled.MyLocation,
+                  contentDescription = "現在地へ移動",
+                )
+              }
             }
 
             // ズームインボタン
