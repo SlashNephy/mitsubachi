@@ -68,7 +68,7 @@ fun NearbyVenuesScreen(
           permissionState.launchPermissionRequester()
         }
         LaunchedEffect(permissionState.status) {
-          if (permissionState.status is PermissionStatus.Granted) {
+          if (permissionState.status == PermissionStatus.Granted) {
             viewModel.onPermissionGranted()
           }
         }
