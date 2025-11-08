@@ -78,7 +78,7 @@ class VenueHistoriesScreenViewModel @Inject constructor(
       deviceLocationRepository.findCurrentLocation()?.toLatLng()
     } catch (_: SecurityException) {
       // 権限がある前提
-      return null
+      null
     }
   }
 }
