@@ -47,6 +47,7 @@ include(
   ":feature:checkin",
   ":feature:home",
   ":feature:map",
+  ":feature:photo-widget",
   ":feature:settings",
   ":feature:welcome",
 )
