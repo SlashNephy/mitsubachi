@@ -64,7 +64,7 @@ fun NearbyVenuesScreen(
       is NearbyVenuesScreenViewModel.UiState.PermissionRequested -> {
         val permissionState = rememberPermissionState(state.permission)
 
-        LaunchedEffect(permissionState) {
+        LaunchedEffect(Unit) {
           permissionState.launchPermissionRequester()
         }
         LaunchedEffect(permissionState.status) {

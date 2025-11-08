@@ -75,7 +75,7 @@ fun SearchMapScreen() {
 @Composable
 private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
   val permissionState = rememberPermissionState(AndroidPermission.Location)
-  LaunchedEffect(permissionState.status) {
+  LaunchedEffect(Unit) {
     if (permissionState.status != PermissionStatus.Granted) {
       permissionState.launchPermissionRequester()
     }
