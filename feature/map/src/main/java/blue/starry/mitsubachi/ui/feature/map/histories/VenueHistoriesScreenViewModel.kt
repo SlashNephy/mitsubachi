@@ -3,8 +3,10 @@ package blue.starry.mitsubachi.ui.feature.map.histories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
+import blue.starry.mitsubachi.domain.usecase.DeviceLocationRepository
 import blue.starry.mitsubachi.domain.usecase.FetchUserVenueHistoriesUseCase
 import blue.starry.mitsubachi.ui.error.onException
+import blue.starry.mitsubachi.ui.feature.map.toLatLng
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,10 +19,16 @@ import javax.inject.Inject
 @HiltViewModel
 class VenueHistoriesScreenViewModel @Inject constructor(
   private val fetchUserVenueHistoriesUseCase: FetchUserVenueHistoriesUseCase,
+  private val deviceLocationRepository: DeviceLocationRepository,
 ) : ViewModel() {
   sealed interface UiState {
     data object Loading : UiState
-    data class Success(val data: List<VenueHistory>, val isRefreshing: Boolean) : UiState
+    data class Success(
+      val data: List<VenueHistory>,
+      val initialPosition: LatLng,
+      val isRefreshing: Boolean,
+    ) : UiState
+
     data class Error(val exception: Exception) : UiState
   }
 
@@ -49,7 +57,12 @@ class VenueHistoriesScreenViewModel @Inject constructor(
     runCatching {
       fetchUserVenueHistoriesUseCase()
     }.onSuccess { data ->
-      _state.value = UiState.Success(data, isRefreshing = false)
+      _state.value =
+        UiState.Success(
+          data = data,
+          initialPosition = data.weightedAveragePosition,
+          isRefreshing = false,
+        )
     }.onException { e ->
       if (currentState is UiState.Success) {
         // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
@@ -59,14 +72,18 @@ class VenueHistoriesScreenViewModel @Inject constructor(
       }
     }
   }
+
+  suspend fun findCurrentLocation(): LatLng? {
+    return deviceLocationRepository.findCurrentLocation()?.toLatLng()
+  }
 }
 
 // チェックイン回数で重み付けした加重平均のベニューの座標を求める
-val VenueHistoriesScreenViewModel.UiState.Success.weightedAveragePosition: LatLng
+private val List<VenueHistory>.weightedAveragePosition: LatLng
   get() {
-    val latitudeTotal = data.sumOf { it.venue.location.latitude * it.count }
-    val longitudeTotal = data.sumOf { it.venue.location.longitude * it.count }
-    val weightTotal = data.sumOf { it.count }
+    val latitudeTotal = sumOf { it.venue.location.latitude * it.count }
+    val longitudeTotal = sumOf { it.venue.location.longitude * it.count }
+    val weightTotal = sumOf { it.count }
 
     if (weightTotal == 0) {
       return LatLng(0.0, 0.0)
