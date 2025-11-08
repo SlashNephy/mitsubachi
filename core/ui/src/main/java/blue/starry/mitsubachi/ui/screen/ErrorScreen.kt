@@ -67,7 +67,7 @@ fun ErrorScreen(
       Spacer(modifier = Modifier.height(32.dp))
 
       Text(
-        text = remember { viewModel.format(exception) },
+        text = remember(exception) { viewModel.format(exception) },
         textAlign = TextAlign.Center,
         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
       )
