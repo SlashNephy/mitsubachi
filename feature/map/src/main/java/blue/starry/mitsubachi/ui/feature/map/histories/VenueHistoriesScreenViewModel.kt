@@ -74,7 +74,12 @@ class VenueHistoriesScreenViewModel @Inject constructor(
   }
 
   suspend fun findCurrentLocation(): LatLng? {
-    return deviceLocationRepository.findCurrentLocation()?.toLatLng()
+    return try {
+      deviceLocationRepository.findCurrentLocation()?.toLatLng()
+    } catch (_: SecurityException) {
+      // 権限がある前提
+      return null
+    }
   }
 }
 
