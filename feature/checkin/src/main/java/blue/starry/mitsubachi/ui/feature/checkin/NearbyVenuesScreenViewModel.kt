@@ -11,18 +11,15 @@ import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.error.onException
+import blue.starry.mitsubachi.ui.permission.AndroidPermission
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
-import timber.log.Timber
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 enum class NearbyVenuesSortOrder {
   RELEVANCE,
@@ -37,8 +34,7 @@ class NearbyVenuesScreenViewModel @Inject constructor(
 ) : ViewModel(), AccountEventHandler {
   @Immutable
   sealed interface UiState {
-    data class PermissionRequesting(val anyOf: List<String>) : UiState
-    data object PermissionRequestDenied : UiState
+    data class PermissionRequested(val permission: AndroidPermission) : UiState
     data object Loading : UiState
     data class Success(
       val venues: List<Venue>,
@@ -69,17 +65,12 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     if (ActivityCompat.checkSelfPermission(
         context,
         Manifest.permission.ACCESS_COARSE_LOCATION,
-      ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+      ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
         context,
         Manifest.permission.ACCESS_FINE_LOCATION,
       ) != PackageManager.PERMISSION_GRANTED
     ) {
-      _state.value = UiState.PermissionRequesting(
-        anyOf = listOf(
-          Manifest.permission.ACCESS_COARSE_LOCATION,
-          Manifest.permission.ACCESS_FINE_LOCATION,
-        ),
-      )
+      _state.value = UiState.PermissionRequested(AndroidPermission.Location)
       return
     }
 
@@ -91,37 +82,21 @@ class NearbyVenuesScreenViewModel @Inject constructor(
       _state.value = UiState.Loading
     }
 
-    try {
-      withTimeout(10.seconds) {
-        runCatching {
-          searchNearVenuesUseCase(query = query)
-        }.onSuccess { data ->
-          _state.value = UiState.Success(
-            venues = data,
-            isRefreshing = false,
-            sortOrder = _sortOrder.value,
-          )
-        }.onException { e ->
-          _state.value = UiState.Error(e)
-        }
-      }
-    } catch (e: TimeoutCancellationException) {
-      Timber.w(e, "fetch timeout")
-
-      // タイムアウトした場合は前回の状態に戻す
-      _state.value = currentState
+    runCatching {
+      searchNearVenuesUseCase(query = query)
+    }.onSuccess { data ->
+      _state.value = UiState.Success(
+        venues = data,
+        isRefreshing = false,
+        sortOrder = _sortOrder.value,
+      )
+    }.onException { e ->
+      _state.value = UiState.Error(e)
     }
   }
 
-  fun onPermissionResult(result: Map<String, Boolean>) {
-    // ACCESS_COARSE_LOCATION と ACCESS_FINE_LOCATION のいずれかが許可されていればOK
-    val anyGranted = result.any { it.value }
-    if (anyGranted) {
-      refresh()
-      return
-    }
-
-    _state.value = UiState.PermissionRequestDenied
+  fun onPermissionGranted() {
+    refresh()
   }
 
   fun onUpdateSortOrder(order: NearbyVenuesSortOrder) {

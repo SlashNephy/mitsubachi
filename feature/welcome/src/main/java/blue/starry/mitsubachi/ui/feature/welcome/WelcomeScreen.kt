@@ -1,7 +1,5 @@
 package blue.starry.mitsubachi.ui.feature.welcome
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -45,6 +43,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.ui.permission.AndroidPermission
+import blue.starry.mitsubachi.ui.permission.PermissionStatus
+import blue.starry.mitsubachi.ui.permission.rememberPermissionState
 import blue.starry.mitsubachi.ui.screen.LoadingScreen
 
 @Composable
@@ -249,22 +250,14 @@ private fun PermissionsStep(
   onPreviousStep: () -> Unit,
   onPermissionResult: (Boolean) -> Unit,
 ) {
-  val permissionLauncher = rememberLauncherForActivityResult(
-    contract = ActivityResultContracts.RequestMultiplePermissions(),
-    onResult = { permissions ->
-      val granted = permissions.values.any { it }
-      onPermissionResult(granted)
-    },
-  )
+  val permissionState = rememberPermissionState(AndroidPermission.Location)
+  LaunchedEffect(Unit) {
+    onPermissionResult(permissionState.status == PermissionStatus.Granted)
+  }
 
   PermissionsStepContent(
     onRequestPermission = {
-      permissionLauncher.launch(
-        arrayOf(
-          android.Manifest.permission.ACCESS_FINE_LOCATION,
-          android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        ),
-      )
+      permissionState.launchPermissionRequester()
     },
     onPreviousStep = onPreviousStep,
     onSkip = { onPermissionResult(false) },
