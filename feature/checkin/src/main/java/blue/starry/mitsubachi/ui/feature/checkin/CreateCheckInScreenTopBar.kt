@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.primaryCategory
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.ui.foundation.VenueCategoryIcon
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -44,7 +45,7 @@ fun CreateCheckInScreenTopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
       ) {
-        VenueCategoryIcon(venue.primaryCategory?.iconUrl, modifier = Modifier.size(iconSize))
+        VenueCategoryIcon(venue.primaryCategory, modifier = Modifier.size(iconSize))
         Text(venue.name, fontSize = fontSize)
       }
     },
