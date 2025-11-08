@@ -73,6 +73,19 @@ class VenueHistoriesScreenViewModel @Inject constructor(
     }
   }
 
+  // チェックイン回数で重み付けした加重平均のベニューの座標を求める
+  private val List<VenueHistory>.weightedAveragePosition: LatLng
+    get() {
+      val latitudeTotal = sumOf { it.venue.location.latitude * it.count }
+      val longitudeTotal = sumOf { it.venue.location.longitude * it.count }
+      val weightTotal = sumOf { it.count }
+
+      if (weightTotal == 0) {
+        return LatLng(0.0, 0.0)
+      }
+      return LatLng(latitudeTotal / weightTotal, longitudeTotal / weightTotal)
+    }
+
   suspend fun findCurrentLocation(): LatLng? {
     return try {
       deviceLocationRepository.findCurrentLocation()?.toLatLng()
@@ -82,16 +95,3 @@ class VenueHistoriesScreenViewModel @Inject constructor(
     }
   }
 }
-
-// チェックイン回数で重み付けした加重平均のベニューの座標を求める
-private val List<VenueHistory>.weightedAveragePosition: LatLng
-  get() {
-    val latitudeTotal = sumOf { it.venue.location.latitude * it.count }
-    val longitudeTotal = sumOf { it.venue.location.longitude * it.count }
-    val weightTotal = sumOf { it.count }
-
-    if (weightTotal == 0) {
-      return LatLng(0.0, 0.0)
-    }
-    return LatLng(latitudeTotal / weightTotal, longitudeTotal / weightTotal)
-  }

@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
+@Suppress("ComposableNaming")
 fun <T> LocaleAware(block: @Composable () -> T): T {
   if (LocalInspectionMode.current) {
     return block()
@@ -18,6 +19,7 @@ fun <T> LocaleAware(block: @Composable () -> T): T {
 }
 
 @Composable
+@Suppress("ComposableNaming")
 private fun <T> LocaleAwareActual(
   viewModel: LocaleAwareViewModel = hiltViewModel(),
   block: @Composable () -> T,
