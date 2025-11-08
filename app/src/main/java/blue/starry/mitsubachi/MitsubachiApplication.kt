@@ -3,6 +3,7 @@ package blue.starry.mitsubachi
 import android.app.Application
 import blue.starry.mitsubachi.domain.ApplicationScope
 import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
+import blue.starry.mitsubachi.ui.feature.photowidget.PhotoWidgetWorkScheduler
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -30,6 +31,10 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
   @Inject
   lateinit var appSettingsRepository: AppSettingsRepository
 
+  @Suppress("LateinitUsage")
+  @Inject
+  lateinit var photoWidgetWorkScheduler: PhotoWidgetWorkScheduler
+
   override fun onCreate() {
     super.onCreate()
 
@@ -42,6 +47,9 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
       }
     }
+
+    // Schedule periodic photo widget updates
+    photoWidgetWorkScheduler.schedulePeriodicUpdate()
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
