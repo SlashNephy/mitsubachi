@@ -108,7 +108,8 @@ class FoursquareApiClientImpl @Inject constructor(
   override suspend fun updateCheckIn(checkInId: String, shout: String?) {
     ktorfit.updateCheckIn(
       checkInId = checkInId,
-      shout = shout?.ifBlank { null })
+      shout = shout?.ifBlank { null },
+    )
   }
 
   override suspend fun deleteCheckIn(checkInId: String) {
