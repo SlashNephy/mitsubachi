@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.core.os.ConfigurationCompat
+import blue.starry.mitsubachi.domain.error.NetworkTimeoutError
 import blue.starry.mitsubachi.domain.error.NetworkUnavailableError
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import dagger.Module
@@ -12,6 +13,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.network.sockets.ConnectTimeoutException
+import io.ktor.client.network.sockets.SocketTimeoutException
+import io.ktor.client.plugins.HttpCallValidator
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -34,6 +39,7 @@ import kotlin.time.Duration.Companion.seconds
 internal object KtorClientModule {
   @Provides
   @Singleton
+  @Suppress("ThrowsCount")
   fun provide(
     config: ApplicationConfig,
     connectivityManager: ConnectivityManager,
@@ -88,6 +94,20 @@ internal object KtorClientModule {
           }
 
           proceed()
+        }
+      }
+
+      install(HttpCallValidator) {
+        handleResponseExceptionWithRequest { throwable, _ ->
+          when (throwable) {
+            is HttpRequestTimeoutException, is ConnectTimeoutException, is SocketTimeoutException -> {
+              throw NetworkTimeoutError(throwable)
+            }
+
+            else -> {
+              throw throwable
+            }
+          }
         }
       }
     }
