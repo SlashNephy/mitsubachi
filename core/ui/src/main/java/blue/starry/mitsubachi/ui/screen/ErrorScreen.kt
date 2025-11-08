@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.NetworkCheck
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -31,11 +32,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.domain.error.AppError
 import blue.starry.mitsubachi.domain.error.NetworkTimeoutError
+import blue.starry.mitsubachi.domain.error.NetworkUnavailableError
 import blue.starry.mitsubachi.domain.error.RetryableAppError
 import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.ui.R
@@ -59,12 +62,13 @@ fun ErrorScreen(
     contentAlignment = Alignment.Center,
   ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      val (icon, stringResourceId) = findErrorResource(exception)
+      val (icon, stringResourceId) = rememberResource(exception)
 
       Icon(icon, contentDescription = null, modifier = Modifier.scale(1.5f))
       Spacer(modifier = Modifier.height(32.dp))
       Text(
         stringResource(stringResourceId),
+        textAlign = TextAlign.Center,
         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
       )
 
@@ -105,16 +109,21 @@ private fun Exception.isRetryable(): Boolean {
 
 private data class ErrorResource(val icon: ImageVector, @param:StringRes val stringResourceId: Int)
 
-private fun findErrorResource(exception: Exception): ErrorResource {
+@Composable
+private fun rememberResource(exception: Exception): ErrorResource {
   return when (exception) {
     is AppError -> {
       when (exception) {
-        is UnauthorizedError -> {
-          ErrorResource(Icons.Default.Close, R.string.unauthorized_error)
-        }
-
         is NetworkTimeoutError -> {
           ErrorResource(Icons.Default.AccessTime, R.string.network_timeout_error)
+        }
+
+        is NetworkUnavailableError -> {
+          ErrorResource(Icons.Default.NetworkCheck, R.string.network_unavailable_error)
+        }
+
+        is UnauthorizedError -> {
+          ErrorResource(Icons.Default.Close, R.string.unauthorized_error)
         }
       }
     }
@@ -127,9 +136,9 @@ private fun findErrorResource(exception: Exception): ErrorResource {
 
 @Preview(showSystemUi = true)
 @Composable
-private fun UnauthorizedErrorScreenPreview() {
+private fun NetworkTimeoutErrorScreenPreview() {
   ErrorScreen(
-    exception = UnauthorizedError(),
+    exception = NetworkTimeoutError(mockk()),
     onClickRetry = {},
     viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
   )
@@ -137,9 +146,19 @@ private fun UnauthorizedErrorScreenPreview() {
 
 @Preview(showSystemUi = true)
 @Composable
-private fun NetworkTimeoutErrorScreenPreview() {
+private fun NetworkUnavailableErrorScreenPreview() {
   ErrorScreen(
-    exception = NetworkTimeoutError(mockk()),
+    exception = NetworkUnavailableError(),
+    onClickRetry = {},
+    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
+  )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun UnauthorizedErrorScreenPreview() {
+  ErrorScreen(
+    exception = UnauthorizedError(),
     onClickRetry = {},
     viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
   )
