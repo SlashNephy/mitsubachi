@@ -20,7 +20,7 @@ object MockData {
     id = "category",
     name = "国立公園",
     iconUrl = "https://example.com/icon-secondary.png",
-    isPrimary = true,
+    isPrimary = false,
   )
 
   val VenueLocation = VenueLocation(
