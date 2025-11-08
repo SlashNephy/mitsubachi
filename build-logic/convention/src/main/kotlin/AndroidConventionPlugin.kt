@@ -117,7 +117,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
         "testImplementation"(versions.library("junit-jupiter"))
         "testRuntimeOnly"(versions.library("junit-jupiter-engine"))
         "testRuntimeOnly"(versions.library("junit-platform-launcher"))
-        "implementation"(versions.library("mockk")) // testImplementation で十分だけど @Preview でモックしたいことがある
+        "testImplementation"(versions.library("mockk"))
         "testImplementation"(versions.library("archunit"))
 
         // Instrumented Testing
