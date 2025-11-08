@@ -11,7 +11,6 @@ import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationRequest
 import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationResponse
 import blue.starry.mitsubachi.domain.usecase.BeginAuthorizationUseCase
 import blue.starry.mitsubachi.domain.usecase.FinishAuthorizationUseCase
-import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.ui.snackbar.enqueue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
   private val beginAuthorizationUseCase: BeginAuthorizationUseCase,
   private val finishAuthorizationUseCase: FinishAuthorizationUseCase,
   private val snackbarHostService: SnackbarHostService,
-) : ViewModel(), AccountEventHandler {
+) : ViewModel() {
   sealed interface UiState {
     data object Pending : UiState
     data class Authorizing(val request: OAuth2AuthorizationRequest) : UiState
@@ -74,9 +73,5 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
         snackbarHostService.enqueue(context.getString(R.string.login_failed))
       }
     }
-  }
-
-  override fun onAccountDeleted() {
-    _state.value = UiState.Pending
   }
 }

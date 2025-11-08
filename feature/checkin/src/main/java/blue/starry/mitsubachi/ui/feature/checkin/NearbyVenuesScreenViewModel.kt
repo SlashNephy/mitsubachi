@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
-import blue.starry.mitsubachi.ui.AccountEventHandler
 import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.ui.permission.AndroidPermission
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +30,7 @@ enum class NearbyVenuesSortOrder {
 class NearbyVenuesScreenViewModel @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val searchNearVenuesUseCase: SearchNearVenuesUseCase,
-) : ViewModel(), AccountEventHandler {
+) : ViewModel() {
   @Immutable
   sealed interface UiState {
     data class PermissionRequested(val permission: AndroidPermission) : UiState
@@ -105,10 +104,6 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     if (currentState is UiState.Success) {
       _state.value = currentState.copy(sortOrder = order)
     }
-  }
-
-  override fun onAccountDeleted() {
-    _state.value = UiState.Loading
   }
 }
 
