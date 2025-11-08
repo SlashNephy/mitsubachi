@@ -1,6 +1,5 @@
 package blue.starry.mitsubachi.ui.screen
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineBreak
@@ -42,7 +41,8 @@ import blue.starry.mitsubachi.domain.error.NetworkUnavailableError
 import blue.starry.mitsubachi.domain.error.RetryableAppError
 import blue.starry.mitsubachi.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.ui.R
-import io.mockk.mockk
+import blue.starry.mitsubachi.ui.error.ErrorFormatterImpl
+import blue.starry.mitsubachi.ui.error.NoOpErrorReporter
 import kotlinx.coroutines.launch
 
 @Composable
@@ -62,12 +62,12 @@ fun ErrorScreen(
     contentAlignment = Alignment.Center,
   ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      val (icon, stringResourceId) = rememberResource(exception)
+      ErrorIcon(exception, modifier = Modifier.scale(1.5f))
 
-      Icon(icon, contentDescription = null, modifier = Modifier.scale(1.5f))
       Spacer(modifier = Modifier.height(32.dp))
+
       Text(
-        stringResource(stringResourceId),
+        text = remember { viewModel.format(exception) },
         textAlign = TextAlign.Center,
         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
       )
@@ -80,16 +80,6 @@ fun ErrorScreen(
       }
     }
   }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun ErrorScreenPreview() {
-  ErrorScreen(
-    exception = Exception("Something went wrong"),
-    onClickRetry = {},
-    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
-  )
 }
 
 private fun Exception.isRetryable(): Boolean {
@@ -107,61 +97,31 @@ private fun Exception.isRetryable(): Boolean {
   }
 }
 
-private data class ErrorResource(val icon: ImageVector, @param:StringRes val stringResourceId: Int)
-
 @Composable
-private fun rememberResource(exception: Exception): ErrorResource {
-  return when (exception) {
+private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
+  val icon = when (exception) {
     is AppError -> {
       when (exception) {
         is NetworkTimeoutError -> {
-          ErrorResource(Icons.Default.AccessTime, R.string.network_timeout_error)
+          Icons.Default.AccessTime
         }
 
         is NetworkUnavailableError -> {
-          ErrorResource(Icons.Default.NetworkCheck, R.string.network_unavailable_error)
+          Icons.Default.NetworkCheck
         }
 
         is UnauthorizedError -> {
-          ErrorResource(Icons.Default.Close, R.string.unauthorized_error)
+          Icons.Default.Close
         }
       }
     }
 
     is Exception -> {
-      ErrorResource(Icons.Default.ErrorOutline, R.string.unknown_error)
+      Icons.Default.ErrorOutline
     }
   }
-}
 
-@Preview(showSystemUi = true)
-@Composable
-private fun NetworkTimeoutErrorScreenPreview() {
-  ErrorScreen(
-    exception = NetworkTimeoutError(mockk()),
-    onClickRetry = {},
-    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
-  )
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun NetworkUnavailableErrorScreenPreview() {
-  ErrorScreen(
-    exception = NetworkUnavailableError(),
-    onClickRetry = {},
-    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
-  )
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun UnauthorizedErrorScreenPreview() {
-  ErrorScreen(
-    exception = UnauthorizedError(),
-    onClickRetry = {},
-    viewModel = @Suppress("ViewModelConstructorInComposable") ErrorScreenViewModel(mockk()),
-  )
+  return Icon(icon, contentDescription = null, modifier = modifier)
 }
 
 @Composable
@@ -194,6 +154,57 @@ private fun RetryButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
       Text(stringResource(R.string.retry_button))
     }
   }
+}
+
+@Composable
+private fun rememberPreviewViewModel(): ErrorScreenViewModel {
+  val context = LocalContext.current
+  return remember {
+    ErrorScreenViewModel(
+      reporter = NoOpErrorReporter,
+      formatter = ErrorFormatterImpl(context),
+    )
+  }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun GenericErrorScreenPreview() {
+  ErrorScreen(
+    exception = Exception("Something went wrong"),
+    onClickRetry = {},
+    viewModel = rememberPreviewViewModel(),
+  )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun NetworkTimeoutErrorScreenPreview() {
+  ErrorScreen(
+    exception = NetworkTimeoutError(Exception()),
+    onClickRetry = {},
+    viewModel = rememberPreviewViewModel(),
+  )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun NetworkUnavailableErrorScreenPreview() {
+  ErrorScreen(
+    exception = NetworkUnavailableError(),
+    onClickRetry = {},
+    viewModel = rememberPreviewViewModel(),
+  )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun UnauthorizedErrorScreenPreview() {
+  ErrorScreen(
+    exception = UnauthorizedError(),
+    onClickRetry = {},
+    viewModel = rememberPreviewViewModel(),
+  )
 }
 
 @Preview
