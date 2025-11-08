@@ -6,5 +6,4 @@
     <string name="settings_button">設定</string>
     <string name="check_in_button">チェックイン</string>
     <string name="like_button">いいね</string>
-    <string name="location_permission_missing">位置情報へのアクセスが許可されていません。</string>
 </resources>

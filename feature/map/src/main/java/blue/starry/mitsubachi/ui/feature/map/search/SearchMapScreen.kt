@@ -1,6 +1,5 @@
 package blue.starry.mitsubachi.ui.feature.map.search
 
-import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,11 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.ui.permission.AndroidPermission
+import blue.starry.mitsubachi.ui.permission.PermissionStatus
+import blue.starry.mitsubachi.ui.permission.rememberPermissionState
 import blue.starry.mitsubachi.ui.screen.ErrorScreen
 import blue.starry.mitsubachi.ui.screen.LoadingScreen
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -74,13 +73,11 @@ fun SearchMapScreen() {
 }
 
 @Composable
-@OptIn(ExperimentalPermissionsApi::class)
 private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
-  val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
+  val permissionState = rememberPermissionState(AndroidPermission.Location)
   LaunchedEffect(Unit) {
-    if (!locationPermissionState.status.isGranted) {
-      locationPermissionState.launchPermissionRequest()
+    if (permissionState.status != PermissionStatus.Granted) {
+      permissionState.launchPermissionRequester()
     }
   }
 
@@ -104,7 +101,7 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
       zoomControlsEnabled = false,
     ),
     properties = MapProperties(
-      isMyLocationEnabled = locationPermissionState.status.isGranted,
+      isMyLocationEnabled = permissionState.status == PermissionStatus.Granted,
     ),
   ) {
     // ベニューのマーカーを表示

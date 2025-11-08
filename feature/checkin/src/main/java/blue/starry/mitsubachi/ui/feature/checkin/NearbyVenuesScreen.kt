@@ -1,7 +1,5 @@
 package blue.starry.mitsubachi.ui.feature.checkin
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,8 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.domain.model.Venue
+import blue.starry.mitsubachi.ui.permission.PermissionStatus
+import blue.starry.mitsubachi.ui.permission.rememberPermissionState
 import blue.starry.mitsubachi.ui.screen.ErrorScreen
 import blue.starry.mitsubachi.ui.screen.LoadingScreen
+import blue.starry.mitsubachi.ui.screen.PermissionDeniedScreen
 
 @Composable
 fun NearbyVenuesScreen(
@@ -50,11 +51,6 @@ fun NearbyVenuesScreen(
     }
   }
 
-  val permissionLauncher = rememberLauncherForActivityResult(
-    contract = ActivityResultContracts.RequestMultiplePermissions(),
-    onResult = viewModel::onPermissionResult,
-  )
-
   PullToRefreshBox(
     isRefreshing = (state as? NearbyVenuesScreenViewModel.UiState.Success)?.isRefreshing == true,
     onRefresh = {
@@ -65,15 +61,26 @@ fun NearbyVenuesScreen(
       .imePadding(),
   ) {
     when (val state = state) {
-      is NearbyVenuesScreenViewModel.UiState.PermissionRequesting -> {
-        LaunchedEffect(state.anyOf) {
-          permissionLauncher.launch(state.anyOf.toTypedArray())
-        }
-      }
+      is NearbyVenuesScreenViewModel.UiState.PermissionRequested -> {
+        val permissionState = rememberPermissionState(state.permission)
 
-      is NearbyVenuesScreenViewModel.UiState.PermissionRequestDenied -> {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-          Text(stringResource(R.string.location_permission_missing))
+        LaunchedEffect(permissionState) {
+          permissionState.launchPermissionRequester()
+        }
+        LaunchedEffect(permissionState.status) {
+          if (permissionState.status is PermissionStatus.Granted) {
+            viewModel.onPermissionGranted()
+          }
+        }
+
+        when (permissionState.status) {
+          is PermissionStatus.Denied -> {
+            PermissionDeniedScreen(permissionState.permission)
+          }
+
+          else -> {
+            LoadingScreen()
+          }
         }
       }
 

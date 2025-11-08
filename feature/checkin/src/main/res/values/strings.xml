@@ -5,7 +5,6 @@
     <string name="settings_button">Settings</string>
     <string name="check_in_button">Check-in</string>
     <string name="like_button">Like</string>
-    <string name="location_permission_missing">Access to location services is not granted.</string>
     <string name="no_venues_found">No nearby venues found.</string>
     <string name="sort_by_relevance">Relevance</string>
     <string name="sort_by_distance">Distance</string>
