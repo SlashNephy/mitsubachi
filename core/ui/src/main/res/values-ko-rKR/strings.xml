@@ -6,4 +6,5 @@
     <string name="unauthorized_error">세션이 만료되었습니다. 다시 로그인해 주세요.</string>
     <string name="unknown_error">오류가 발생했습니다.</string>
     <string name="retry_button">리트라이</string>
+    <string name="network_unavailable_error">인터넷에 연결되어 있지 않습니다. 다시 시도해 주세요.</string>
 </resources>

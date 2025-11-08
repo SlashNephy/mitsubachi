@@ -1,6 +1,5 @@
 package blue.starry.mitsubachi.data.network
 
-import blue.starry.mitsubachi.data.network.model.FoursquareTokenResponse
 import blue.starry.mitsubachi.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationRequest
@@ -64,30 +63,29 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     check(response.state == response.request.state)
 
     val token = getAccessToken(response.code, response.request.codeVerifier)
-    val foursquare = apiClientFactory.create { token.accessToken }
+    val foursquare = apiClientFactory.create { token }
     val user = foursquare.getUser()
 
     return FoursquareAccount(
       id = user.id,
       displayName = user.displayName,
       iconUrl = user.iconUrl,
-      accessToken = token.accessToken,
+      accessToken = token,
     )
   }
 
   private suspend fun getAccessToken(
     code: String,
     codeVerifier: String,
-  ): FoursquareTokenResponse {
-    return ktorfit.runNetwork {
-      getAccessToken(
-        clientId = config.foursquareClientId,
-        clientSecret = config.foursquareClientSecret,
-        grantType = "authorization_code",
-        redirectUri = config.foursquareRedirectUri,
-        code = code,
-        codeVerifier = codeVerifier,
-      )
-    }
+  ): String {
+    val data = ktorfit.getAccessToken(
+      clientId = config.foursquareClientId,
+      clientSecret = config.foursquareClientSecret,
+      grantType = "authorization_code",
+      redirectUri = config.foursquareRedirectUri,
+      code = code,
+      codeVerifier = codeVerifier,
+    )
+    return data.accessToken
   }
 }
