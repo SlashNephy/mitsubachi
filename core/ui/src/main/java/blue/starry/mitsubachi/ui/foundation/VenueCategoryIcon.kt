@@ -29,7 +29,7 @@ fun VenueCategoryIcon(
       .clip(CircleShape)
       .background(MitsubachiColors.SwarmOrange),
   ) {
-    category?.also {
+    if (category != null) {
       AsyncImage(
         model = category.iconUrl,
         contentDescription = category.name,
