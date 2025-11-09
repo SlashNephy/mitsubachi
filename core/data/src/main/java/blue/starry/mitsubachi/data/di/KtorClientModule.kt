@@ -125,7 +125,7 @@ internal object KtorClientModule {
     val capabilities = getNetworkCapabilities(network) ?: return false
 
     return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) && capabilities.hasCapability(
-      NetworkCapabilities.NET_CAPABILITY_VALIDATED
+      NetworkCapabilities.NET_CAPABILITY_VALIDATED,
     )
   }
 }
