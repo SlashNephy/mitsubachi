@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.ui.feature.photowidget
+package blue.starry.mitsubachi.feature.photowidget.ui
 
 import blue.starry.mitsubachi.common.ZonedDateTimeSerializer
 import kotlinx.serialization.Serializable

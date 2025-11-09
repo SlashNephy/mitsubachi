@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.ui.feature.photowidget
+package blue.starry.mitsubachi.feature.photowidget.ui
 
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
