@@ -209,6 +209,7 @@ android-mapsplatform-secrets = { id = "com.google.android.libraries.mapsplatform
 convention-android-compose-application = { id = "blue.starry.mitsubachi.buildlogic.convention.android.compose.application" }
 convention-android-library = { id = "blue.starry.mitsubachi.buildlogic.convention.android.library" }
 convention-android-compose-library = { id = "blue.starry.mitsubachi.buildlogic.convention.android.compose.library" }
+convention-android-glance-library = { id = "blue.starry.mitsubachi.buildlogic.convention.android.glance.library" }
 convention-detekt = { id = "blue.starry.mitsubachi.buildlogic.convention.detekt" }
 convention-hilt = { id = "blue.starry.mitsubachi.buildlogic.convention.hilt" }
 convention-kotlin-serialization = { id = "blue.starry.mitsubachi.buildlogic.convention.kotlin.serialization" }
