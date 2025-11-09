@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class AppSettingsRepositoryImpl @Inject constructor(
+internal class DataStoreAppSettingsRepositoryImpl @Inject constructor(
   private val dataStore: DataStore<AppSettings>,
 ) : AppSettingsRepository {
   override val isFirebaseCrashlyticsEnabled: Flow<Boolean> = dataStore.data.map { settings ->

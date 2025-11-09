@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.data.di
 
-import blue.starry.mitsubachi.data.repository.AppSettingsRepositoryImpl
+import blue.starry.mitsubachi.data.repository.EncryptedAppSettingsRepositoryImpl
 import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 internal abstract class AppSettingsRepositoryModule {
   @Binds
   @Singleton
-  abstract fun bind(impl: AppSettingsRepositoryImpl): AppSettingsRepository
+  abstract fun bind(impl: EncryptedAppSettingsRepositoryImpl): AppSettingsRepository
 }
