@@ -119,6 +119,8 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
       dependencies {
         // Convention Plugin では全モジュールで共通の依存のみを定義する
 
+        "implementation"(versions.library("timber"))
+
         // Unit Testing
         "testImplementation"(kotlin("test"))
         "testImplementation"(versions.library("junit-jupiter"))
