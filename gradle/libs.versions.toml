@@ -162,7 +162,11 @@ androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidx-s
 
 # Glance
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidx-glance" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "androidx-glance" }
+androidx-glance-appwidget-testing = { module = "androidx.glance:glance-appwidget-testing", version.ref = "androidx-glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "androidx-glance" }
+androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "androidx-glance" }
+androidx-glance-testing = { module = "androidx.glance:glance-testing", version.ref = "androidx-glance" }
 
 # WorkManager
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }

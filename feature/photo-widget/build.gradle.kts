@@ -14,25 +14,19 @@ dependencies {
   implementation(projects.core.domain)
   implementation(projects.core.ui)
 
-  // Glance for widgets
   implementation(libs.androidx.glance.appwidget)
   implementation(libs.androidx.glance.material3)
+  implementation(libs.androidx.glance.preview)
+  debugImplementation(libs.androidx.glance.appwidget.preview)
+  testImplementation(libs.androidx.glance.testing)
+  testImplementation(libs.androidx.glance.appwidget.testing)
 
-  // WorkManager for background tasks
+  ksp(libs.androidx.hilt.compiler)
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.androidx.hilt.work)
-  ksp(libs.androidx.hilt.compiler)
+  testImplementation(libs.androidx.work.testing)
 
-  // Coil for image loading
   implementation(libs.coil.compose)
 
-  // kotlinx-serialization for state serialization
-  implementation(libs.kotlinx.serialization.json)
-
-  // DataStore for Glance state
   implementation(libs.androidx.datastore)
-
-  testImplementation(libs.junit.jupiter)
-  testImplementation(libs.mockk)
-  testImplementation(libs.androidx.work.testing)
 }
