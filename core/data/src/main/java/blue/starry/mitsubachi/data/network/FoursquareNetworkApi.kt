@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.data.network.model.FoursquareRecentCheckinsRespons
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenueRecommendationsResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareSearchVenuesResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserCheckinsResponse
+import blue.starry.mitsubachi.data.network.model.FoursquareUserPhotosResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserResponse
 import blue.starry.mitsubachi.data.network.model.FoursquareUserVenueHistoriesResponse
 import de.jensklingenberg.ktorfit.core.NoDelegation
@@ -16,6 +17,7 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.request.forms.MultiPartFormDataContent
 
+@Suppress("TooManyFunctions")
 interface FoursquareNetworkApi : @NoDelegation NetworkApi {
   @GET("/checkins/recent")
   suspend fun getRecentCheckIns(
@@ -95,4 +97,11 @@ interface FoursquareNetworkApi : @NoDelegation NetworkApi {
     @Query limit: Int?,
     @Query offset: Int?,
   ): FoursquareApiResponse<FoursquareUserCheckinsResponse>
+
+  @GET("/users/{userId}/photos")
+  suspend fun getUserPhotos(
+    @Path userId: String,
+    @Query limit: Int?,
+    @Query offset: Int?,
+  ): FoursquareApiResponse<FoursquareUserPhotosResponse>
 }

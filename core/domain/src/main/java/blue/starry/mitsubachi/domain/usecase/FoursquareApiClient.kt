@@ -6,9 +6,11 @@ import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.VenueRecommendation
+import blue.starry.mitsubachi.domain.model.foursquare.Photo
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import java.time.ZonedDateTime
 
+@Suppress("TooManyFunctions")
 interface FoursquareApiClient {
   suspend fun getRecentCheckIns(
     limit: Int? = null,
@@ -48,4 +50,10 @@ interface FoursquareApiClient {
     limit: Int? = null,
     offset: Int? = null,
   ): List<CheckIn>
+
+  suspend fun getUserPhotos(
+    userId: String? = null,
+    limit: Int? = null,
+    offset: Int? = null,
+  ): List<Photo>
 }

@@ -10,6 +10,7 @@ import blue.starry.mitsubachi.domain.model.FilePart
 import blue.starry.mitsubachi.domain.model.FoursquareUser
 import blue.starry.mitsubachi.domain.model.Venue
 import blue.starry.mitsubachi.domain.model.VenueRecommendation
+import blue.starry.mitsubachi.domain.model.foursquare.Photo
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.domain.usecase.FoursquareBearerTokenSource
@@ -26,6 +27,7 @@ import io.ktor.http.HttpHeaders
 import java.time.ZonedDateTime
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class FoursquareApiClientImpl @Inject constructor(
   private val httpClient: HttpClient,
   private val bearerTokenSource: FoursquareBearerTokenSource,
@@ -164,6 +166,19 @@ class FoursquareApiClientImpl @Inject constructor(
       offset = offset,
     )
     return data.response.checkins.items.map(FoursquareCheckIn::toDomain)
+  }
+
+  override suspend fun getUserPhotos(
+    userId: String?,
+    limit: Int?,
+    offset: Int?,
+  ): List<Photo> {
+    val data = ktorfit.getUserPhotos(
+      userId = userId ?: "self",
+      limit = limit,
+      offset = offset,
+    )
+    return data.response.photos.items.map { it.toDomain() }
   }
 }
 
