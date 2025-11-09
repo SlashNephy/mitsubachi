@@ -1,6 +1,5 @@
 package blue.starry.mitsubachi.feature.photowidget.ui
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,8 +11,11 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.clickable
+import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.currentState
@@ -28,25 +30,27 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
+import blue.starry.mitsubachi.feature.photowidget.worker.PhotoWidgetWorker
 import java.io.File
 import java.time.format.DateTimeFormatter
 
 @Composable
-internal fun PhotoWidgetContent(context: Context) {
+internal fun PhotoWidgetContent() {
   val state = currentState<PhotoWidgetState>()
 
-  Box(
+  Scaffold(
     modifier = GlanceModifier
       .fillMaxSize()
       .background(GlanceTheme.colors.surface)
       .cornerRadius(16.dp)
       .padding(4.dp),
-    contentAlignment = Alignment.Center,
   ) {
-    when {
-      !state.isLoggedIn -> NotLoggedInContent()
-      !state.hasPhoto || state.checkInId == null -> NoPhotosContent()
-      else -> PhotoContent(context, state)
+    when (state) {
+      is PhotoWidgetState.Loading -> CircularProgressIndicator()
+      is PhotoWidgetState.Photo -> PhotoContent(state)
+      is PhotoWidgetState.NoPhotos -> NoPhotosContent()
+      is PhotoWidgetState.LoginRequired -> NotLoggedInContent()
     }
   }
 }
@@ -102,12 +106,13 @@ private fun NoPhotosContent() {
 }
 
 @Composable
-private fun PhotoContent(context: Context, state: PhotoWidgetState) {
-  val file = File(context.filesDir, PhotoWidgetUpdateWorker.WIDGET_PHOTO_FILENAME)
+private fun PhotoContent(photo: PhotoWidgetState.Photo) {
+  val context = LocalContext.current
+  val file = File(context.filesDir, PhotoWidgetWorker.WIDGET_PHOTO_FILENAME)
   val bitmap = loadBitmap(file)
 
   if (bitmap != null) {
-    PhotoWithOverlay(state, bitmap)
+    PhotoWithOverlay(photo, bitmap)
   } else {
     NoPhotosContent()
   }
@@ -122,7 +127,7 @@ private fun loadBitmap(file: File): Bitmap? {
 }
 
 @Composable
-private fun PhotoWithOverlay(state: PhotoWidgetState, bitmap: Bitmap) {
+private fun PhotoWithOverlay(state: PhotoWidgetState.Photo, bitmap: Bitmap) {
   Box(
     modifier = GlanceModifier
       .fillMaxSize()
@@ -149,7 +154,7 @@ private fun PhotoWithOverlay(state: PhotoWidgetState, bitmap: Bitmap) {
 }
 
 @Composable
-private fun PhotoOverlay(state: PhotoWidgetState) {
+private fun PhotoOverlay(photo: PhotoWidgetState.Photo) {
   Box(
     modifier = GlanceModifier
       .fillMaxSize()
@@ -162,25 +167,21 @@ private fun PhotoOverlay(state: PhotoWidgetState) {
         .cornerRadius(8.dp)
         .padding(8.dp),
     ) {
-      state.venueName?.let { venueName ->
-        Text(
-          text = venueName,
-          style = TextStyle(
-            color = GlanceTheme.colors.onSurface,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-          ),
-        )
-      }
-      state.checkInDate?.let { date ->
-        Text(
-          text = date.format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
-          style = TextStyle(
-            color = GlanceTheme.colors.onSurface,
-            fontSize = 12.sp,
-          ),
-        )
-      }
+      Text(
+        text = photo.venueName,
+        style = TextStyle(
+          color = GlanceTheme.colors.onSurface,
+          fontSize = 14.sp,
+          fontWeight = FontWeight.Bold,
+        ),
+      )
+      Text(
+        text = photo.checkInAt.format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
+        style = TextStyle(
+          color = GlanceTheme.colors.onSurface,
+          fontSize = 12.sp,
+        ),
+      )
     }
   }
 }
