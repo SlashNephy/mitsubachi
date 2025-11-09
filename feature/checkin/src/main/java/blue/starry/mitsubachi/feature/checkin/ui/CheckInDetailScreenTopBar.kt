@@ -10,6 +10,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import blue.starry.mitsubachi.domain.model.CheckIn
+import blue.starry.mitsubachi.feature.checkin.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

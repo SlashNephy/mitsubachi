@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import blue.starry.mitsubachi.feature.home.R
 
 private enum class NavigationItem(@param:StringRes val labelId: Int, val icon: ImageVector) {
   Home(R.string.home_bar, Icons.Filled.Home),

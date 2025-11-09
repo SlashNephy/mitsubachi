@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.feature.settings.ui"
+  namespace = "blue.starry.mitsubachi.feature.settings"
 }
 
 dependencies {

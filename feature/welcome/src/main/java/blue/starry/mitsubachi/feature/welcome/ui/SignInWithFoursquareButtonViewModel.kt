@@ -11,6 +11,7 @@ import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationRequest
 import blue.starry.mitsubachi.domain.model.OAuth2AuthorizationResponse
 import blue.starry.mitsubachi.domain.usecase.BeginAuthorizationUseCase
 import blue.starry.mitsubachi.domain.usecase.FinishAuthorizationUseCase
+import blue.starry.mitsubachi.feature.welcome.R
 import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.ui.snackbar.enqueue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,7 +69,7 @@ class SignInWithFoursquareButtonViewModel @Inject constructor(
       }.onSuccess {
         _state.value = UiState.Authorized(it)
         snackbarHostService.enqueue(context.getString(R.string.login_succeeded))
-      }.onFailure { e ->
+      }.onFailure {
         _state.value = UiState.Failed
         snackbarHostService.enqueue(context.getString(R.string.login_failed))
       }

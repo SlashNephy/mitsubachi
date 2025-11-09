@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import blue.starry.mitsubachi.feature.home.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

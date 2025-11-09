@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.feature.map.ui"
+  namespace = "blue.starry.mitsubachi.feature.map"
 }
 
 dependencies {

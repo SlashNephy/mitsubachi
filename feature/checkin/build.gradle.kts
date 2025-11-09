@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.feature.checkin.ui"
+  namespace = "blue.starry.mitsubachi.feature.checkin"
 }
 
 dependencies {

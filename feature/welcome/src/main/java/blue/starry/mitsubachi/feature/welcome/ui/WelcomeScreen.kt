@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.feature.welcome.R
 import blue.starry.mitsubachi.ui.permission.AndroidPermission
 import blue.starry.mitsubachi.ui.permission.PermissionStatus
 import blue.starry.mitsubachi.ui.permission.rememberPermissionState
@@ -114,7 +115,7 @@ private fun OnboardingFlow(
           else -> 1
         }
         slideInHorizontally { width -> width * direction } + fadeIn() togetherWith
-          slideOutHorizontally { width -> -width * direction } + fadeOut()
+                slideOutHorizontally { width -> -width * direction } + fadeOut()
       },
       label = "onboarding_step_animation",
     ) { step ->

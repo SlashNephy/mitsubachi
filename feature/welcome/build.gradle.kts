@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.feature.welcome.ui"
+  namespace = "blue.starry.mitsubachi.feature.welcome"
 }
 
 dependencies {
