@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="photo_widget_title">Random Photo</string>
     <string name="photo_widget_description">Displays a random photo from your check-ins</string>
 </resources>
