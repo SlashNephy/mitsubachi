@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.domain.usecase.DeviceLocationRepository
 import blue.starry.mitsubachi.domain.usecase.FetchUserVenueHistoriesUseCase
-import blue.starry.mitsubachi.ui.error.onException
 import blue.starry.mitsubachi.feature.map.ui.toLatLng
+import blue.starry.mitsubachi.ui.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
