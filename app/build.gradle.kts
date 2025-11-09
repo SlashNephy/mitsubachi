@@ -111,6 +111,10 @@ dependencies {
   implementation(projects.feature.welcome)
 
   implementation(libs.androidx.core.splashscreen)
+  
+  // WorkManager and Hilt Worker for Configuration.Provider
+  implementation(libs.androidx.work.runtime.ktx)
+  implementation(libs.androidx.hilt.work)
 
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.crashlytics)

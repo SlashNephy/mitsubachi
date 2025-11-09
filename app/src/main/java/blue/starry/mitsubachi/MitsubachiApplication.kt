@@ -1,9 +1,10 @@
 package blue.starry.mitsubachi
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import blue.starry.mitsubachi.domain.ApplicationScope
 import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
-import blue.starry.mitsubachi.ui.feature.photowidget.PhotoWidgetWorkScheduler
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -17,7 +18,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
+class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Configuration.Provider {
   @Suppress("LateinitUsage")
   @Inject
   lateinit var imageLoader: ImageLoader
@@ -33,7 +34,12 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
 
   @Suppress("LateinitUsage")
   @Inject
-  lateinit var photoWidgetWorkScheduler: PhotoWidgetWorkScheduler
+  lateinit var workerFactory: HiltWorkerFactory
+
+  override val workManagerConfiguration: Configuration
+    get() = Configuration.Builder()
+      .setWorkerFactory(workerFactory)
+      .build()
 
   override fun onCreate() {
     super.onCreate()
@@ -47,9 +53,6 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
       }
     }
-
-    // Schedule periodic photo widget updates
-    photoWidgetWorkScheduler.schedulePeriodicUpdate()
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())

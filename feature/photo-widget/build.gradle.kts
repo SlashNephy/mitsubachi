@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.convention.android.compose.library)
   alias(libs.plugins.convention.hilt)
   alias(libs.plugins.convention.detekt)
+  alias(libs.plugins.convention.kotlin.serialization)
 }
 
 android {
@@ -24,6 +25,12 @@ dependencies {
 
   // Coil for image loading
   implementation(libs.coil.compose)
+
+  // kotlinx-serialization for state serialization
+  implementation(libs.kotlinx.serialization.json)
+
+  // DataStore for Glance state
+  implementation(libs.androidx.datastore)
 
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.mockk)
