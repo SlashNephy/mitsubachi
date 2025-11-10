@@ -10,6 +10,8 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -29,7 +31,9 @@ internal fun NoPhotosContent() {
         fontWeight = FontWeight.Bold,
       ),
     )
-    Spacer(modifier = GlanceModifier.height(8.dp))
+
+    Spacer(modifier = GlanceModifier.height(16.dp))
+
     Text(
       text = "Add photos to your check-ins to see them here",
       style = TextStyle(
@@ -38,4 +42,11 @@ internal fun NoPhotosContent() {
       ),
     )
   }
+}
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview
+@Composable
+private fun NoPhotosContentPreview() {
+  NoPhotosContent()
 }
