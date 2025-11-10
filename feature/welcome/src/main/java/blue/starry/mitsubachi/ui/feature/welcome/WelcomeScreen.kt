@@ -251,7 +251,7 @@ private fun PermissionsStep(
   onPermissionResult: (Boolean) -> Unit,
 ) {
   val permissionState = rememberPermissionState(AndroidPermission.Location)
-  LaunchedEffect(Unit) {
+  LaunchedEffect(permissionState.status) {
     onPermissionResult(permissionState.status == PermissionStatus.Granted)
   }
 
