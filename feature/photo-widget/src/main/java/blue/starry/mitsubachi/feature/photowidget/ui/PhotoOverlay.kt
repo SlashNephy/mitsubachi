@@ -45,6 +45,16 @@ internal fun PhotoOverlay(photo: PhotoWidgetState.Photo) {
         ),
       )
 
+      if (photo.venueAddress.isNotEmpty()) {
+        Text(
+          text = photo.venueAddress,
+          style = TextStyle(
+            color = GlanceTheme.colors.onSurface,
+            fontSize = 11.sp,
+          ),
+        )
+      }
+
       val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
       Text(
         text = photo.checkInAt.format(formatter),
@@ -67,7 +77,8 @@ private fun PhotoOverlayPreview() {
       path = "photo.jpg",
       checkInId = "check_in",
       venueName = "ぷれびゅーパーク",
-      checkInAt = ZonedDateTime.now().minusDays(7)
+      venueAddress = "東京都渋谷区",
+      checkInAt = ZonedDateTime.now().minusDays(7),
     ),
   )
 }

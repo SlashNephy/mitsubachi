@@ -9,6 +9,7 @@ import androidx.glance.LocalContext
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.preview.ExperimentalGlancePreviewApi
@@ -25,7 +26,9 @@ internal fun LoginRequiredContent(modifier: GlanceModifier = GlanceModifier) {
   Column(
     verticalAlignment = Alignment.CenterVertically,
     horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = modifier.padding(16.dp),
+    modifier = modifier
+      .fillMaxSize()
+      .padding(16.dp),
   ) {
     Text(
       text = context.getString(R.string.login_required_title),

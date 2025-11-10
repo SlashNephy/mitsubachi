@@ -8,6 +8,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.preview.ExperimentalGlancePreviewApi
@@ -21,7 +22,9 @@ internal fun NoPhotosContent() {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalAlignment = Alignment.CenterVertically,
-    modifier = GlanceModifier.padding(16.dp),
+    modifier = GlanceModifier
+      .fillMaxSize()
+      .padding(16.dp),
   ) {
     Text(
       text = "No photos yet",

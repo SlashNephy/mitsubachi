@@ -41,23 +41,23 @@ internal fun PhotoContent(photo: PhotoWidgetState.Photo) {
 @Composable
 private fun ActualPhotoContent(state: PhotoWidgetState.Photo, image: ImageProvider) {
   Box(
-    modifier = GlanceModifier
-      .fillMaxSize()
-      .clickable(
-        actionStartActivity(
-          Intent(
-            Intent.ACTION_VIEW,
-            "blue.starry.mitsubachi://checkin/${state.checkInId}".toUri(),
-          ).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-          },
-        ),
-      ),
+    modifier = GlanceModifier.fillMaxSize(),
   ) {
     Image(
       provider = image,
       contentDescription = state.venueName,
-      modifier = GlanceModifier.fillMaxSize(),
+      modifier = GlanceModifier
+        .fillMaxSize()
+        .clickable(
+          actionStartActivity(
+            Intent(
+              Intent.ACTION_VIEW,
+              "blue.starry.mitsubachi://checkin/${state.checkInId}".toUri(), // TODO: チェックイン詳細画面が開けるようにする
+            ).apply {
+              flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            },
+          ),
+        ),
       contentScale = ContentScale.Crop,
     )
 
@@ -74,8 +74,9 @@ private fun ActualPhotoContentPreview() {
       id = "photo",
       path = "photo.jpg",
       checkInId = "check_in",
-      venueName = "すしパーク",
-      checkInAt = ZonedDateTime.now().minusDays(7)
+      venueName = "ぷれびゅーパーク",
+      venueAddress = "東京都渋谷区",
+      checkInAt = ZonedDateTime.now().minusDays(7),
     ),
     image = ImageProvider(R.drawable.sushi),
   )

@@ -57,11 +57,16 @@ class PhotoWidgetWorker @AssistedInject constructor(
     val photo = photos.random()
     val file = download(photo) ?: return Result.failure()
 
+    // TODO: VenueLocationFormatter を利用する
+    val venueAddress = photo.venue.location.crossStreet
+      ?: photo.venue.location.address ?: photo.venue.location.city ?: photo.venue.location.country
+
     val newState = PhotoWidgetState.Photo(
       id = photo.id,
       path = file.absolutePath,
       checkInId = photo.checkInId,
       venueName = photo.venue.name,
+      venueAddress = venueAddress,
       checkInAt = photo.createdAt,
     )
     widget.updateAll(glanceIds, newState)

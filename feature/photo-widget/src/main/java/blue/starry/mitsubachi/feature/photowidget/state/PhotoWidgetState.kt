@@ -16,6 +16,7 @@ sealed interface PhotoWidgetState : WidgetState {
     val path: String,
     val checkInId: String,
     val venueName: String,
+    val venueAddress: String,
     @Serializable(with = ZonedDateTimeSerializer::class) val checkInAt: ZonedDateTime,
   ) : PhotoWidgetState
 

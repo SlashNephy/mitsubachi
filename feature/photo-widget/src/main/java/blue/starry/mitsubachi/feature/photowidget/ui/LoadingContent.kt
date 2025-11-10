@@ -6,6 +6,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
@@ -15,7 +16,9 @@ internal fun LoadingContent() {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalAlignment = Alignment.CenterVertically,
-    modifier = GlanceModifier.padding(32.dp),
+    modifier = GlanceModifier
+      .fillMaxSize()
+      .padding(32.dp),
   ) {
     CircularProgressIndicator()
   }

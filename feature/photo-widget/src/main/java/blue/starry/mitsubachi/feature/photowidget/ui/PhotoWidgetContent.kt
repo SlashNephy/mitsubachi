@@ -1,17 +1,23 @@
 package blue.starry.mitsubachi.feature.photowidget.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
-import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.GlanceTheme
+import androidx.glance.appwidget.cornerRadius
+import androidx.glance.background
 import androidx.glance.currentState
+import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
 
 @Composable
 internal fun PhotoWidgetContent() {
-  Scaffold(
+  Box(
     modifier = GlanceModifier
-      .fillMaxSize(),
+      .fillMaxSize()
+      .background(GlanceTheme.colors.surface)
+      .cornerRadius(16.dp),
   ) {
     when (val state = currentState<PhotoWidgetState>()) {
       is PhotoWidgetState.Loading -> LoadingContent()
