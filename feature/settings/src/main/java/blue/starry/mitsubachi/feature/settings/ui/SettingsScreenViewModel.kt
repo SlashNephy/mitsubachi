@@ -2,7 +2,7 @@ package blue.starry.mitsubachi.feature.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
+import blue.starry.mitsubachi.domain.usecase.SettingsRepository
 import blue.starry.mitsubachi.domain.usecase.SignOutUseCase
 import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.ui.error.onException
@@ -16,10 +16,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
   private val signOutUseCase: SignOutUseCase,
-  private val appSettingsRepository: AppSettingsRepository,
+  private val settingsRepository: SettingsRepository,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel() {
-  val isFirebaseCrashlyticsEnabled = appSettingsRepository.isFirebaseCrashlyticsEnabled.stateIn(
+  val isFirebaseCrashlyticsEnabled = settingsRepository.isFirebaseCrashlyticsEnabled.stateIn(
     scope = viewModelScope,
     started = SharingStarted.WhileSubscribed(5000),
     initialValue = true,
@@ -38,7 +38,7 @@ class SettingsScreenViewModel @Inject constructor(
   fun setFirebaseCrashlyticsEnabled(isEnabled: Boolean): Job {
     return viewModelScope.launch {
       runCatching {
-        appSettingsRepository.setFirebaseCrashlyticsEnabled(isEnabled)
+        settingsRepository.setFirebaseCrashlyticsEnabled(isEnabled)
       }.onException { e ->
         snackbarErrorHandler.handle(e)
       }

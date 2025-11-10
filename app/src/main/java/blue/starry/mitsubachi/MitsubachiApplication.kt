@@ -2,7 +2,7 @@ package blue.starry.mitsubachi
 
 import android.app.Application
 import blue.starry.mitsubachi.domain.ApplicationScope
-import blue.starry.mitsubachi.domain.usecase.AppSettingsRepository
+import blue.starry.mitsubachi.domain.usecase.SettingsRepository
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -28,7 +28,7 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
 
   @Suppress("LateinitUsage")
   @Inject
-  lateinit var appSettingsRepository: AppSettingsRepository
+  lateinit var settingsRepository: SettingsRepository
 
   override fun onCreate() {
     super.onCreate()
@@ -36,9 +36,9 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory {
     applicationScope.launch {
       // 起動時にオプトアウトを設定
       Firebase.crashlytics.isCrashlyticsCollectionEnabled =
-        appSettingsRepository.isFirebaseCrashlyticsEnabled.first()
+        settingsRepository.isFirebaseCrashlyticsEnabled.first()
 
-      appSettingsRepository.isFirebaseCrashlyticsEnabled.collect { enabled ->
+      settingsRepository.isFirebaseCrashlyticsEnabled.collect { enabled ->
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
       }
     }
