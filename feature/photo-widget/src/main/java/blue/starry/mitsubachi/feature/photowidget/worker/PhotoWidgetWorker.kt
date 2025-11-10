@@ -9,13 +9,13 @@ import androidx.glance.appwidget.updateAll
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import blue.starry.mitsubachi.domain.model.foursquare.Photo
 import blue.starry.mitsubachi.domain.usecase.FindFoursquareAccountUseCase
 import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.feature.photowidget.PhotoWidget
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetStateDefinition
 import coil3.ImageLoader
-import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.toBitmap
 import dagger.assisted.Assisted
@@ -25,6 +25,8 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @HiltWorker
 class PhotoWidgetWorker @AssistedInject constructor(
@@ -53,18 +55,17 @@ class PhotoWidgetWorker @AssistedInject constructor(
     }
 
     val photo = photos.random()
-    val success = downloadAndSavePhoto(photo.url)
-    if (!success) {
-      return Result.failure()
-    }
+    val file = download(photo) ?: return Result.failure()
 
     val newState = PhotoWidgetState.Photo(
       id = photo.id,
+      path = file.absolutePath,
       checkInId = photo.checkInId,
       venueName = photo.venue.name,
       checkInAt = photo.createdAt,
     )
     widget.updateAll(glanceIds, newState)
+
     return Result.success()
   }
 
@@ -82,24 +83,24 @@ class PhotoWidgetWorker @AssistedInject constructor(
     updateAll(applicationContext)
   }
 
-  private suspend fun downloadAndSavePhoto(photoUrl: String): Boolean {
+  private suspend fun download(photo: Photo): File? {
     val request = ImageRequest.Builder(applicationContext)
-      .data(photoUrl)
-      .memoryCachePolicy(CachePolicy.ENABLED)
-      .diskCachePolicy(CachePolicy.ENABLED)
+      .data(photo.url)
       .build()
 
-    val imageResult = imageLoader.execute(request)
-    val bitmap = imageResult.image?.toBitmap() ?: return false
+    val result = imageLoader.execute(request)
+    val bitmap = result.image?.toBitmap() ?: return null
 
-    val file = File(applicationContext.filesDir, WIDGET_PHOTO_FILENAME)
-    FileOutputStream(file).use { out ->
-      bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+    val file = createCacheFile()
+    FileOutputStream(file).use { stream ->
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
     }
-    return true
+    return file
   }
 
-  companion object {
-    const val WIDGET_PHOTO_FILENAME = "widget_photo.jpg"
+  @OptIn(ExperimentalUuidApi::class)
+  private fun createCacheFile(): File {
+    val key = Uuid.random().toHexString()
+    return File(applicationContext.cacheDir, "$key.jpg")
   }
 }

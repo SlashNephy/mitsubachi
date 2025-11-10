@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photo_widget_title">무작위 사진</string>
+    <string name="photo_widget_description">귀하의 체크인 중 무작위 사진을 표시합니다.</string>
+    <string name="login_required_title">로그인하십시오</string>
+    <string name="login_required_description">위젯을 사용하려면 로그인이 필요합니다.</string>
+</resources>

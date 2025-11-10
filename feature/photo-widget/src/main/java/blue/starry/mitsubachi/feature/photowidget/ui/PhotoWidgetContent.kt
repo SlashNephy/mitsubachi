@@ -23,15 +23,12 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
-import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
-import blue.starry.mitsubachi.feature.photowidget.worker.PhotoWidgetWorker
 import java.io.File
 import java.time.format.DateTimeFormatter
 
@@ -50,65 +47,15 @@ internal fun PhotoWidgetContent() {
       is PhotoWidgetState.Loading -> CircularProgressIndicator()
       is PhotoWidgetState.Photo -> PhotoContent(state)
       is PhotoWidgetState.NoPhotos -> NoPhotosContent()
-      is PhotoWidgetState.LoginRequired -> NotLoggedInContent()
+      is PhotoWidgetState.LoginRequired -> LoginRequiredContent()
     }
-  }
-}
-
-@Composable
-private fun NotLoggedInContent() {
-  Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = GlanceModifier.padding(16.dp),
-  ) {
-    Text(
-      text = "Not logged in",
-      style = TextStyle(
-        color = GlanceTheme.colors.onSurface,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Bold,
-      ),
-    )
-    Spacer(modifier = GlanceModifier.height(8.dp))
-    Text(
-      text = "Please log in to see your check-in photos",
-      style = TextStyle(
-        color = GlanceTheme.colors.onSurface,
-        fontSize = 12.sp,
-      ),
-    )
-  }
-}
-
-@Composable
-private fun NoPhotosContent() {
-  Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = GlanceModifier.padding(16.dp),
-  ) {
-    Text(
-      text = "No photos yet",
-      style = TextStyle(
-        color = GlanceTheme.colors.onSurface,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Bold,
-      ),
-    )
-    Spacer(modifier = GlanceModifier.height(8.dp))
-    Text(
-      text = "Add photos to your check-ins to see them here",
-      style = TextStyle(
-        color = GlanceTheme.colors.onSurface,
-        fontSize = 12.sp,
-      ),
-    )
   }
 }
 
 @Composable
 private fun PhotoContent(photo: PhotoWidgetState.Photo) {
   val context = LocalContext.current
-  val file = File(context.filesDir, PhotoWidgetWorker.WIDGET_PHOTO_FILENAME)
+  val file = File(photo.path)
   val bitmap = loadBitmap(file)
 
   if (bitmap != null) {
