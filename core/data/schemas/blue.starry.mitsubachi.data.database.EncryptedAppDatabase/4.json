@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "a16b49147be2a6e270816e6091ac6e9b",
+    "identityHash": "5689d398568717d76c8c257c4c022174",
     "entities": [
       {
         "tableName": "foursquare_accounts",
@@ -72,33 +72,27 @@
         }
       },
       {
-        "tableName": "app_settings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `is_firebase_crashlytics_enabled` INTEGER NOT NULL, PRIMARY KEY(`userId`))",
+        "tableName": "settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`foursquare_account_id` TEXT NOT NULL, PRIMARY KEY(`foursquare_account_id`))",
         "fields": [
           {
-            "fieldPath": "userId",
-            "columnName": "userId",
+            "fieldPath": "foursquareAccountId",
+            "columnName": "foursquare_account_id",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isFirebaseCrashlyticsEnabled",
-            "columnName": "is_firebase_crashlytics_enabled",
-            "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "userId"
+            "foursquare_account_id"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a16b49147be2a6e270816e6091ac6e9b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5689d398568717d76c8c257c4c022174')"
     ]
   }
 }
