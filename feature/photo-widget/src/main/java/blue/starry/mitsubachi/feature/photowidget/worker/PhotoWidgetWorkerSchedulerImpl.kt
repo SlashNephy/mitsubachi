@@ -6,6 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import blue.starry.mitsubachi.domain.usecase.DeviceNetworkRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,6 +16,7 @@ import kotlin.time.toJavaDuration
 @Singleton
 internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
   @param:ApplicationContext private val context: Context,
+  private val deviceNetworkRepository: DeviceNetworkRepository,
 ) : PhotoWidgetWorkerScheduler {
   companion object {
     private const val WORKER_NAME = "photo_widget_worker"
@@ -22,8 +24,15 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
   }
 
   override fun enqueue() {
+    // データセーバーモードが有効な場合は無制限のネットワークでのみ実行
+    val networkType = if (deviceNetworkRepository.isDataSaverEnabled()) {
+      NetworkType.UNMETERED
+    } else {
+      NetworkType.CONNECTED
+    }
+
     val constraints = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
+      .setRequiredNetworkType(networkType)
       .setRequiresBatteryNotLow(true)
       .build()
 
