@@ -44,9 +44,11 @@ include(
   ":core:data",
   ":core:domain",
   ":core:ui",
+  ":core:ui-widget",
   ":feature:checkin",
   ":feature:home",
   ":feature:map",
+  ":feature:photo-widget",
   ":feature:settings",
   ":feature:welcome",
 )

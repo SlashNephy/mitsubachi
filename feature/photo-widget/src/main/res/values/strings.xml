@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photo_widget_title">Random Photo</string>
+    <string name="photo_widget_description">Displays a random photo from your check-ins.</string>
+    <string name="login_required_title">Not logged-in</string>
+    <string name="login_required_description">Please log in to use this widget.</string>
+    <string name="no_photos_title">No photos yet</string>
+    <string name="no_photos_description">Add photos to your check-ins to see them here</string>
+</resources>

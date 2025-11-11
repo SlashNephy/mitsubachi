@@ -106,10 +106,14 @@ dependencies {
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
   implementation(projects.feature.map)
+  implementation(projects.feature.photoWidget)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
 
   implementation(libs.androidx.core.splashscreen)
+
+  implementation(libs.androidx.work.runtime.ktx)
+  implementation(libs.androidx.hilt.work)
 
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.crashlytics)

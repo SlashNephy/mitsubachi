@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photo_widget_title">ランダムな写真</string>
+    <string name="photo_widget_description">チェックインの中からランダムな写真を表示します。</string>
+    <string name="login_required_title">ログインしてください</string>
+    <string name="login_required_description">ウィジェットを使用するにはログインする必要があります。</string>
+    <string name="no_photos_title">写真がありません</string>
+    <string name="no_photos_description">写真を付けてチェックインしてみましょう</string>
+</resources>

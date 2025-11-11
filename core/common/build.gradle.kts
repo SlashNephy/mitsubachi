@@ -7,7 +7,3 @@ plugins {
 android {
   namespace = "blue.starry.mitsubachi.common"
 }
-
-dependencies {
-  api(libs.timber)
-}
