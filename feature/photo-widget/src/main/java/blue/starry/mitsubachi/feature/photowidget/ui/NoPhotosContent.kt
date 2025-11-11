@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.feature.photowidget.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
@@ -16,6 +17,7 @@ import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import blue.starry.mitsubachi.feature.photowidget.R
 
 @Composable
 internal fun NoPhotosContent() {
@@ -27,7 +29,7 @@ internal fun NoPhotosContent() {
       .padding(16.dp),
   ) {
     Text(
-      text = "No photos yet",
+      text = stringResource(R.string.no_photos_title),
       style = TextStyle(
         color = GlanceTheme.colors.onSurface,
         fontSize = 16.sp,
@@ -38,7 +40,7 @@ internal fun NoPhotosContent() {
     Spacer(modifier = GlanceModifier.height(16.dp))
 
     Text(
-      text = "Add photos to your check-ins to see them here",
+      text = stringResource(R.string.no_photos_description),
       style = TextStyle(
         color = GlanceTheme.colors.onSurface,
         fontSize = 12.sp,
