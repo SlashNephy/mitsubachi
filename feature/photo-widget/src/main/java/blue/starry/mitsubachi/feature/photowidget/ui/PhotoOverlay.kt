@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
@@ -24,6 +25,9 @@ import java.time.format.FormatStyle
 
 @Composable
 internal fun PhotoOverlay(photo: PhotoWidgetState.Photo) {
+  val context = LocalContext.current
+  val surfaceColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = 0.7f)
+
   Box(
     modifier = GlanceModifier
       .fillMaxSize()
@@ -32,7 +36,7 @@ internal fun PhotoOverlay(photo: PhotoWidgetState.Photo) {
   ) {
     Column(
       modifier = GlanceModifier
-        .background(GlanceTheme.colors.surface)
+        .background(surfaceColor)
         .cornerRadius(8.dp)
         .padding(8.dp),
     ) {
