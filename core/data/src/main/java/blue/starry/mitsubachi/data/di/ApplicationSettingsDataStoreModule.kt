@@ -5,8 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.MultiProcessDataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
-import blue.starry.mitsubachi.data.datastore.AppSettings
-import blue.starry.mitsubachi.data.datastore.AppSettingsSerializer
+import blue.starry.mitsubachi.data.datastore.ApplicationSettings
+import blue.starry.mitsubachi.data.datastore.ApplicationSettingsSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,17 +16,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object AppSettingsDataStoreModule {
+internal object ApplicationSettingsDataStoreModule {
   @Provides
   @Singleton
-  fun provide(@ApplicationContext context: Context): DataStore<AppSettings> {
+  fun provide(@ApplicationContext context: Context): DataStore<ApplicationSettings> {
     return MultiProcessDataStoreFactory.create(
-      serializer = AppSettingsSerializer,
+      serializer = ApplicationSettingsSerializer,
       corruptionHandler = ReplaceFileCorruptionHandler {
-        AppSettings.getDefaultInstance()
+        ApplicationSettings.getDefaultInstance()
       },
       produceFile = {
-        context.dataStoreFile("app_settings.pb")
+        context.dataStoreFile("application_settings.pb")
       },
     )
   }

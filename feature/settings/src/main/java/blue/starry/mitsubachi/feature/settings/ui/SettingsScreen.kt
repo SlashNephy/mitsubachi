@@ -19,53 +19,66 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.ui.screen.LoadingScreen
 
 @Composable
 fun SettingsScreen(
   onSignOut: () -> Unit,
   viewModel: SettingsScreenViewModel = hiltViewModel(),
 ) {
-  val crashlyticsEnabled by viewModel.isFirebaseCrashlyticsEnabled.collectAsStateWithLifecycle()
+  val state by viewModel.state.collectAsStateWithLifecycle()
 
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .verticalScroll(rememberScrollState()),
-  ) {
-    // Crashlytics Setting
-    ListItem(
-      headlineContent = { Text("Firebase Crashlytics") },
-      supportingContent = { Text("クラッシュレポートを送信する") },
-      trailingContent = {
-        Switch(
-          checked = crashlyticsEnabled,
-          onCheckedChange = { viewModel.setFirebaseCrashlyticsEnabled(it) },
-        )
-      },
-    )
+  when (val state = state) {
+    is SettingsScreenViewModel.UiState.Loading -> {
+      LoadingScreen()
+    }
 
-    HorizontalDivider()
-
-    // Sign Out Button
-    ListItem(
-      headlineContent = {
-        Button(
-          onClick = {
-            viewModel
-              .signOut()
-              .invokeOnCompletion {
-                onSignOut()
-              }
+    is SettingsScreenViewModel.UiState.Loaded -> {
+      Column(
+        modifier = Modifier
+          .fillMaxSize()
+          .verticalScroll(rememberScrollState()),
+      ) {
+        ListItem(
+          headlineContent = { Text("Firebase Crashlytics") },
+          supportingContent = { Text("クラッシュレポートを送信する") },
+          trailingContent = {
+            Switch(
+              checked = state.applicationSettings.isFirebaseCrashlyticsEnabled,
+              onCheckedChange = {
+                viewModel.update { settings ->
+                  settings.copy(
+                    isFirebaseCrashlyticsEnabled = it
+                  )
+                }
+              },
+            )
           },
-          modifier = Modifier.fillMaxWidth(),
-          colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red,
-          ),
-        ) {
-          Text("ログアウト")
-        }
-      },
-      modifier = Modifier.padding(vertical = 8.dp),
-    )
+        )
+
+        HorizontalDivider()
+
+        ListItem(
+          headlineContent = {
+            Button(
+              onClick = {
+                viewModel
+                  .signOut()
+                  .invokeOnCompletion {
+                    onSignOut()
+                  }
+              },
+              modifier = Modifier.fillMaxWidth(),
+              colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red,
+              ),
+            ) {
+              Text("ログアウト")
+            }
+          },
+          modifier = Modifier.padding(vertical = 8.dp),
+        )
+      }
+    }
   }
 }
