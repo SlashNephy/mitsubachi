@@ -10,6 +10,3 @@ data class ApplicationConfig(
   val foursquareClientSecret: String,
   val foursquareRedirectUri: String,
 )
-
-val ApplicationConfig.isProductionBuild: Boolean
-  get() = !isDebugBuild

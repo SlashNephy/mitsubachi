@@ -6,18 +6,18 @@ import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
-object AppSettingsSerializer : Serializer<AppSettings> {
-  override val defaultValue: AppSettings = AppSettings.getDefaultInstance()
+object UserSettingsMapSerializer : Serializer<UserSettingsMap> {
+  override val defaultValue: UserSettingsMap = UserSettingsMap.getDefaultInstance()
 
-  override suspend fun readFrom(input: InputStream): AppSettings {
+  override suspend fun readFrom(input: InputStream): UserSettingsMap {
     try {
-      return AppSettings.parseFrom(input)
+      return UserSettingsMap.parseFrom(input)
     } catch (exception: InvalidProtocolBufferException) {
       throw CorruptionException("cannot read proto.", exception)
     }
   }
 
-  override suspend fun writeTo(t: AppSettings, output: OutputStream) {
+  override suspend fun writeTo(t: UserSettingsMap, output: OutputStream) {
     t.writeTo(output)
   }
 }
