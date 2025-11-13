@@ -48,7 +48,7 @@ fun SettingsScreen(
               onCheckedChange = {
                 viewModel.update { settings ->
                   settings.copy(
-                    isFirebaseCrashlyticsEnabled = it
+                    isFirebaseCrashlyticsEnabled = it,
                   )
                 }
               },
