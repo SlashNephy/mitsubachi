@@ -9,7 +9,6 @@ import blue.starry.mitsubachi.data.repository.model.toEntity
 import blue.starry.mitsubachi.domain.usecase.UserSettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 import javax.inject.Singleton
 import blue.starry.mitsubachi.domain.model.UserSettings as DomainUserSettings
@@ -22,7 +21,7 @@ internal class UserSettingsRepositoryImpl @Inject constructor(
     dataStore.data.map { it.usersMap.entries.associate { (key, value) -> key to value.toDomain() } }
 
   override fun flow(userId: String): Flow<DomainUserSettings> {
-    return flow.mapNotNull { it[userId] }
+    return flow.map { it[userId] ?: UserSettings.getDefaultInstance().toDomain() }
   }
 
   override suspend fun update(userId: String, block: (DomainUserSettings) -> DomainUserSettings) {
