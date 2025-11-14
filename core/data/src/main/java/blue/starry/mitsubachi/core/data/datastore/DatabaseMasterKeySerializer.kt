@@ -2,7 +2,6 @@ package blue.starry.mitsubachi.core.data.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import blue.starry.mitsubachi.core.data.datastore.DatabaseMasterKey
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream

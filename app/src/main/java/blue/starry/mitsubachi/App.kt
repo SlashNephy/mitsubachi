@@ -3,7 +3,6 @@ package blue.starry.mitsubachi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -52,7 +51,6 @@ fun App(viewModel: AppViewModel = hiltViewModel()) {
     topBar = { AppTopBar(backStack = backStack) },
     bottomBar = { AppBottomBar(backStack = backStack) },
     floatingActionButton = { AppFloatingActionButton(backStack = backStack) },
-    floatingActionButtonPosition = AppFloatingActionButtonPosition(),
     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
   ) { padding ->
     NavDisplay(
@@ -169,11 +167,6 @@ private fun AppFloatingActionButton(backStack: NavBackStack<RouteKey>) {
 
     else -> {}
   }
-}
-
-@Suppress("FunctionName")
-private fun AppFloatingActionButtonPosition(): FabPosition {
-  return FabPosition.End
 }
 
 @Suppress("FunctionName", "LongMethod")

@@ -40,7 +40,7 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
       .setConstraints(constraints)
       .build()
 
-    WorkManager.Companion.getInstance(context).enqueueUniquePeriodicWork(
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
       WORKER_NAME,
       ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
       request,
@@ -48,6 +48,6 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
   }
 
   override fun cancel() {
-    WorkManager.Companion.getInstance(context).cancelUniqueWork(WORKER_NAME)
+    WorkManager.getInstance(context).cancelUniqueWork(WORKER_NAME)
   }
 }
