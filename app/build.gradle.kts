@@ -1,6 +1,5 @@
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -13,14 +12,6 @@ plugins {
   alias(libs.plugins.convention.detekt)
 
   alias(libs.plugins.android.mapsplatform.secrets)
-}
-
-val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("keystore.properties")
-if (keystorePropertiesFile.exists()) {
-  FileInputStream(keystorePropertiesFile).use {
-    keystoreProperties.load(it)
-  }
 }
 
 android {
@@ -42,6 +33,10 @@ android {
 
   signingConfigs {
     create("default") {
+      val keystoreProperties = Properties().apply {
+        rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
+      }
+
       storeFile = keystoreProperties.getProperty("android_keystore_path")?.let { file(it) }
       storePassword = keystoreProperties.getProperty("android_keystore_password")
       keyAlias = keystoreProperties.getProperty("android_keystore_alias")
