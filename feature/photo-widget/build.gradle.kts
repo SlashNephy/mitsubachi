@@ -12,7 +12,7 @@ android {
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
-  implementation(projects.core.uiWidget)
+  implementation(projects.core.ui.glance)
 
   ksp(libs.androidx.hilt.compiler)
   implementation(libs.androidx.work.runtime.ktx)

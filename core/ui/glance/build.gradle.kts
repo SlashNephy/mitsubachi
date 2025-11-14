@@ -10,7 +10,5 @@ android {
 }
 
 dependencies {
-  implementation(projects.core.common)
-  implementation(projects.core.domain)
-  implementation(projects.core.uiColor)
+  implementation(projects.core.ui.common)
 }

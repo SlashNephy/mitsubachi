@@ -7,7 +7,8 @@ import androidx.glance.GlanceTheme
 @Composable
 fun MitsubachiGlanceTheme(
   dynamicColor: Boolean = true,
-  content: @Composable @GlanceComposable () -> Unit,
+  content:
+  @Composable @GlanceComposable () -> Unit,
 ) {
   val colors = if (dynamicColor) {
     GlanceTheme.colors
