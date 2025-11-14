@@ -2,6 +2,8 @@ package blue.starry.mitsubachi.feature.map.ui.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import blue.starry.mitsubachi.feature.map.R
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.DefaultMapProperties
@@ -23,7 +25,7 @@ internal fun Map(
   GoogleMap(
     modifier = modifier,
     cameraPositionState = cameraPositionState,
-    contentDescription = "マップ",
+    contentDescription = stringResource(R.string.map),
     properties = properties,
     uiSettings = uiSettings,
     mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM,
