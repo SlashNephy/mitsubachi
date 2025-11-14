@@ -30,6 +30,7 @@ import blue.starry.mitsubachi.ui.screen.ErrorScreen
 import blue.starry.mitsubachi.ui.screen.LoadingScreen
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -103,6 +104,7 @@ private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
     properties = MapProperties(
       isMyLocationEnabled = permissionState.status == PermissionStatus.Granted,
     ),
+    mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM,
   ) {
     // ベニューのマーカーを表示
     val recommendations =
