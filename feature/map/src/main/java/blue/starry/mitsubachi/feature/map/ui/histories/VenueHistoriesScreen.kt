@@ -28,6 +28,7 @@ import blue.starry.mitsubachi.ui.screen.ErrorScreen
 import blue.starry.mitsubachi.ui.screen.LoadingScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -88,6 +89,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
             properties = MapProperties(
               isMyLocationEnabled = permissionState.status == PermissionStatus.Granted,
             ),
+            mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM,
           ) {
             VenueHistoriesMapView(state.data)
           }
