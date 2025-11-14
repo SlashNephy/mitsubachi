@@ -1,6 +1,5 @@
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -13,14 +12,6 @@ plugins {
   alias(libs.plugins.convention.detekt)
 
   alias(libs.plugins.android.mapsplatform.secrets)
-}
-
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-  FileInputStream(localPropertiesFile).use {
-    localProperties.load(it)
-  }
 }
 
 android {
@@ -42,10 +33,14 @@ android {
 
   signingConfigs {
     create("default") {
-      storeFile = localProperties.getProperty("android_keystore_path")?.let { file(it) }
-      storePassword = localProperties.getProperty("android_keystore_password")
-      keyAlias = localProperties.getProperty("android_keystore_alias")
-      keyPassword = localProperties.getProperty("android_keystore_alias_password")
+      val keystoreProperties = Properties().apply {
+        rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
+      }
+
+      storeFile = keystoreProperties.getProperty("android_keystore_path")?.let { file(it) }
+      storePassword = keystoreProperties.getProperty("android_keystore_password")
+      keyAlias = keystoreProperties.getProperty("android_keystore_alias")
+      keyPassword = keystoreProperties.getProperty("android_keystore_alias_password")
     }
   }
 
@@ -87,6 +82,10 @@ android {
     }
   }
 
+  buildFeatures {
+    buildConfig = true
+  }
+
   androidResources {
     @Suppress("UnstableApiUsage")
     generateLocaleConfig = true
@@ -94,8 +93,8 @@ android {
 }
 
 secrets {
-  propertiesFileName = rootProject.relativePath("local.properties")
-  defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
+  propertiesFileName = rootProject.relativePath("secrets.properties")
+  defaultPropertiesFileName = rootProject.relativePath("secrets.defaults.properties")
 }
 
 dependencies {
