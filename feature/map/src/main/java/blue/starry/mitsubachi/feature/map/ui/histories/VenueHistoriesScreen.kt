@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.feature.map.ui.common.Map
 import blue.starry.mitsubachi.ui.permission.AndroidPermission
 import blue.starry.mitsubachi.ui.permission.PermissionStatus
 import blue.starry.mitsubachi.ui.permission.rememberPermissionState
@@ -28,8 +29,6 @@ import blue.starry.mitsubachi.ui.screen.ErrorScreen
 import blue.starry.mitsubachi.ui.screen.LoadingScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.ComposeMapColorScheme
-import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
@@ -78,7 +77,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
-          GoogleMap(
+          Map(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(
@@ -89,7 +88,6 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
             properties = MapProperties(
               isMyLocationEnabled = permissionState.status == PermissionStatus.Granted,
             ),
-            mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM,
           ) {
             VenueHistoriesMapView(state.data)
           }

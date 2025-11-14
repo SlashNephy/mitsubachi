@@ -3,10 +3,9 @@ package blue.starry.mitsubachi.feature.map.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import blue.starry.mitsubachi.feature.map.ui.common.Map
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.ComposeMapColorScheme
-import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
@@ -19,10 +18,9 @@ fun MapScreen(latitude: Double, longitude: Double, title: String?) { // TODO: Co
     position = CameraPosition.fromLatLngZoom(location, 17f)
   }
 
-  GoogleMap(
+  Map(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState,
-    mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM,
   ) {
     if (title != null) {
       Marker(
