@@ -77,7 +77,6 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
 
           buildFeatures {
-            buildConfig = true
             compose =
               projectType.framework == AndroidProjectType.UiFramework.Compose || projectType.framework == AndroidProjectType.UiFramework.Glance
           }
