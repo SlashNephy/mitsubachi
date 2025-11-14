@@ -8,9 +8,9 @@ import androidx.glance.appwidget.updateAll
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import blue.starry.mitsubachi.domain.usecase.FindFoursquareAccountUseCase
-import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
-import blue.starry.mitsubachi.domain.usecase.ImageDownloader
+import blue.starry.mitsubachi.core.domain.usecase.FindFoursquareAccountUseCase
+import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClient
+import blue.starry.mitsubachi.core.domain.usecase.ImageDownloader
 import blue.starry.mitsubachi.feature.photowidget.PhotoWidget
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetStateDefinition

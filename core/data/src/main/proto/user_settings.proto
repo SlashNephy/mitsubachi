@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "blue.starry.mitsubachi.data.datastore";
+option java_package = "blue.starry.mitsubachi.core.data.datastore";
 option java_multiple_files = true;
 
 message UserSettingsMap {

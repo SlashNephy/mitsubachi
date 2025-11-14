@@ -6,7 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import blue.starry.mitsubachi.ui.color.MitsubachiColors
+import blue.starry.mitsubachi.core.ui.common.MitsubachiColors
 
 @Composable
 internal fun MapPoint(modifier: Modifier = Modifier) {

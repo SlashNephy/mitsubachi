@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.core.ui.widget"
+  namespace = "blue.starry.mitsubachi.core.ui.glance"
 }
 
 dependencies {

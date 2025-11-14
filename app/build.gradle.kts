@@ -102,6 +102,7 @@ dependencies {
   implementation(projects.core.common)
   implementation(projects.core.data)
   implementation(projects.core.domain)
+  implementation(projects.core.ui.common)
   implementation(projects.core.ui.compose)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)

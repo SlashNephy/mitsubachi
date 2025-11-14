@@ -1,7 +1,7 @@
 package blue.starry.mitsubachi.feature.photowidget.state
 
-import blue.starry.mitsubachi.common.ZonedDateTimeSerializer
-import blue.starry.mitsubachi.core.ui.widget.state.WidgetState
+import blue.starry.mitsubachi.core.common.ZonedDateTimeSerializer
+import blue.starry.mitsubachi.core.ui.glance.state.WidgetState
 import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
 

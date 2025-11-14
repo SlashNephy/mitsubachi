@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
-import blue.starry.mitsubachi.core.ui.widget.MitsubachiGlanceTheme
+import blue.starry.mitsubachi.core.ui.glance.MitsubachiGlanceTheme
 import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetStateDefinition
 import blue.starry.mitsubachi.feature.photowidget.ui.PhotoWidgetContent
 

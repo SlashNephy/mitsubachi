@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.ui.color"
+  namespace = "blue.starry.mitsubachi.core.ui.common"
 }
 
 dependencies {

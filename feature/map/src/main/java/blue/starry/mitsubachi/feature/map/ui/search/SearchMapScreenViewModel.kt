@@ -2,10 +2,10 @@ package blue.starry.mitsubachi.feature.map.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import blue.starry.mitsubachi.domain.model.Coordinates
-import blue.starry.mitsubachi.domain.model.VenueRecommendation
-import blue.starry.mitsubachi.domain.usecase.SearchVenueRecommendationsUseCase
-import blue.starry.mitsubachi.ui.error.onException
+import blue.starry.mitsubachi.core.domain.model.Coordinates
+import blue.starry.mitsubachi.core.domain.model.VenueRecommendation
+import blue.starry.mitsubachi.core.domain.usecase.SearchVenueRecommendationsUseCase
+import blue.starry.mitsubachi.core.ui.compose.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

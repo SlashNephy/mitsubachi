@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.ui"
+  namespace = "blue.starry.mitsubachi.core.ui.compose"
 }
 
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
-  api(projects.core.ui.common)
+  implementation(projects.core.ui.common)
 
   api(libs.androidx.core.ktx)
   api(libs.androidx.activity.compose)

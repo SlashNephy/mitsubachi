@@ -6,7 +6,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import blue.starry.mitsubachi.ui.color.MitsubachiColorScheme
+import blue.starry.mitsubachi.core.ui.common.MitsubachiColorScheme
 
 @Composable
 fun MitsubachiTheme(

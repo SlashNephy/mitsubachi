@@ -2,8 +2,8 @@ package blue.starry.mitsubachi.feature.welcome.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import blue.starry.mitsubachi.domain.model.FoursquareAccount
-import blue.starry.mitsubachi.domain.usecase.FindFoursquareAccountUseCase
+import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
+import blue.starry.mitsubachi.core.domain.usecase.FindFoursquareAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

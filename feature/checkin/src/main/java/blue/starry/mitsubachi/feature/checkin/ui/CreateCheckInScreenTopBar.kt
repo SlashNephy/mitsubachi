@@ -22,10 +22,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import blue.starry.mitsubachi.domain.model.Venue
-import blue.starry.mitsubachi.domain.model.primaryCategory
-import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
-import blue.starry.mitsubachi.ui.foundation.VenueCategoryIcon
+import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.domain.model.primaryCategory
+import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -57,7 +57,7 @@ fun CreateCheckInScreenTopBar(
       IconButton(onClick = onBack) {
         Icon(
           imageVector = Icons.AutoMirrored.Default.ArrowBack,
-          contentDescription = stringResource(blue.starry.mitsubachi.ui.R.string.back_button),
+          contentDescription = stringResource(blue.starry.mitsubachi.core.ui.compose.R.string.back_button),
         )
       }
     },

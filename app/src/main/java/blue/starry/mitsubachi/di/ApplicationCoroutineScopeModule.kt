@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.di
 
-import blue.starry.mitsubachi.domain.ApplicationScope
+import blue.starry.mitsubachi.core.domain.ApplicationScope
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

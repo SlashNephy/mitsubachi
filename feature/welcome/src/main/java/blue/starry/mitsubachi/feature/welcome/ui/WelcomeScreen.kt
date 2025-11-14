@@ -43,11 +43,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
+import blue.starry.mitsubachi.core.ui.compose.permission.PermissionStatus
+import blue.starry.mitsubachi.core.ui.compose.permission.rememberPermissionState
+import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 import blue.starry.mitsubachi.feature.welcome.R
-import blue.starry.mitsubachi.ui.permission.AndroidPermission
-import blue.starry.mitsubachi.ui.permission.PermissionStatus
-import blue.starry.mitsubachi.ui.permission.rememberPermissionState
-import blue.starry.mitsubachi.ui.screen.LoadingScreen
 
 @Composable
 fun WelcomeScreen(

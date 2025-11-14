@@ -22,11 +22,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import blue.starry.mitsubachi.domain.model.VenueRecommendation
-import blue.starry.mitsubachi.domain.model.url
-import blue.starry.mitsubachi.ui.formatter.LengthUnitFormatter
-import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
-import blue.starry.mitsubachi.ui.locale.LocaleAware
+import blue.starry.mitsubachi.core.domain.model.VenueRecommendation
+import blue.starry.mitsubachi.core.domain.model.url
+import blue.starry.mitsubachi.core.ui.compose.formatter.LengthUnitFormatter
+import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.core.ui.compose.locale.LocaleAware
 import coil3.compose.AsyncImage
 
 @Composable

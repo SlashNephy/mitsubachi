@@ -51,7 +51,7 @@ fun NearbyVenuesScreenTopBar(
       IconButton(onClick = onBack) {
         Icon(
           imageVector = Icons.AutoMirrored.Default.ArrowBack,
-          contentDescription = stringResource(blue.starry.mitsubachi.ui.R.string.back_button),
+          contentDescription = stringResource(blue.starry.mitsubachi.core.ui.compose.R.string.back_button),
         )
       }
     },

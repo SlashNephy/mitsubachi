@@ -17,6 +17,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import blue.starry.mitsubachi.core.ui.compose.navigation.rememberNavBackStack
 import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailScreen
 import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailScreenTopBar
 import blue.starry.mitsubachi.feature.checkin.ui.CreateCheckInScreen
@@ -34,7 +35,6 @@ import blue.starry.mitsubachi.feature.map.ui.histories.VenueHistoriesScreen
 import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
 import blue.starry.mitsubachi.feature.welcome.ui.WelcomeScreen
-import blue.starry.mitsubachi.ui.navigation.rememberNavBackStack
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

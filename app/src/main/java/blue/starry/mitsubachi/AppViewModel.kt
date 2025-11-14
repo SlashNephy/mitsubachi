@@ -1,8 +1,8 @@
 package blue.starry.mitsubachi
 
 import androidx.lifecycle.ViewModel
-import blue.starry.mitsubachi.ui.snackbar.SnackbarHostService
-import blue.starry.mitsubachi.ui.snackbar.SnackbarMessage
+import blue.starry.mitsubachi.core.ui.compose.snackbar.SnackbarHostService
+import blue.starry.mitsubachi.core.ui.compose.snackbar.SnackbarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject

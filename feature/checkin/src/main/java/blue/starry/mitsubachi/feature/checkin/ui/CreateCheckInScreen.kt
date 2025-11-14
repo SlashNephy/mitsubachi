@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import blue.starry.mitsubachi.domain.model.Venue
+import blue.starry.mitsubachi.core.domain.model.Venue
 
 @Composable
 @Suppress("LongMethod") // TODO: 後でなんとかする

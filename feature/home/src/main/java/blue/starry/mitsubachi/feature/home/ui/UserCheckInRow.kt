@@ -32,12 +32,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import blue.starry.mitsubachi.domain.model.CheckIn
-import blue.starry.mitsubachi.domain.model.primaryCategory
+import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.primaryCategory
+import blue.starry.mitsubachi.core.ui.common.MitsubachiColors
+import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
+import blue.starry.mitsubachi.core.ui.compose.rememberInterval
 import blue.starry.mitsubachi.feature.home.R
-import blue.starry.mitsubachi.ui.color.MitsubachiColors
-import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
-import blue.starry.mitsubachi.ui.rememberInterval
 import coil3.compose.AsyncImage
 import kotlin.time.Duration.Companion.seconds
 

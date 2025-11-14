@@ -12,6 +12,7 @@ android {
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
+  implementation(projects.core.ui.common)
   implementation(projects.core.ui.glance)
 
   ksp(libs.androidx.hilt.compiler)
