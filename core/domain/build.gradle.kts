@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.domain"
+  namespace = "blue.starry.mitsubachi.core.domain"
 }
 
 dependencies {

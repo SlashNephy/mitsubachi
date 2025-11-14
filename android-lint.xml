@@ -17,4 +17,8 @@
     <issue id="Typos" severity="informational">
         <ignore path="app/src/main/res/values/font_certs.xml" />
     </issue>
+
+    <issue id="IconLocation" severity="informational">
+        <ignore path="feature/widget/photo/src/main/res/drawable/sushi.webp" />
+    </issue>
 </lint>

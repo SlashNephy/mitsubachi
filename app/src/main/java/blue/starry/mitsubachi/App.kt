@@ -3,7 +3,6 @@ package blue.starry.mitsubachi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -17,6 +16,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import blue.starry.mitsubachi.core.ui.compose.navigation.rememberNavBackStack
 import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailScreen
 import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailScreenTopBar
 import blue.starry.mitsubachi.feature.checkin.ui.CreateCheckInScreen
@@ -34,7 +34,6 @@ import blue.starry.mitsubachi.feature.map.ui.histories.VenueHistoriesScreen
 import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
 import blue.starry.mitsubachi.feature.welcome.ui.WelcomeScreen
-import blue.starry.mitsubachi.ui.navigation.rememberNavBackStack
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +51,6 @@ fun App(viewModel: AppViewModel = hiltViewModel()) {
     topBar = { AppTopBar(backStack = backStack) },
     bottomBar = { AppBottomBar(backStack = backStack) },
     floatingActionButton = { AppFloatingActionButton(backStack = backStack) },
-    floatingActionButtonPosition = AppFloatingActionButtonPosition(),
     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
   ) { padding ->
     NavDisplay(
@@ -169,11 +167,6 @@ private fun AppFloatingActionButton(backStack: NavBackStack<RouteKey>) {
 
     else -> {}
   }
-}
-
-@Suppress("FunctionName")
-private fun AppFloatingActionButtonPosition(): FabPosition {
-  return FabPosition.End
 }
 
 @Suppress("FunctionName", "LongMethod")

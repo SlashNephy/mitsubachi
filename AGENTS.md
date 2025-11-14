@@ -64,7 +64,6 @@ is not violated.
     - Handles data retrieval, caching, and persistence
 - **:core/ui**: Reusable UI components
 - **:core/common**: Shared utilities and extensions
-- **:core/testing** & **:core/ui-testing**: Testing utilities and helpers
 
 ### Feature Modules (:feature:*)
 
@@ -73,6 +72,7 @@ is not violated.
 - **:feature:checkin**: Check-in functionality
 - **:feature:map**: Map view and location display
 - **:feature:settings**: Application settings
+- **:feature:widget**: Widget implementation
 
 ## Data Flow
 
@@ -93,4 +93,4 @@ The following are typical commands used for local development.
 - **Lint (detekt)**: `./gradlew detekt`
 
 If desired, you can restrict the target by prefixing the module name like
-`./gradlew :core:ui:assembleLocalDebug` for speed-up.
+`./gradlew :core:ui:compose:assembleLocalDebug` for speed-up.

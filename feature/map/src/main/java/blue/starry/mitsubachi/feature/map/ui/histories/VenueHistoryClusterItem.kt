@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.feature.map.ui.histories
 
-import blue.starry.mitsubachi.domain.model.foursquare.VenueHistory
+import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 

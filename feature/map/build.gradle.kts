@@ -11,7 +11,8 @@ android {
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
-  implementation(projects.core.ui)
+  implementation(projects.core.ui.common)
+  implementation(projects.core.ui.compose)
 
   implementation(libs.play.services.maps)
   implementation(libs.android.maps.ktx)

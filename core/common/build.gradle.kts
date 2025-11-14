@@ -5,5 +5,5 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.common"
+  namespace = "blue.starry.mitsubachi.core.common"
 }

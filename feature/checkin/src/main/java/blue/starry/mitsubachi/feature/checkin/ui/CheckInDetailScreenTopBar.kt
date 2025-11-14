@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import blue.starry.mitsubachi.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.feature.checkin.R
 
 @Composable
@@ -28,7 +28,7 @@ fun CheckInDetailScreenTopBar(
       IconButton(onClick = onBack) {
         Icon(
           Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = stringResource(blue.starry.mitsubachi.ui.R.string.back_button),
+          contentDescription = stringResource(blue.starry.mitsubachi.core.ui.compose.R.string.back_button),
         )
       }
     },

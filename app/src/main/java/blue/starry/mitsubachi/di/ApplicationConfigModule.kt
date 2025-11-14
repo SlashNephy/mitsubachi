@@ -1,7 +1,7 @@
 package blue.starry.mitsubachi.di
 
 import blue.starry.mitsubachi.BuildConfig
-import blue.starry.mitsubachi.domain.model.ApplicationConfig
+import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

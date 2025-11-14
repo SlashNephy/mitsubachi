@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.data"
+  namespace = "blue.starry.mitsubachi.core.data"
 }
 
 dependencies {

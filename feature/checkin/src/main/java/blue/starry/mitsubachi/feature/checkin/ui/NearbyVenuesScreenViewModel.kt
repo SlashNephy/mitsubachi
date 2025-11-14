@@ -7,10 +7,10 @@ import androidx.compose.runtime.Immutable
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import blue.starry.mitsubachi.domain.model.Venue
-import blue.starry.mitsubachi.domain.usecase.SearchNearVenuesUseCase
-import blue.starry.mitsubachi.ui.error.onException
-import blue.starry.mitsubachi.ui.permission.AndroidPermission
+import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.domain.usecase.SearchNearVenuesUseCase
+import blue.starry.mitsubachi.core.ui.compose.error.onException
+import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview

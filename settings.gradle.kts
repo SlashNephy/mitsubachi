@@ -43,12 +43,13 @@ include(
   ":core:common",
   ":core:data",
   ":core:domain",
-  ":core:ui",
-  ":core:ui-widget",
+  ":core:ui:common",
+  ":core:ui:compose",
+  ":core:ui:glance",
   ":feature:checkin",
   ":feature:home",
   ":feature:map",
-  ":feature:photo-widget",
   ":feature:settings",
   ":feature:welcome",
+  ":feature:widget:photo"
 )

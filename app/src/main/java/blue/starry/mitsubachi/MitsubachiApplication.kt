@@ -3,8 +3,8 @@ package blue.starry.mitsubachi
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import blue.starry.mitsubachi.domain.ApplicationScope
-import blue.starry.mitsubachi.domain.usecase.ApplicationSettingsRepository
+import blue.starry.mitsubachi.core.domain.ApplicationScope
+import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader

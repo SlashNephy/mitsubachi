@@ -102,13 +102,14 @@ dependencies {
   implementation(projects.core.common)
   implementation(projects.core.data)
   implementation(projects.core.domain)
-  implementation(projects.core.ui)
+  implementation(projects.core.ui.common)
+  implementation(projects.core.ui.compose)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
   implementation(projects.feature.map)
-  implementation(projects.feature.photoWidget)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
+  implementation(projects.feature.widget.photo)
 
   implementation(libs.androidx.core.splashscreen)
 

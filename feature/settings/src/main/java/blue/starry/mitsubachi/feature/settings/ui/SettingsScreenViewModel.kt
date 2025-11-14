@@ -2,11 +2,11 @@ package blue.starry.mitsubachi.feature.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import blue.starry.mitsubachi.domain.model.ApplicationSettings
-import blue.starry.mitsubachi.domain.usecase.ApplicationSettingsRepository
-import blue.starry.mitsubachi.domain.usecase.SignOutUseCase
-import blue.starry.mitsubachi.ui.error.SnackbarErrorPresenter
-import blue.starry.mitsubachi.ui.error.onException
+import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
+import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
+import blue.starry.mitsubachi.core.domain.usecase.SignOutUseCase
+import blue.starry.mitsubachi.core.ui.compose.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.core.ui.compose.error.onException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,0 +1,14 @@
+plugins {
+  alias(libs.plugins.convention.android.glance.library)
+  alias(libs.plugins.convention.hilt)
+  alias(libs.plugins.convention.detekt)
+  alias(libs.plugins.convention.kotlin.serialization)
+}
+
+android {
+  namespace = "blue.starry.mitsubachi.core.ui.glance"
+}
+
+dependencies {
+  implementation(projects.core.ui.common)
+}
