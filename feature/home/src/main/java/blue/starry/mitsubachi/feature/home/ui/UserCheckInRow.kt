@@ -35,7 +35,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.domain.model.CheckIn
 import blue.starry.mitsubachi.domain.model.primaryCategory
 import blue.starry.mitsubachi.feature.home.R
-import blue.starry.mitsubachi.ui.MitsubachiColors
+import blue.starry.mitsubachi.ui.color.MitsubachiColors
 import blue.starry.mitsubachi.ui.formatter.VenueLocationFormatter
 import blue.starry.mitsubachi.ui.rememberInterval
 import coil3.compose.AsyncImage

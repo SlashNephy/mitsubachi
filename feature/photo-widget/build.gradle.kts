@@ -18,8 +18,4 @@ dependencies {
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.androidx.hilt.work)
   testImplementation(libs.androidx.work.testing)
-
-  implementation(libs.coil.compose)
-
-  implementation(libs.androidx.datastore)
 }

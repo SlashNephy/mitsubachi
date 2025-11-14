@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.ui
+package blue.starry.mitsubachi.ui.color
 
 import androidx.compose.ui.graphics.Color
 

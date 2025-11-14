@@ -13,6 +13,7 @@ android {
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
+  api(projects.core.uiColor)
 
   api(libs.androidx.core.ktx)
   api(libs.androidx.activity.compose)

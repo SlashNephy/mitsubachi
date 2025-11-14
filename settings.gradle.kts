@@ -44,6 +44,7 @@ include(
   ":core:data",
   ":core:domain",
   ":core:ui",
+  ":core:ui-color",
   ":core:ui-widget",
   ":feature:checkin",
   ":feature:home",

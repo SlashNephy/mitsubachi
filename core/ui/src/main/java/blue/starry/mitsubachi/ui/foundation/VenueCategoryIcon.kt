@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.domain.model.VenueCategory
-import blue.starry.mitsubachi.ui.MitsubachiColors
+import blue.starry.mitsubachi.ui.color.MitsubachiColors
 import blue.starry.mitsubachi.ui.preview.MockData
 import blue.starry.mitsubachi.ui.preview.PreviewImageProvider
 import coil3.compose.AsyncImage

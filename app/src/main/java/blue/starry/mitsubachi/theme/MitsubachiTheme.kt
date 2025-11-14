@@ -2,21 +2,11 @@ package blue.starry.mitsubachi.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import blue.starry.mitsubachi.ui.MitsubachiColors
-
-private val DarkColorScheme = darkColorScheme(
-  primary = MitsubachiColors.SwarmOrange,
-)
-
-private val LightColorScheme = lightColorScheme(
-  primary = MitsubachiColors.SwarmOrange,
-)
+import blue.starry.mitsubachi.ui.color.MitsubachiColorScheme
 
 @Composable
 fun MitsubachiTheme(
@@ -32,18 +22,17 @@ fun MitsubachiTheme(
     }
 
     darkTheme -> {
-      DarkColorScheme
+      MitsubachiColorScheme.Dark
     }
 
     else -> {
-      LightColorScheme
+      MitsubachiColorScheme.Light
     }
   }
 
-  val typography = rememberTypography()
   MaterialTheme(
     colorScheme = colorScheme,
-    typography = typography,
+    typography = rememberTypography(),
     content = content,
   )
 }
