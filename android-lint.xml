@@ -19,6 +19,6 @@
     </issue>
 
     <issue id="IconLocation" severity="informational">
-        <ignore path="feature/photo-widget/src/main/res/drawable/sushi.webp" />
+        <ignore path="feature/widget/photo/src/main/res/drawable/sushi.webp" />
     </issue>
 </lint>
