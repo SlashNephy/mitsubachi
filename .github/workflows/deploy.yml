@@ -41,21 +41,25 @@ jobs:
         env:
           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
       - run: |
-          cat >> local.properties << EOF
+          cat >> secrets.properties << EOF
           foursquare_client_id=$FOURSQUARE_CLIENT_ID
           foursquare_client_secret=$FOURSQUARE_CLIENT_SECRET
           foursquare_redirect_uri=$FOURSQUARE_REDIRECT_URI
           google_maps_api_key=$GOOGLE_MAPS_API_KEY
-          android_keystore_path=$ANDROID_KEYSTORE_PATH
-          android_keystore_password=$ANDROID_KEYSTORE_PASSWORD
-          android_keystore_alias=$ANDROID_KEYSTORE_ALIAS
-          android_keystore_alias_password=$ANDROID_KEYSTORE_ALIAS_PASSWORD
           EOF
         env:
           FOURSQUARE_CLIENT_ID: ${{ secrets.FOURSQUARE_CLIENT_ID }}
           FOURSQUARE_CLIENT_SECRET: ${{ secrets.FOURSQUARE_CLIENT_SECRET }}
           FOURSQUARE_REDIRECT_URI: ${{ secrets.FOURSQUARE_REDIRECT_URI }}
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      - run: |
+          cat >> keystore.properties << EOF
+          android_keystore_path=$ANDROID_KEYSTORE_PATH
+          android_keystore_password=$ANDROID_KEYSTORE_PASSWORD
+          android_keystore_alias=$ANDROID_KEYSTORE_ALIAS
+          android_keystore_alias_password=$ANDROID_KEYSTORE_ALIAS_PASSWORD
+          EOF
+        env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/local.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}

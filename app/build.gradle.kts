@@ -15,11 +15,11 @@ plugins {
   alias(libs.plugins.android.mapsplatform.secrets)
 }
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-  FileInputStream(localPropertiesFile).use {
-    localProperties.load(it)
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+if (keystorePropertiesFile.exists()) {
+  FileInputStream(keystorePropertiesFile).use {
+    keystoreProperties.load(it)
   }
 }
 
@@ -42,10 +42,10 @@ android {
 
   signingConfigs {
     create("default") {
-      storeFile = localProperties.getProperty("android_keystore_path")?.let { file(it) }
-      storePassword = localProperties.getProperty("android_keystore_password")
-      keyAlias = localProperties.getProperty("android_keystore_alias")
-      keyPassword = localProperties.getProperty("android_keystore_alias_password")
+      storeFile = keystoreProperties.getProperty("android_keystore_path")?.let { file(it) }
+      storePassword = keystoreProperties.getProperty("android_keystore_password")
+      keyAlias = keystoreProperties.getProperty("android_keystore_alias")
+      keyPassword = keystoreProperties.getProperty("android_keystore_alias_password")
     }
   }
 
@@ -94,8 +94,8 @@ android {
 }
 
 secrets {
-  propertiesFileName = rootProject.relativePath("local.properties")
-  defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
+  propertiesFileName = rootProject.relativePath("secrets.properties")
+  defaultPropertiesFileName = rootProject.relativePath("secrets.defaults.properties")
 }
 
 dependencies {
