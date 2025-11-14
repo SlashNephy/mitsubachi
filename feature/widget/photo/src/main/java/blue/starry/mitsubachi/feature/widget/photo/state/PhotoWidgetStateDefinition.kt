@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.state
+package blue.starry.mitsubachi.feature.widget.photo.state
 
 import blue.starry.mitsubachi.core.ui.glance.state.WidgetStateDefinition
 

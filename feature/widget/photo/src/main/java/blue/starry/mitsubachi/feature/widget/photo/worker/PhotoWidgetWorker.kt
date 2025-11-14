@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.worker
+package blue.starry.mitsubachi.feature.widget.photo.worker
 
 import android.content.Context
 import androidx.glance.GlanceId
@@ -11,9 +11,9 @@ import androidx.work.WorkerParameters
 import blue.starry.mitsubachi.core.domain.usecase.FindFoursquareAccountUseCase
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.core.domain.usecase.ImageDownloader
-import blue.starry.mitsubachi.feature.photowidget.PhotoWidget
-import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
-import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetStateDefinition
+import blue.starry.mitsubachi.feature.widget.photo.PhotoWidget
+import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
+import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetStateDefinition
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.coroutineScope

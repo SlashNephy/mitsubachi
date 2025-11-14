@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.ui
+package blue.starry.mitsubachi.feature.widget.photo.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -17,7 +17,7 @@ import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import blue.starry.mitsubachi.feature.photowidget.R
+import blue.starry.mitsubachi.feature.widget.photo.R
 
 @Composable
 internal fun NoPhotosContent() {

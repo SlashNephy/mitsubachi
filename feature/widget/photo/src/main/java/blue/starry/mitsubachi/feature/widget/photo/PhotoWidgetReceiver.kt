@@ -1,10 +1,10 @@
-package blue.starry.mitsubachi.feature.photowidget
+package blue.starry.mitsubachi.feature.widget.photo
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import blue.starry.mitsubachi.feature.photowidget.worker.PhotoWidgetWorkerScheduler
+import blue.starry.mitsubachi.feature.widget.photo.worker.PhotoWidgetWorkerScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

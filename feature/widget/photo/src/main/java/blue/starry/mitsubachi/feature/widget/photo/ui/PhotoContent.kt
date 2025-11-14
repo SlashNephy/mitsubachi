@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.ui
+package blue.starry.mitsubachi.feature.widget.photo.ui
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -15,8 +15,8 @@ import androidx.glance.layout.ContentScale
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import blue.starry.mitsubachi.feature.photowidget.R
-import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
+import blue.starry.mitsubachi.feature.widget.photo.R
+import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
 import java.io.File
 import java.time.ZonedDateTime
 

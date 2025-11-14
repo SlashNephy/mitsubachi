@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.worker
+package blue.starry.mitsubachi.feature.widget.photo.worker
 
 // TODO: いずれ domain/usecase に移すかも
 interface PhotoWidgetWorkerScheduler {

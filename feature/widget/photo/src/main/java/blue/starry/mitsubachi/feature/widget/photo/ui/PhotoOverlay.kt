@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.ui
+package blue.starry.mitsubachi.feature.widget.photo.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -18,7 +18,7 @@ import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
+import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

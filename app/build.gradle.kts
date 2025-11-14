@@ -107,9 +107,9 @@ dependencies {
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
   implementation(projects.feature.map)
-  implementation(projects.feature.photoWidget)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
+  implementation(projects.feature.widget.photo)
 
   implementation(libs.androidx.core.splashscreen)
 

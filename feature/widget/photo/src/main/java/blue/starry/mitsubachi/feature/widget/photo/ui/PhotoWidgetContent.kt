@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.ui
+package blue.starry.mitsubachi.feature.widget.photo.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -9,7 +9,7 @@ import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
-import blue.starry.mitsubachi.feature.photowidget.state.PhotoWidgetState
+import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
 
 @Composable
 internal fun PhotoWidgetContent() {

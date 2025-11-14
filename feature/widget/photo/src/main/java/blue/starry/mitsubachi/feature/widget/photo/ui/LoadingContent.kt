@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.ui
+package blue.starry.mitsubachi.feature.widget.photo.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp

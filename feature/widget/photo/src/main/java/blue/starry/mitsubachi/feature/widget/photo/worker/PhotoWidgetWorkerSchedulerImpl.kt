@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.photowidget.worker
+package blue.starry.mitsubachi.feature.widget.photo.worker
 
 import android.content.Context
 import androidx.work.Constraints

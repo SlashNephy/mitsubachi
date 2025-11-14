@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.feature.photowidget"
+  namespace = "blue.starry.mitsubachi.feature.widget.photo"
 }
 
 dependencies {
