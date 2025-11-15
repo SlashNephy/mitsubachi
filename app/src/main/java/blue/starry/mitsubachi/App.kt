@@ -45,11 +45,13 @@ fun App(
   viewModel: AppViewModel = hiltViewModel(),
 ) {
   val backStack = rememberNavBackStack(initialRouteKeys)
-  LaunchedEffect(backStack) {
-    snapshotFlow { backStack.toList() }
-      .collect { currentBackStack ->
-        Timber.d("BackStack changed: $currentBackStack")
-      }
+  if (viewModel.isDebugBuild) {
+    LaunchedEffect(backStack) {
+      snapshotFlow { backStack.toList() }
+        .collect { currentBackStack ->
+          Timber.d("BackStack changed: $currentBackStack")
+        }
+    }
   }
 
   val snackbarHostState = remember { SnackbarHostState() }
