@@ -237,6 +237,15 @@ private fun AppEntryProvider(backStack: NavBackStack<RouteKey>): (RouteKey) -> N
         }
       }
 
+      is RouteKey.CheckInDetail.ById -> {
+        NavEntry(key) {
+          CheckInDetailLoadingScreen(key.id, onCheckInLoaded = { checkIn ->
+            backStack.remove(key)
+            backStack.add(RouteKey.CheckInDetail(checkIn))
+          })
+        }
+      }
+
       is RouteKey.User -> {
         error("TODO: not implemented")
       }
