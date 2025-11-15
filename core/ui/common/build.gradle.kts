@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.convention.android.compose.library)
   alias(libs.plugins.convention.detekt)
+  alias(libs.plugins.convention.hilt)
 }
 
 android {
@@ -8,6 +9,8 @@ android {
 }
 
 dependencies {
+  implementation(projects.core.domain)
+
   implementation(platform(libs.androidx.compose.bom))
   api(libs.androidx.compose.material3)
 }
