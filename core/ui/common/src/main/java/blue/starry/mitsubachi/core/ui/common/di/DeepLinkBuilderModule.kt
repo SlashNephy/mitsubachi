@@ -1,7 +1,7 @@
 package blue.starry.mitsubachi.core.ui.common.di
 
-import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkBuilder
-import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkBuilderImpl
+import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkSerializer
+import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkSerializerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 internal abstract class DeepLinkBuilderModule {
   @Binds
   @Singleton
-  abstract fun bind(impl: DeepLinkBuilderImpl): DeepLinkBuilder
+  abstract fun bind(impl: DeepLinkSerializerImpl): DeepLinkSerializer
 }

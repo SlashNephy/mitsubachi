@@ -7,19 +7,33 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class DeepLinkBuilderImpl @Inject constructor(
+internal class DeepLinkSerializerImpl @Inject constructor(
   private val applicationConfig: ApplicationConfig,
-) : DeepLinkBuilder {
+) : DeepLinkSerializer {
   private companion object {
     const val CHECK_IN_AUTHORITY = "check_in"
   }
 
-  override fun parseLink(uri: Uri): DeepLink? {
+  override fun serialize(link: DeepLink): Uri {
+    return Uri.Builder()
+      .scheme(applicationConfig.applicationId)
+      .apply {
+        when (link) {
+          is DeepLink.CheckIn -> {
+            authority(CHECK_IN_AUTHORITY)
+            appendPath(link.id)
+          }
+        }
+      }
+      .build()
+  }
+
+  override fun deserialize(uri: Uri): DeepLink? {
     if (uri.scheme != applicationConfig.applicationId) {
       return null
     }
 
-    Timber.d("parseLink: $uri")
+    Timber.d("deserializing deep link: $uri")
 
     return when (uri.authority) {
       CHECK_IN_AUTHORITY -> {
@@ -31,13 +45,5 @@ internal class DeepLinkBuilderImpl @Inject constructor(
         null
       }
     }
-  }
-
-  override fun buildCheckInLink(checkInId: String): Uri {
-    return Uri.Builder()
-      .scheme(applicationConfig.applicationId)
-      .authority(CHECK_IN_AUTHORITY)
-      .appendPath(checkInId)
-      .build()
   }
 }

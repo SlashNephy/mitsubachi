@@ -3,7 +3,7 @@ package blue.starry.mitsubachi
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLink
-import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkBuilder
+import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkSerializer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-  private val deepLinkBuilder: DeepLinkBuilder,
+  private val deepLinkSerializer: DeepLinkSerializer,
 ) : ViewModel() {
   sealed interface UiState {
     data object Initializing : UiState
@@ -25,8 +25,8 @@ class MainActivityViewModel @Inject constructor(
     _state.value = UiState.Ready
   }
 
-  fun parseInitialRouteKeys(intent: Intent): List<RouteKey> {
-    val link = intent.data?.let { deepLinkBuilder.parseLink(it) }
+  fun buildInitialRouteKeys(intent: Intent): List<RouteKey> {
+    val link = intent.data?.let { deepLinkSerializer.deserialize(it) }
 
     return when (link) {
       is DeepLink.CheckIn -> {

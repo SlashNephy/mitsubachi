@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
       }
 
       MitsubachiTheme {
-        App(initialRouteKeys = viewModel.parseInitialRouteKeys(intent))
+        App(initialRouteKeys = viewModel.buildInitialRouteKeys(intent))
       }
     }
   }
