@@ -15,6 +15,7 @@ internal object ApplicationConfigModule {
   @Singleton
   fun provide(): ApplicationConfig {
     return ApplicationConfig(
+      applicationId = BuildConfig.APPLICATION_ID,
       versionName = BuildConfig.VERSION_NAME,
       versionCode = BuildConfig.VERSION_CODE,
       buildType = BuildConfig.BUILD_TYPE,
