@@ -11,7 +11,7 @@ import java.time.ZoneId
 data class FoursquareCheckIn(
   val comments: Comments,
   val createdAt: Long, // 1760321890
-  val createdBy: CreatedBy?,
+  val createdBy: FoursquareUser?,
   val editableUntil: Long?, // 1760408290000
   val entities: List<Entity>?,
   val event: Event?,
@@ -35,32 +35,6 @@ data class FoursquareCheckIn(
   @Serializable
   data class Comments(
     val count: Int, // 0
-  )
-
-  @Serializable
-  data class CreatedBy(
-    val address: String,
-    val birthday: Int?,
-    val city: String,
-    val countryCode: String, // JP
-    val displayName: String,
-    val firstName: String,
-    val followingRelationship: String?, // followingThem
-    val gender: String, // male
-    val handle: String,
-    val id: String,
-    val lastName: String?,
-    val photo: Photo,
-    val privateProfile: Boolean,
-    val relationship: String?, // self
-    val state: String,
-  )
-
-  @Serializable
-  data class Photo(
-    val default: Boolean?, // true
-    val prefix: String,
-    val suffix: String,
   )
 
   @Serializable
@@ -119,7 +93,7 @@ data class FoursquareCheckIn(
       val height: Int, // 1440
       val id: String,
       val prefix: String,
-      val source: Source,
+      val source: Source?,
       val suffix: String,
       val user: FoursquareUser,
       val visibility: String, // public
