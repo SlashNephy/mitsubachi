@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.core.data.network
 
 import blue.starry.mitsubachi.core.data.network.model.FoursquareAddCheckInResponse
 import blue.starry.mitsubachi.core.data.network.model.FoursquareApiResponse
+import blue.starry.mitsubachi.core.data.network.model.FoursquareCheckInResponse
 import blue.starry.mitsubachi.core.data.network.model.FoursquareRecentCheckinsResponse
 import blue.starry.mitsubachi.core.data.network.model.FoursquareSearchVenueRecommendationsResponse
 import blue.starry.mitsubachi.core.data.network.model.FoursquareSearchVenuesResponse
@@ -25,6 +26,11 @@ interface FoursquareNetworkApi : @NoDelegation NetworkApi {
     @Query afterTimeStamp: Long?,
     @Query ll: String?,
   ): FoursquareApiResponse<FoursquareRecentCheckinsResponse>
+
+  @GET("/checkins/{checkInId}")
+  suspend fun getCheckIn(
+    @Path checkInId: String,
+  ): FoursquareApiResponse<FoursquareCheckInResponse>
 
   @GET("/venues/search")
   suspend fun searchNearbyVenues(

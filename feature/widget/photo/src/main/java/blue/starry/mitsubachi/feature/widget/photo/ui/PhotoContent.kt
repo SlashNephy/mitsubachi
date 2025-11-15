@@ -50,10 +50,7 @@ private fun ActualPhotoContent(state: PhotoWidgetState.Photo, image: ImageProvid
         .fillMaxSize()
         .clickable(
           actionStartActivity(
-            Intent(
-              Intent.ACTION_VIEW,
-              "blue.starry.mitsubachi://checkin/${state.checkInId}".toUri(), // TODO: チェックイン詳細画面が開けるようにする
-            ).apply {
+            Intent(Intent.ACTION_VIEW, state.checkInUri).apply {
               flags = Intent.FLAG_ACTIVITY_NEW_TASK
             },
           ),
@@ -73,7 +70,7 @@ private fun ActualPhotoContentPreview() {
     state = PhotoWidgetState.Photo(
       id = "photo",
       path = "photo.jpg",
-      checkInId = "check_in",
+      checkInUri = "app://check_in/123".toUri(),
       venueName = "ぷれびゅーパーク",
       venueAddress = "東京都渋谷区",
       checkInAt = ZonedDateTime.now().minusDays(7),

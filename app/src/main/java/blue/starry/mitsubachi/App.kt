@@ -9,6 +9,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -17,6 +18,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import blue.starry.mitsubachi.core.ui.compose.navigation.rememberNavBackStack
+import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailLoadingScreen
 import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailScreen
 import blue.starry.mitsubachi.feature.checkin.ui.CheckInDetailScreenTopBar
 import blue.starry.mitsubachi.feature.checkin.ui.CreateCheckInScreen
@@ -34,13 +36,25 @@ import blue.starry.mitsubachi.feature.map.ui.histories.VenueHistoriesScreen
 import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
 import blue.starry.mitsubachi.feature.welcome.ui.WelcomeScreen
+import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun App(viewModel: AppViewModel = hiltViewModel()) {
-  val backStack = rememberNavBackStack<RouteKey>(RouteKey.Welcome)
-  val snackbarHostState = remember { SnackbarHostState() }
+fun App(
+  initialRouteKeys: List<RouteKey>,
+  viewModel: AppViewModel = hiltViewModel(),
+) {
+  val backStack = rememberNavBackStack(initialRouteKeys)
+  if (viewModel.isDebugBuild) {
+    LaunchedEffect(backStack) {
+      snapshotFlow { backStack.toList() }
+        .collect { currentBackStack ->
+          Timber.d("BackStack changed: $currentBackStack")
+        }
+    }
+  }
 
+  val snackbarHostState = remember { SnackbarHostState() }
   LaunchedEffect(viewModel, snackbarHostState) {
     viewModel.snackbarMessages.collect { message ->
       snackbarHostState.showSnackbar(message = message.text)
@@ -222,6 +236,15 @@ private fun AppEntryProvider(backStack: NavBackStack<RouteKey>): (RouteKey) -> N
       is RouteKey.CheckInDetail -> {
         NavEntry(key) {
           CheckInDetailScreen(key.checkIn)
+        }
+      }
+
+      is RouteKey.CheckInDetail.ById -> {
+        NavEntry(key) {
+          CheckInDetailLoadingScreen(key.id, onCheckInLoaded = { checkIn ->
+            backStack.remove(key)
+            backStack.add(RouteKey.CheckInDetail(checkIn))
+          })
         }
       }
 

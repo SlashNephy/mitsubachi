@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.feature.widget.photo.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
@@ -79,7 +80,7 @@ private fun PhotoOverlayPreview() {
     photo = PhotoWidgetState.Photo(
       id = "photo",
       path = "photo.jpg",
-      checkInId = "check_in",
+      checkInUri = "app://check_in/123".toUri(),
       venueName = "ぷれびゅーパーク",
       venueAddress = "東京都渋谷区",
       checkInAt = ZonedDateTime.now().minusDays(7),
