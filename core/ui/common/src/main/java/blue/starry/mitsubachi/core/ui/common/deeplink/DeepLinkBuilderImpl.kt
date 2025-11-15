@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.core.ui.common.deeplink
 
 import android.net.Uri
 import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +18,8 @@ internal class DeepLinkBuilderImpl @Inject constructor(
     if (uri.scheme != applicationConfig.applicationId) {
       return null
     }
+
+    Timber.d("parseLink: $uri")
 
     return when (uri.authority) {
       CHECK_IN_AUTHORITY -> {

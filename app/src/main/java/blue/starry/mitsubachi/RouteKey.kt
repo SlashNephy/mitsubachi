@@ -25,7 +25,11 @@ sealed interface RouteKey : NavKey {
 
   @Immutable
   @Serializable
-  data class CheckInDetail(val checkIn: CheckIn) : RouteKey
+  data class CheckInDetail(val checkIn: CheckIn) : RouteKey {
+    @Immutable
+    @Serializable
+    data class ById(val id: String) : RouteKey
+  }
 
   @Immutable
   @Serializable
