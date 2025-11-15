@@ -69,6 +69,11 @@ class FoursquareApiClientImpl @Inject constructor(
     return data.response.recent.map(FoursquareCheckIn::toDomain)
   }
 
+  override suspend fun getCheckIn(checkInId: String): CheckIn {
+    val data = ktorfit.getCheckIn(checkInId = checkInId)
+    return data.response.checkIn.toDomain()
+  }
+
   override suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String?,

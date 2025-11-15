@@ -18,6 +18,8 @@ interface FoursquareApiClient {
     coordinates: Coordinates? = null,
   ): List<CheckIn>
 
+  suspend fun getCheckIn(checkInId: String): CheckIn
+
   suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String? = null,
