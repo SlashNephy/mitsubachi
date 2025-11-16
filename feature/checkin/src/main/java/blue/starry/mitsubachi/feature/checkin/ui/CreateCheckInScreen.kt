@@ -20,6 +20,7 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -74,7 +75,7 @@ fun CreateCheckInScreen(
           onClick = {
             launcher.launch(
               PickVisualMediaRequest(
-                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly,
+                mediaType = ActivityResultContracts.PickVisualMedia.SingleMimeType("image/jpeg"),
                 maxItems = 4,
                 isOrderedSelection = true,
               ),
@@ -176,9 +177,9 @@ private fun ShoutLengthCounter(
   modifier: Modifier = Modifier,
 ) {
   val color = if (isError) {
-    Color.Red
+    MaterialTheme.colorScheme.error
   } else {
-    Color.Gray
+    MaterialTheme.colorScheme.secondary
   }
 
   Text(

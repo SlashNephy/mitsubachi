@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.feature.home.ui
+package blue.starry.mitsubachi.core.ui.compose.foundation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,37 +14,37 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.primaryCategory
+import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
-import blue.starry.mitsubachi.core.ui.compose.foundation.CheckInPhoto
-import blue.starry.mitsubachi.core.ui.compose.foundation.LikeButton
-import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
+import blue.starry.mitsubachi.core.ui.compose.locale.LocaleAware
+import blue.starry.mitsubachi.core.ui.compose.preview.MockData
+import blue.starry.mitsubachi.core.ui.compose.preview.PreviewImageProvider
 import blue.starry.mitsubachi.core.ui.compose.rememberInterval
+import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun UserCheckInRow(
+fun CheckInRow(
   checkIn: CheckIn,
-  onClickCheckIn: (checkIn: CheckIn) -> Unit,
-  viewModel: UserCheckInsScreenViewModel = hiltViewModel(),
+  formatDateTime: (ZonedDateTime) -> String,
+  onClickCheckIn: () -> Unit,
+  onClickLike: () -> Unit,
+  onClickUnlike: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-  Column(
-    modifier = Modifier.fillMaxWidth(),
-  ) {
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
-      modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-          onClickCheckIn(checkIn)
-        },
-    ) {
-      VenueCategoryIcon(
-        category = checkIn.venue.primaryCategory,
+  val checkInUser = checkIn.user ?: return
+
+  Column(modifier = modifier.fillMaxWidth()) {
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+      UserIcon(
+        url = checkInUser.iconUrl,
+        contentDescription = checkInUser.handle,
         modifier = Modifier
           .size(72.dp)
           .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -53,8 +53,10 @@ fun UserCheckInRow(
       Column(
         modifier = Modifier
           .fillMaxHeight()
-          .weight(1f),
+          .weight(1f)
+          .clickable(onClick = onClickCheckIn),
       ) {
+        Text(checkInUser.displayName, color = MaterialTheme.colorScheme.secondary)
         Text(checkIn.venue.name, fontWeight = FontWeight.Bold)
         Text(
           "${checkIn.venue.primaryCategory?.name}・${
@@ -66,10 +68,16 @@ fun UserCheckInRow(
           color = MaterialTheme.colorScheme.secondary,
         )
 
-        val datetime = rememberInterval(10.seconds) {
-          viewModel.formatAsRelativeTimeSpan(checkIn.timestamp)
+        val datetime = LocaleAware {
+          rememberInterval(10.seconds) {
+            formatDateTime(checkIn.timestamp)
+          }
         }
         Text(datetime)
+
+        checkIn.createdBy?.also {
+          Text(stringResource(R.string.check_in_created_by, it.displayName))
+        }
 
         checkIn.message?.also {
           Spacer(modifier = Modifier.height(8.dp))
@@ -80,8 +88,8 @@ fun UserCheckInRow(
       LikeButton(
         isLiked = checkIn.isLiked,
         likeCount = checkIn.likeCount,
-        onClickLike = { viewModel.likeCheckIn(checkIn.id) },
-        onClickUnlike = { viewModel.unlikeCheckIn(checkIn.id) },
+        onClickLike = onClickLike,
+        onClickUnlike = onClickUnlike,
         modifier = Modifier
           .size(48.dp)
           .padding(end = 16.dp),
@@ -89,7 +97,22 @@ fun UserCheckInRow(
     }
 
     if (checkIn.photos.isNotEmpty()) {
+      // TODO: 複数画像のグリッドレイアウト
       CheckInPhoto(photo = checkIn.photos.first())
     }
+  }
+}
+
+@Composable
+@Preview
+private fun CheckInRowPreview() {
+  PreviewImageProvider {
+    CheckInRow(
+      checkIn = MockData.CheckIn,
+      formatDateTime = { "10 分前" },
+      onClickCheckIn = {},
+      onClickLike = {},
+      onClickUnlike = {},
+    )
   }
 }

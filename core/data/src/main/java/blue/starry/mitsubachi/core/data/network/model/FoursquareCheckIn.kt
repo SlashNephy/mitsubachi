@@ -158,8 +158,9 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
     id = id,
     venue = venue.toDomain(),
     user = user?.toDomain(),
+    createdBy = createdBy?.toDomain(),
     coin = 0, // TODO: API で取得できない？
-    sticker = null,
+    sticker = sticker?.let { "${it.image.prefix}${it.image.sizes.firstOrNull() ?: 60}${it.image.name}" },
     message = shout,
     photos = photos.items.map { it.toDomain() },
     timestamp = Instant.ofEpochSecond(createdAt).atZone(ZoneId.systemDefault()),
@@ -167,6 +168,8 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
     likeCount = likes.count,
     source = source?.toDomain(),
     isMeyer = isMayor,
+    with = with?.map { it.toDomain() } ?: emptyList(),
+    friendsHere = emptyList(), // TODO: Foursquare APIでfriendsHereデータを取得する方法を調査
   )
 }
 
