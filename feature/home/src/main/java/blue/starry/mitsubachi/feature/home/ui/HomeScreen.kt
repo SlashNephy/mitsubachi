@@ -14,13 +14,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.ui.compose.foundation.CheckInRow
 import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun HomeScreen(
-  onClickCheckIn: (checkIn: CheckIn) -> Unit,
+  onClickCheckIn: (CheckIn) -> Unit,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -44,7 +45,10 @@ fun HomeScreen(
           itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
             CheckInRow(
               checkIn,
-              onClickCheckIn = onClickCheckIn,
+              formatDateTime = { viewModel.formatAsRelativeTimeSpan(it) },
+              onClickCheckIn = { onClickCheckIn(checkIn) },
+              onClickLike = { viewModel.likeCheckIn(checkIn.id) },
+              onClickUnlike = { viewModel.unlikeCheckIn(checkIn.id) },
             )
 
             if (index < state.feed.lastIndex) {

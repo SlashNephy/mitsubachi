@@ -11,6 +11,7 @@ data class CheckIn(
   val id: String,
   val venue: Venue,
   val user: FoursquareUser?,
+  val createdBy: FoursquareUser?,
   val coin: Int,
   val sticker: String?,
   val message: String?,
@@ -20,6 +21,8 @@ data class CheckIn(
   val likeCount: Int,
   val source: Source?,
   val isMeyer: Boolean,
+  val with: List<FoursquareUser> = emptyList(),
+  val friendsHere: List<FoursquareUser> = emptyList(),
 )
 
 @Immutable
