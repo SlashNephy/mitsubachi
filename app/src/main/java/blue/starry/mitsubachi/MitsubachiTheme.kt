@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.theme
+package blue.starry.mitsubachi
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -7,6 +7,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import blue.starry.mitsubachi.core.ui.common.MitsubachiColorScheme
+import blue.starry.mitsubachi.core.ui.compose.typography.rememberTypography
 
 @Composable
 fun MitsubachiTheme(
@@ -18,7 +19,11 @@ fun MitsubachiTheme(
   val colorScheme = when {
     dynamicColor -> {
       val context = LocalContext.current
-      if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+      if (darkTheme) {
+        dynamicDarkColorScheme(context)
+      } else {
+        dynamicLightColorScheme(context)
+      }
     }
 
     darkTheme -> {

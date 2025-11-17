@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import blue.starry.mitsubachi.theme.MitsubachiTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
