@@ -11,4 +11,6 @@
     <string name="like_button">즐겨찾기</string>
     <string name="unlike_button">즐겨찾기 해제</string>
     <string name="check_in_created_by">%1$s님의 체크인</string>
+    <string name="collapse_button">접다</string>
+    <string name="expand_button">전개</string>
 </resources>

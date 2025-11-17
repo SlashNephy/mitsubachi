@@ -11,4 +11,6 @@
     <string name="like_button">お気に入り</string>
     <string name="unlike_button">お気に入り解除</string>
     <string name="check_in_created_by">%1$sさんによるチェックイン</string>
+    <string name="collapse_button">折りたたむ</string>
+    <string name="expand_button">展開する</string>
 </resources>

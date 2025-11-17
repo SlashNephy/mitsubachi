@@ -1,22 +1,7 @@
 package blue.starry.mitsubachi.feature.settings.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
@@ -34,51 +19,17 @@ fun SettingsScreen(
     }
 
     is SettingsScreenViewModel.UiState.Loaded -> {
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .verticalScroll(rememberScrollState()),
-      ) {
-        ListItem(
-          headlineContent = { Text("Firebase Crashlytics") },
-          supportingContent = { Text("クラッシュレポートを送信する") },
-          trailingContent = {
-            Switch(
-              checked = state.applicationSettings.isFirebaseCrashlyticsEnabled,
-              onCheckedChange = {
-                viewModel.update { settings ->
-                  settings.copy(
-                    isFirebaseCrashlyticsEnabled = it,
-                  )
-                }
-              },
-            )
-          },
-        )
-
-        HorizontalDivider()
-
-        ListItem(
-          headlineContent = {
-            Button(
-              onClick = {
-                viewModel
-                  .signOut()
-                  .invokeOnCompletion {
-                    onSignOut()
-                  }
-              },
-              modifier = Modifier.fillMaxWidth(),
-              colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-              ),
-            ) {
-              Text("ログアウト")
-            }
-          },
-          modifier = Modifier.padding(vertical = 8.dp),
-        )
-      }
+      SettingsContent(
+        applicationSettings = state.applicationSettings,
+        onChangeApplicationSettings = { block ->
+          viewModel.update { settings ->
+            settings.let(block)
+          }
+        },
+        onSignOut = {
+          viewModel.signOut().invokeOnCompletion { onSignOut() }
+        },
+      )
     }
   }
 }
