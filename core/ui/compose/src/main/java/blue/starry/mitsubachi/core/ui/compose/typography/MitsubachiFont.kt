@@ -1,0 +1,46 @@
+package blue.starry.mitsubachi.core.ui.compose.typography
+
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import blue.starry.mitsubachi.core.ui.compose.R
+
+object MitsubachiFont {
+  val IBMPlexSans by lazy {
+    GoogleFont("IBM Plex Sans").toFontVariants()
+  }
+
+  val IBMPlexSansJP by lazy {
+    GoogleFont("IBM Plex Sans JP").toFontVariants()
+  }
+
+  val IBMPlexSansKR by lazy {
+    GoogleFont("IBM Plex Sans KR").toFontVariants()
+  }
+
+  private val googleFontProvider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs,
+  )
+
+  private fun GoogleFont.toFontVariants(): List<Font> {
+    val normalVariant = androidx.compose.ui.text.googlefonts.Font(
+      googleFont = this,
+      fontProvider = googleFontProvider,
+      weight = FontWeight.Normal,
+    )
+    val mediumVariant = androidx.compose.ui.text.googlefonts.Font(
+      googleFont = this,
+      fontProvider = googleFontProvider,
+      weight = FontWeight.Medium,
+    )
+    val boldVariant = androidx.compose.ui.text.googlefonts.Font(
+      googleFont = this,
+      fontProvider = googleFontProvider,
+      weight = FontWeight.Bold,
+    )
+
+    return listOf(normalVariant, mediumVariant, boldVariant)
+  }
+}
