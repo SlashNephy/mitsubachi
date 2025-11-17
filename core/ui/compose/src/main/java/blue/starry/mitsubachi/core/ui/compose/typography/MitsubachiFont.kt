@@ -25,22 +25,12 @@ object MitsubachiFont {
   )
 
   private fun GoogleFont.toFontVariants(): List<Font> {
-    val normalVariant = androidx.compose.ui.text.googlefonts.Font(
-      googleFont = this,
-      fontProvider = googleFontProvider,
-      weight = FontWeight.Normal,
-    )
-    val mediumVariant = androidx.compose.ui.text.googlefonts.Font(
-      googleFont = this,
-      fontProvider = googleFontProvider,
-      weight = FontWeight.Medium,
-    )
-    val boldVariant = androidx.compose.ui.text.googlefonts.Font(
-      googleFont = this,
-      fontProvider = googleFontProvider,
-      weight = FontWeight.Bold,
-    )
-
-    return listOf(normalVariant, mediumVariant, boldVariant)
+    return listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.Bold).map { weight ->
+      androidx.compose.ui.text.googlefonts.Font(
+        googleFont = this,
+        fontProvider = googleFontProvider,
+        weight = weight,
+      )
+    }
   }
 }
