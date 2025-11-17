@@ -11,4 +11,6 @@
     <string name="like_button">Like</string>
     <string name="unlike_button">Unlike</string>
     <string name="check_in_created_by">Created by %1$s</string>
+    <string name="collapse_button">Collapse</string>
+    <string name="expand_button">Expand</string>
 </resources>
