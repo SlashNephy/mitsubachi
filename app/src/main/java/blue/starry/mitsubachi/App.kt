@@ -35,6 +35,7 @@ import blue.starry.mitsubachi.feature.map.ui.MapScreenTopBar
 import blue.starry.mitsubachi.feature.map.ui.histories.VenueHistoriesScreen
 import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
+import blue.starry.mitsubachi.feature.settings.ui.SettingsScreenTopBar
 import blue.starry.mitsubachi.feature.welcome.ui.WelcomeScreen
 import timber.log.Timber
 
@@ -134,6 +135,14 @@ private fun AppTopBar(backStack: NavBackStack<RouteKey>) {
 
     is RouteKey.Map -> {
       MapScreenTopBar(
+        onBack = {
+          backStack.remove(key)
+        },
+      )
+    }
+
+    is RouteKey.Settings -> {
+      SettingsScreenTopBar(
         onBack = {
           backStack.remove(key)
         },
