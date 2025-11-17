@@ -48,7 +48,7 @@ fun SettingSection(
   title: String? = null,
   content: SettingSectionScope.() -> Unit,
 ) {
-  val scope = remember { SettingSectionScopeImpl().apply(content) }
+  val scope = remember(content) { SettingSectionScopeImpl().apply(content) }
   var isExpanded by remember { mutableStateOf(true) }
 
   Column(
