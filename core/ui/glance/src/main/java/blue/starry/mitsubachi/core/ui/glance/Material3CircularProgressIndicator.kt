@@ -5,6 +5,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
 import androidx.glance.unit.ColorProvider
 
 @Composable
@@ -19,6 +20,7 @@ fun Material3CircularProgressIndicator(
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
+@Preview
 @Composable
 private fun Material3CircularProgressIndicatorPreview() {
   Material3CircularProgressIndicator()
