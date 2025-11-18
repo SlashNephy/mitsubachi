@@ -11,7 +11,6 @@ import blue.starry.mitsubachi.core.domain.usecase.DeviceNetworkRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.time.Duration.Companion.hours
 import kotlin.time.toJavaDuration
 
 @Singleton
@@ -22,7 +21,6 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
 ) : PhotoWidgetWorkerScheduler {
   companion object {
     private const val WORKER_NAME = "photo_widget_worker"
-    private val interval = 3.hours.toJavaDuration()
   }
 
   override suspend fun enqueue() {
@@ -37,6 +35,7 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
       .setRequiresBatteryNotLow(true)
       .build()
 
+    val interval = applicationSettingsRepository.select { it.widgetUpdateInterval }.toJavaDuration()
     val request = PeriodicWorkRequestBuilder<PhotoWidgetWorker>(interval)
       .setConstraints(constraints)
       .build()

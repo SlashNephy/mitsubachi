@@ -6,4 +6,5 @@ option java_multiple_files = true;
 message ApplicationSettings {
   optional bool is_firebase_crashlytics_enabled = 1;
   optional bool is_widget_update_on_unmetered_network_only_enabled = 2;
+  optional int64 widget_update_interval_millis = 3;
 }
