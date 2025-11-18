@@ -63,10 +63,10 @@ private fun Photo(photo: PhotoWidgetState.Photo) {
     is PhotoWidgetState.Photo.Image.Resource -> ImageProvider(photo.image.id)
   }
 
-  Box(modifier = GlanceModifier.fillMaxSize()) {
-    image?.also {
+  if (image != null) {
+    Box(modifier = GlanceModifier.fillMaxSize()) {
       Image(
-        provider = it,
+        provider = image,
         contentDescription = photo.venueName,
         modifier = GlanceModifier
           .fillMaxSize()
@@ -79,9 +79,11 @@ private fun Photo(photo: PhotoWidgetState.Photo) {
           ),
         contentScale = ContentScale.Crop,
       )
-    }
 
-    PhotoOverlay(photo)
+      PhotoOverlay(photo)
+    }
+  } else {
+    NoPhotos()
   }
 }
 
