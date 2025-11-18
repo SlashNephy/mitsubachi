@@ -41,6 +41,8 @@ Don't hesitate to use early access versions.
 4. **Security First**: Always strive to write secure code. Be mindful of implementation best
    practices.
 5. **Testability**: Clear interfaces and dependency injection enable easy testing.
+6. **Internationalization**: When presenting strings that require localization, add string resources
+   for each language.
 
 ## Module Structure
 
@@ -93,4 +95,4 @@ The following are typical commands used for local development.
 - **Lint (detekt)**: `./gradlew detekt`
 
 If desired, you can restrict the target by prefixing the module name like
-`./gradlew :core:ui:compose:assembleLocalDebug` for speed-up.
+`./gradlew :core:ui:compose:assembleDebug` for speed-up.
