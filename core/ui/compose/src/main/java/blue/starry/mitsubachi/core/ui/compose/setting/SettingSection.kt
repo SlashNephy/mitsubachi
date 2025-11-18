@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -66,13 +67,13 @@ fun SettingSection(
     }
 
     AnimatedVisibility(visible = isExpanded) {
-      Column(
+      LazyColumn(
         modifier = Modifier
           .fillMaxWidth()
           .clip(ShapeDefaults.Large),
       ) {
-        scope.items.forEachIndexed { index, item ->
-          item.Composable()
+        items(scope.items.size) { index ->
+          scope.items[index].Composable()
 
           if (index != scope.items.lastIndex) {
             HorizontalDivider(

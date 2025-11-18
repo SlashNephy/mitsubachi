@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.BugReport
@@ -28,9 +26,7 @@ fun SettingsContent(
 ) {
   Surface(modifier = Modifier.fillMaxSize()) {
     Column(
-      modifier = Modifier
-        .padding(24.dp)
-        .verticalScroll(rememberScrollState()),
+      modifier = Modifier.padding(24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       AccountSection(
