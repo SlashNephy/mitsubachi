@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.feature.widget.photo
 import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.provideContent
 import androidx.glance.currentState
 import blue.starry.mitsubachi.core.ui.glance.MitsubachiGlanceTheme
@@ -24,6 +25,18 @@ class PhotoWidget : GlanceAppWidget() {
   }
 
   override suspend fun providePreview(context: Context, widgetCategory: Int) {
-    // TODO: Add preview
+    provideContent {
+      MitsubachiGlanceTheme {
+        PhotoWidgetContent(
+          state = previewState,
+        )
+      }
+    }
+  }
+
+  companion object {
+    suspend fun updatePreview(context: Context) {
+      GlanceAppWidgetManager(context).setWidgetPreviews(PhotoWidgetReceiver::class)
+    }
   }
 }

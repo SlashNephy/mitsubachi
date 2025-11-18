@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
@@ -32,6 +31,7 @@ import blue.starry.mitsubachi.core.ui.glance.Material3CircularProgressIndicator
 import blue.starry.mitsubachi.core.ui.glance.image.localImageProvider
 import blue.starry.mitsubachi.core.ui.glance.withAlpha
 import blue.starry.mitsubachi.feature.widget.photo.R
+import blue.starry.mitsubachi.feature.widget.photo.previewState
 import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
 
 @Composable
@@ -209,14 +209,7 @@ private fun LoadingPreview() {
 @Composable
 private fun PhotoPreview() {
   PhotoWidgetContent(
-    state = PhotoWidgetState.Photo(
-      id = "photo",
-      image = PhotoWidgetState.Photo.Image.Resource(R.drawable.sushi),
-      checkInUri = "app://check_in/123".toUri(),
-      venueName = "ぷれびゅーパーク",
-      venueAddress = "東京都渋谷区",
-      date = "2025/11/01",
-    ),
+    state = previewState,
   )
 }
 
