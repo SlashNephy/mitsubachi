@@ -6,6 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import blue.starry.mitsubachi.core.domain.usecase.DeviceNetworkRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -16,6 +17,7 @@ import kotlin.time.toJavaDuration
 @Singleton
 internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
   @param:ApplicationContext private val context: Context,
+  private val applicationSettingsRepository: ApplicationSettingsRepository,
   private val deviceNetworkRepository: DeviceNetworkRepository,
 ) : PhotoWidgetWorkerScheduler {
   companion object {
@@ -23,9 +25,8 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
     private val interval = 3.hours.toJavaDuration()
   }
 
-  override fun enqueue() {
-    // データセーバーモードが有効な場合は無制限のネットワークでのみ実行
-    val networkType = if (deviceNetworkRepository.isDataSaverEnabled()) {
+  override suspend fun enqueue() {
+    val networkType = if (preferUnmeteredNetwork()) {
       NetworkType.UNMETERED
     } else {
       NetworkType.CONNECTED
@@ -47,7 +48,15 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
     )
   }
 
-  override fun cancel() {
+  private suspend fun preferUnmeteredNetwork(): Boolean {
+    // 次の場合は無制限のネットワークを優先
+    // - isWidgetUpdateOnUnmeteredNetworkOnlyEnabled が有効
+    // - データセーバーモードが有効
+    return applicationSettingsRepository.select { it.isWidgetUpdateOnUnmeteredNetworkOnlyEnabled } ||
+      deviceNetworkRepository.isDataSaverEnabled()
+  }
+
+  override suspend fun cancel() {
     WorkManager.getInstance(context).cancelUniqueWork(WORKER_NAME)
   }
 }
