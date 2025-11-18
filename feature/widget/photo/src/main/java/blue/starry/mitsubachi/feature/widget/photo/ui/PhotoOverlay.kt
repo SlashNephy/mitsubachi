@@ -18,7 +18,7 @@ import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
+import androidx.glance.text.TextDefaults
 import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -43,30 +43,33 @@ internal fun PhotoOverlay(photo: PhotoWidgetState.Photo) {
     ) {
       Text(
         text = photo.venueName,
-        style = TextStyle(
+        style = TextDefaults.defaultTextStyle.copy(
           color = GlanceTheme.colors.onSurface,
           fontSize = 14.sp,
           fontWeight = FontWeight.Bold,
         ),
+        maxLines = 1,
       )
 
       if (photo.venueAddress.isNotEmpty()) {
         Text(
           text = photo.venueAddress,
-          style = TextStyle(
+          style = TextDefaults.defaultTextStyle.copy(
             color = GlanceTheme.colors.onSurface,
             fontSize = 11.sp,
           ),
+          maxLines = 1,
         )
       }
 
       val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
       Text(
         text = photo.checkInAt.format(formatter),
-        style = TextStyle(
+        style = TextDefaults.defaultTextStyle.copy(
           color = GlanceTheme.colors.onSurface,
           fontSize = 12.sp,
         ),
+        maxLines = 1,
       )
     }
   }
