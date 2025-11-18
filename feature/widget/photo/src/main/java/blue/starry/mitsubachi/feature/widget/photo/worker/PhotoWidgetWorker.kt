@@ -21,6 +21,8 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import kotlin.io.path.absolutePathString
 
 @HiltWorker
@@ -57,13 +59,14 @@ class PhotoWidgetWorker @AssistedInject constructor(
     val venueAddress = photo.venue.location.crossStreet
       ?: photo.venue.location.address ?: photo.venue.location.city ?: photo.venue.location.country
 
+    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     val newState = PhotoWidgetState.Photo(
       id = photo.id,
-      path = imagePath.absolutePathString(),
+      image = PhotoWidgetState.Photo.Image.Local(path = imagePath.absolutePathString()),
       checkInUri = deepLinkSerializer.serialize(DeepLink.CheckIn(id = photo.checkInId)),
       venueName = photo.venue.name,
       venueAddress = venueAddress,
-      checkInAt = photo.createdAt,
+      date = photo.createdAt.format(formatter),
     )
     widget.updateAll(glanceIds, newState)
 
