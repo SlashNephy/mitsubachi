@@ -10,6 +10,7 @@ import blue.starry.mitsubachi.core.ui.glance.MitsubachiGlanceTheme
 import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetState
 import blue.starry.mitsubachi.feature.widget.photo.state.PhotoWidgetStateDefinition
 import blue.starry.mitsubachi.feature.widget.photo.ui.PhotoWidgetContent
+import timber.log.Timber
 
 class PhotoWidget : GlanceAppWidget() {
   override val stateDefinition = PhotoWidgetStateDefinition
@@ -36,7 +37,11 @@ class PhotoWidget : GlanceAppWidget() {
 
   companion object {
     suspend fun updatePreview(context: Context) {
-      GlanceAppWidgetManager(context).setWidgetPreviews(PhotoWidgetReceiver::class)
+      val manager = GlanceAppWidgetManager(context)
+      val result = manager.setWidgetPreviews(PhotoWidgetReceiver::class)
+      if (result == GlanceAppWidgetManager.SET_WIDGET_PREVIEWS_RESULT_RATE_LIMITED) {
+        Timber.w("widget preview rate limited: $result")
+      }
     }
   }
 }

@@ -15,7 +15,7 @@
     </issue>
 
     <issue id="Typos" severity="informational">
-        <ignore path="app/src/main/res/values/font_certs.xml" />
+        <ignore path="core/ui/compose/src/main/res/values/font_certs.xml" />
     </issue>
 
     <issue id="IconLocation" severity="informational">
