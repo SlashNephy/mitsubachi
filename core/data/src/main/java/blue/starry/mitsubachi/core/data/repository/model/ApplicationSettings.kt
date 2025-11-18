@@ -10,11 +10,17 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
     } else {
       DomainApplicationSettings.Default.isFirebaseCrashlyticsEnabled
     },
+    isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = if (hasIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled()) {
+      isWidgetUpdateOnUnmeteredNetworkOnlyEnabled
+    } else {
+      DomainApplicationSettings.Default.isWidgetUpdateOnUnmeteredNetworkOnlyEnabled
+    },
   )
 }
 
 internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
   return ApplicationSettings.newBuilder()
     .setIsFirebaseCrashlyticsEnabled(isFirebaseCrashlyticsEnabled)
+    .setIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled(isWidgetUpdateOnUnmeteredNetworkOnlyEnabled)
     .build()
 }

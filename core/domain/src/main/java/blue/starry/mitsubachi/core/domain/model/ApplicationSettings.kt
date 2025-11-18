@@ -2,10 +2,12 @@ package blue.starry.mitsubachi.core.domain.model
 
 data class ApplicationSettings(
   val isFirebaseCrashlyticsEnabled: Boolean,
+  val isWidgetUpdateOnUnmeteredNetworkOnlyEnabled: Boolean,
 ) {
   companion object {
     val Default = ApplicationSettings(
       isFirebaseCrashlyticsEnabled = true,
+      isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = false,
     )
   }
 }
