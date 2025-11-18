@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.core.data.repository.model.toDomain
 import blue.starry.mitsubachi.core.data.repository.model.toEntity
 import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,6 +18,10 @@ internal class ApplicationSettingsRepositoryImpl @Inject constructor(
 ) : ApplicationSettingsRepository {
   override val flow: Flow<DomainApplicationSettings> =
     dataStore.data.map(ApplicationSettings::toDomain)
+
+  override suspend fun <T> select(block: (DomainApplicationSettings) -> T): T {
+    return flow.map(block).first()
+  }
 
   override suspend fun update(block: (DomainApplicationSettings) -> DomainApplicationSettings) {
     dataStore.updateData {
