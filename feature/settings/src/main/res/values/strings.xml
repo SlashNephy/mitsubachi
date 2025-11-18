@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_section_title">Account</string>
+    <string name="logout_button">Sign Out</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="logout_confirm_body">Are you sure you want to sign out?</string>
+    <string name="data_collection_section_title">Data Collection</string>
+    <string name="optin_firebase_crashlytics_headline">Automatically send bug reports</string>
+    <string name="optin_firebase_crashlytics_supporting">The app reports errors to Firebase Crashlytics when it crashes. The data sent is anonymous.</string>
+</resources>
