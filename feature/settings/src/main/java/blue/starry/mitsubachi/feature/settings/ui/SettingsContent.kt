@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,13 +57,14 @@ fun SettingsContent(
 
 @Composable
 private fun AccountSection(onClickSignOut: () -> Unit) {
-  val context = LocalContext.current
   val showLogoutDialog = remember { mutableStateOf(false) }
 
   SettingSection(title = stringResource(R.string.account_section_title)) {
     item(
       leadingIcon = SettingItem.LeadingIcon.Flat(Icons.AutoMirrored.Filled.Logout),
-      headlineText = context.getString(R.string.logout_button),
+      headline = {
+        Text(stringResource(R.string.logout_button))
+      },
       modifier = Modifier.clickable(onClick = { showLogoutDialog.value = true }),
     )
   }
@@ -119,14 +119,16 @@ private fun DataCollectionSection(
   applicationSettings: ApplicationSettings,
   onChangeIsFirebaseCrashlyticsEnabled: (Boolean) -> Unit,
 ) {
-  val context = LocalContext.current
-
   SettingSection(title = stringResource(R.string.data_collection_section_title)) {
     item(
       leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.BugReport),
-      headlineText = context.getString(R.string.optin_firebase_crashlytics_headline),
-      supportingText = context.getString(R.string.optin_firebase_crashlytics_supporting),
-      trailingContent = {
+      headline = {
+        Text(stringResource(R.string.optin_firebase_crashlytics_headline))
+      },
+      supporting = {
+        Text(stringResource(R.string.optin_firebase_crashlytics_supporting))
+      },
+      trailing = {
         Switch(
           checked = applicationSettings.isFirebaseCrashlyticsEnabled,
           onCheckedChange = onChangeIsFirebaseCrashlyticsEnabled,
