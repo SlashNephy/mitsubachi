@@ -11,21 +11,21 @@ internal class SettingSectionScopeImpl : SettingSectionScope {
   }
 
   override fun item(
-    headlineText: String,
+    headline: @Composable () -> Unit,
     modifier: Modifier,
-    overlineText: String?,
-    supportingText: String?,
+    overline: @Composable (() -> Unit)?,
+    supporting: @Composable (() -> Unit)?,
     leadingIcon: SettingItem.LeadingIcon,
-    trailingContent: @Composable (() -> Unit)?,
+    trailing: @Composable (() -> Unit)?,
   ) {
     item(
       SettingItem(
-        headlineText = headlineText,
+        headline = headline,
         modifier = modifier,
-        overlineText = overlineText,
-        supportingText = supportingText,
+        overline = overline,
+        supporting = supporting,
         leadingIcon = leadingIcon,
-        trailingContent = trailingContent,
+        trailing = trailing,
       ),
     )
   }

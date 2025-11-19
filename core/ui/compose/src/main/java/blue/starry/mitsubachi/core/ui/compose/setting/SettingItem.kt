@@ -5,12 +5,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class SettingItem(
-  val headlineText: String,
+  val headline: @Composable () -> Unit,
   val modifier: Modifier,
-  val overlineText: String?,
-  val supportingText: String?,
+  val overline: @Composable (() -> Unit)?,
+  val supporting: @Composable (() -> Unit)?,
   val leadingIcon: LeadingIcon,
-  val trailingContent: @Composable (() -> Unit)?,
+  val trailing: @Composable (() -> Unit)?,
 ) {
   sealed interface LeadingIcon {
     data class Flat(val imageVector: ImageVector) : LeadingIcon

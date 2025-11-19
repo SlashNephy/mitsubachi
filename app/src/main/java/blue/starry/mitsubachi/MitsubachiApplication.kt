@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import blue.starry.mitsubachi.core.domain.ApplicationScope
 import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
+import blue.starry.mitsubachi.feature.widget.photo.PhotoWidget
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -56,6 +57,10 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Confi
         .collect {
           Firebase.crashlytics.isCrashlyticsCollectionEnabled = it
         }
+    }
+
+    applicationScope.launch {
+      PhotoWidget.updatePreview(applicationContext)
     }
 
     if (BuildConfig.DEBUG) {

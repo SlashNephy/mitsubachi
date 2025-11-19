@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.ui.compose.R
+import blue.starry.mitsubachi.core.ui.compose.typography.OverrideTextStyle
 
 @Composable
 fun SettingSection(
@@ -133,31 +134,33 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
 private fun SettingItem.Composable() {
   ListItem(
     headlineContent = {
-      Text(
-        text = headlineText,
-        style = MaterialTheme.typography.titleSmallEmphasized,
+      OverrideTextStyle(
+        style = { MaterialTheme.typography.titleSmallEmphasized },
+        content = headline,
       )
     },
     modifier = modifier,
-    overlineContent = overlineText?.let {
-      {
-        Text(
-          text = it,
-          style = MaterialTheme.typography.bodySmall,
+    overlineContent = overline?.let {
+      @Composable {
+        OverrideTextStyle(
+          style = { MaterialTheme.typography.bodySmall },
+          content = it,
         )
       }
     },
-    supportingContent = supportingText?.let {
-      {
-        Text(
-          text = it,
-          style = MaterialTheme.typography.labelSmall,
-          modifier = Modifier.padding(top = 4.dp),
-        )
+    supportingContent = supporting?.let {
+      @Composable {
+        OverrideTextStyle(
+          style = { MaterialTheme.typography.labelSmall },
+        ) {
+          Box(modifier = Modifier.padding(top = 4.dp)) {
+            it()
+          }
+        }
       }
     },
     leadingContent = ::LeadingContent,
-    trailingContent = trailingContent,
+    trailingContent = trailing,
     tonalElevation = 4.dp,
   )
 }
@@ -211,23 +214,35 @@ private fun SettingSectionPreview() {
     modifier = Modifier.padding(16.dp),
   ) {
     item(
-      headlineText = "Headline",
-      overlineText = "Overline",
+      headline = {
+        Text("Headline")
+      },
+      overline = {
+        Text("Overline")
+      },
       leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Rounded.Home),
-      trailingContent = {
+      trailing = {
         Switch(checked = false, onCheckedChange = {})
       },
     )
 
     item(
-      headlineText = "Headline 2",
-      supportingText = "Supporting",
+      headline = {
+        Text("Headline 2")
+      },
+      supporting = {
+        Text("Supporting")
+      },
       leadingIcon = SettingItem.LeadingIcon.Round(Icons.Rounded.LocationOn),
     )
 
     item(
-      headlineText = "Headline 3",
-      supportingText = "Supporting",
+      headline = {
+        Text("Headline 3")
+      },
+      supporting = {
+        Text("Supporting")
+      },
     )
   }
 }
