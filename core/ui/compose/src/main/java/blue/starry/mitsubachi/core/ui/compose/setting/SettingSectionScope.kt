@@ -7,11 +7,11 @@ interface SettingSectionScope {
   fun item(item: SettingItem)
 
   fun item(
-    headlineText: String,
+    headline: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    overlineText: String? = null,
-    supportingText: String? = null,
+    overline: @Composable (() -> Unit)? = null,
+    supporting: @Composable (() -> Unit)? = null,
     leadingIcon: SettingItem.LeadingIcon = SettingItem.LeadingIcon.Blank,
-    trailingContent: @Composable (() -> Unit)? = null,
+    trailing: @Composable (() -> Unit)? = null,
   )
 }
