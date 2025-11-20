@@ -9,8 +9,8 @@
     <string name="optin_firebase_crashlytics_supporting">アプリがクラッシュした場合にエラーを Firebase Crashlytics に報告します。送信されるデータは匿名です。</string>
     <string name="widget_section_title">ウィジェット</string>
     <string name="widget_update_on_wifi_only_headline">従量制ではないネットワークのみで更新</string>
-    <string name="widget_update_on_wifi_only_supporting">Wi-Fiや従量制ではない他のネットワークに接続時のみウィジェットを更新します。</string>
-    <string name="widget_update_interval_headline">更新間隔</string>
+    <string name="widget_update_on_wifi_only_supporting">定額制の Wi-Fi などデータ容量の制限がないネットワークに接続時のみ、ウィジェットを更新します。</string>
+    <string name="widget_update_interval_headline">更新頻度</string>
     <string name="save_button">保存</string>
     <string name="widget_update_interval_supporting">ウィジェットの更新頻度を調整します。</string>
 </resources>
