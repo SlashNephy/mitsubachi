@@ -11,6 +11,7 @@ import blue.starry.mitsubachi.core.domain.usecase.DeviceNetworkRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
 @Singleton
@@ -35,7 +36,10 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
       .setRequiresBatteryNotLow(true)
       .build()
 
-    val interval = applicationSettingsRepository.select { it.widgetUpdateInterval }.toJavaDuration()
+    val interval = maxOf(
+      applicationSettingsRepository.select { it.widgetUpdateInterval },
+      15.minutes,
+    ).toJavaDuration()
     val request = PeriodicWorkRequestBuilder<PhotoWidgetWorker>(interval)
       .setConstraints(constraints)
       .build()
@@ -52,7 +56,7 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
     // - isWidgetUpdateOnUnmeteredNetworkOnlyEnabled が有効
     // - データセーバーモードが有効
     return applicationSettingsRepository.select { it.isWidgetUpdateOnUnmeteredNetworkOnlyEnabled } ||
-      deviceNetworkRepository.isDataSaverEnabled()
+            deviceNetworkRepository.isDataSaverEnabled()
   }
 
   override suspend fun cancel() {
