@@ -7,6 +7,7 @@ import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import blue.starry.mitsubachi.core.domain.usecase.SignOutUseCase
 import blue.starry.mitsubachi.core.ui.compose.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.core.ui.compose.error.onException
+import blue.starry.mitsubachi.core.ui.compose.formatter.RelativeDateTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +23,8 @@ class SettingsScreenViewModel @Inject constructor(
   private val signOutUseCase: SignOutUseCase,
   private val applicationSettingsRepository: ApplicationSettingsRepository,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
-) : ViewModel() {
+  relativeDateTimeFormatter: RelativeDateTimeFormatter,
+) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
   sealed interface UiState {
     data object Loading : UiState
 

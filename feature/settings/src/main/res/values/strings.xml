@@ -7,4 +7,10 @@
     <string name="data_collection_section_title">Data Collection</string>
     <string name="optin_firebase_crashlytics_headline">Automatically send bug reports</string>
     <string name="optin_firebase_crashlytics_supporting">The app reports errors to Firebase Crashlytics when it crashes. The data sent is anonymous.</string>
+    <string name="widget_section_title">Widget</string>
+    <string name="widget_update_on_wifi_only_headline">Update only on unmetered network</string>
+    <string name="widget_update_on_wifi_only_supporting">Update widget only when connected to Wi-Fi or other unmetered networks</string>
+    <string name="widget_update_interval_headline">Update interval</string>
+    <string name="save_button">Save</string>
+    <string name="widget_update_interval_supporting">Configure the widget’s refresh interval.</string>
 </resources>

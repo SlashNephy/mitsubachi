@@ -29,6 +29,7 @@ fun SettingsScreen(
         onSignOut = {
           viewModel.signOut().invokeOnCompletion { onSignOut() }
         },
+        formatDuration = viewModel::formatDuration,
       )
     }
   }
