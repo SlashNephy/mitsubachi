@@ -14,7 +14,6 @@ import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -50,7 +49,7 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Confi
     applicationScope.launch {
       // 起動時にオプトアウトを設定
       Firebase.crashlytics.isCrashlyticsCollectionEnabled =
-        applicationSettingsRepository.flow.map { it.isFirebaseCrashlyticsEnabled }.first()
+        applicationSettingsRepository.select { it.isFirebaseCrashlyticsEnabled }
 
       applicationSettingsRepository.flow
         .map { it.isFirebaseCrashlyticsEnabled }

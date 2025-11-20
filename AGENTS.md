@@ -40,9 +40,10 @@ Don't hesitate to use early access versions.
 3. **Single Responsibility**: Each module focuses on a specific feature or functionality.
 4. **Security First**: Always strive to write secure code. Be mindful of implementation best
    practices.
-5. **Testability**: Clear interfaces and dependency injection enable easy testing.
+5. **Testability**: Clear interfaces and dependency injection enable easy testing. When implementing
+   Composable functions, ensure they can be previewed and provide a preview implementation.
 6. **Internationalization**: When presenting strings that require localization, add string resources
-   for each language.
+   for each language (supported languages: en, ja, ko-rKR).
 
 ## Module Structure
 
