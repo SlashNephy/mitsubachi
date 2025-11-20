@@ -43,7 +43,7 @@ Don't hesitate to use early access versions.
 5. **Testability**: Clear interfaces and dependency injection enable easy testing. When implementing
    Composable functions, ensure they can be previewed and provide a preview implementation.
 6. **Internationalization**: When presenting strings that require localization, add string resources
-   for each language (supported languages: en, ja, kr).
+   for each language (supported languages: en, ja, ko-rKR).
 
 ## Module Structure
 
