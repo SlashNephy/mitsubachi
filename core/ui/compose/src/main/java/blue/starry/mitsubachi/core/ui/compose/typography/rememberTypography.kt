@@ -37,16 +37,16 @@ fun rememberTypography(fontFamilyPreference: FontFamilyPreference? = null): Typo
 }
 
 private fun getTypographyForFont(fontFamilyPreference: FontFamilyPreference): Typography {
-  val fontFamily = when (fontFamilyPreference) {
-    FontFamilyPreference.IBMPlexSans -> FontFamily(
+  val fontFamily = if (fontFamilyPreference.fontName == FontFamilyPreference.IBMPlexSans.fontName) {
+    FontFamily(
       listOf(
         MitsubachiFont.IBMPlexSans,
         MitsubachiFont.IBMPlexSansJP,
         MitsubachiFont.IBMPlexSansKR,
       ).flatten(),
     )
-
-    is FontFamilyPreference.GoogleFont -> FontFamily(
+  } else {
+    FontFamily(
       MitsubachiFont.fromName(fontFamilyPreference.fontName),
     )
   }

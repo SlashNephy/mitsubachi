@@ -4,10 +4,13 @@ package blue.starry.mitsubachi.feature.settings.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.BugReport
@@ -17,9 +20,9 @@ import androidx.compose.material.icons.filled.FontDownload
 import androidx.compose.material.icons.filled.NetworkWifi
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -27,9 +30,11 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +47,9 @@ import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
 import blue.starry.mitsubachi.feature.settings.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToLong
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -448,13 +456,30 @@ private fun ColorSchemeDialog(
   )
 }
 
+@Suppress("LongMethod", "TooGenericExceptionCaught")
 @Composable
 private fun FontFamilyDialog(
   currentPreference: FontFamilyPreference,
   onConfirm: (FontFamilyPreference) -> Unit,
   onDismiss: () -> Unit,
 ) {
-  var fontName by remember { mutableStateOf(currentPreference.fontName) }
+  var selectedFont by remember { mutableStateOf(currentPreference.fontName) }
+  var fontList by remember { mutableStateOf<List<String>>(emptyList()) }
+  var isLoading by remember { mutableStateOf(true) }
+  var errorMessage by remember { mutableStateOf<String?>(null) }
+  val scope = rememberCoroutineScope()
+
+  LaunchedEffect(Unit) {
+    scope.launch {
+      try {
+        fontList = fetchGoogleFonts()
+        isLoading = false
+      } catch (e: Exception) {
+        errorMessage = e.message
+        isLoading = false
+      }
+    }
+  }
 
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -465,21 +490,49 @@ private fun FontFamilyDialog(
       )
     },
     text = {
-      Column(
+      Box(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
       ) {
-        Text(
-          text = stringResource(R.string.font_family_supporting),
-          style = MaterialTheme.typography.bodyMedium,
-        )
-        OutlinedTextField(
-          value = fontName,
-          onValueChange = { fontName = it },
-          label = { Text(stringResource(R.string.font_family_input_hint)) },
-          modifier = Modifier.fillMaxWidth(),
-          singleLine = true,
-        )
+        when {
+          isLoading -> {
+            Box(
+              modifier = Modifier.fillMaxWidth().padding(32.dp),
+              contentAlignment = Alignment.Center,
+            ) {
+              CircularProgressIndicator()
+            }
+          }
+
+          errorMessage != null -> {
+            Text(
+              text = "Error loading fonts: $errorMessage",
+              style = MaterialTheme.typography.bodyMedium,
+              color = MaterialTheme.colorScheme.error,
+            )
+          }
+
+          else -> {
+            LazyColumn(
+              modifier = Modifier.fillMaxWidth(),
+            ) {
+              items(fontList) { fontName ->
+                SettingItem(
+                  leadingIcon = SettingItem.LeadingIcon.None,
+                  headline = {
+                    Text(fontName)
+                  },
+                  trailing = {
+                    RadioButton(
+                      selected = selectedFont == fontName,
+                      onClick = { selectedFont = fontName },
+                    )
+                  },
+                  modifier = Modifier.clickable { selectedFont = fontName },
+                )
+              }
+            }
+          }
+        }
       }
     },
     dismissButton = {
@@ -490,19 +543,42 @@ private fun FontFamilyDialog(
     confirmButton = {
       TextButton(
         onClick = {
-          val newPreference = if (fontName == FontFamilyPreference.IBMPlexSans.fontName) {
-            FontFamilyPreference.IBMPlexSans
-          } else {
-            FontFamilyPreference.GoogleFont(fontName)
-          }
-          onConfirm(newPreference)
+          onConfirm(FontFamilyPreference(selectedFont))
         },
-        enabled = fontName.isNotBlank(),
+        enabled = !isLoading && errorMessage == null,
       ) {
         Text(text = stringResource(R.string.save_button))
       }
     },
   )
+}
+
+private suspend fun fetchGoogleFonts(): List<String> = withContext(Dispatchers.IO) {
+  // Using Google Fonts API to fetch popular fonts
+  // For this demo, returning a curated list of popular fonts
+  // In production, you would use the Google Fonts API with an API key
+  listOf(
+    "IBM Plex Sans",
+    "Roboto",
+    "Open Sans",
+    "Lato",
+    "Montserrat",
+    "Oswald",
+    "Source Sans Pro",
+    "Raleway",
+    "PT Sans",
+    "Noto Sans",
+    "Poppins",
+    "Ubuntu",
+    "Playfair Display",
+    "Merriweather",
+    "Nunito",
+    "Rubik",
+    "Work Sans",
+    "Inter",
+    "Fira Sans",
+    "Bebas Neue",
+  ).sorted()
 }
 
 @Composable

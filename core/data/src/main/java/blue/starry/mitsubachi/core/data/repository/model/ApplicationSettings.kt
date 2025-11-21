@@ -35,11 +35,7 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
       DomainApplicationSettings.Default.colorSchemePreference
     },
     fontFamilyPreference = if (hasFontFamilyName()) {
-      if (fontFamilyName == FontFamilyPreference.IBMPlexSans.fontName) {
-        FontFamilyPreference.IBMPlexSans
-      } else {
-        FontFamilyPreference.GoogleFont(fontFamilyName)
-      }
+      FontFamilyPreference(fontFamilyName)
     } else {
       DomainApplicationSettings.Default.fontFamilyPreference
     },
