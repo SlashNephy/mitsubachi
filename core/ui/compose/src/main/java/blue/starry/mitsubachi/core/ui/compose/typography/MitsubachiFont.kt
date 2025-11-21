@@ -18,6 +18,42 @@ object MitsubachiFont {
     GoogleFont("IBM Plex Sans KR").toFontVariants()
   }
 
+  val Roboto by lazy {
+    GoogleFont("Roboto").toFontVariants()
+  }
+
+  val NotoSans by lazy {
+    GoogleFont("Noto Sans").toFontVariants()
+  }
+
+  val OpenSans by lazy {
+    GoogleFont("Open Sans").toFontVariants()
+  }
+
+  val Lato by lazy {
+    GoogleFont("Lato").toFontVariants()
+  }
+
+  val Montserrat by lazy {
+    GoogleFont("Montserrat").toFontVariants()
+  }
+
+  val Poppins by lazy {
+    GoogleFont("Poppins").toFontVariants()
+  }
+
+  val Oswald by lazy {
+    GoogleFont("Oswald").toFontVariants()
+  }
+
+  val SourceSansPro by lazy {
+    GoogleFont("Source Sans Pro").toFontVariants()
+  }
+
+  val Raleway by lazy {
+    GoogleFont("Raleway").toFontVariants()
+  }
+
   private val googleFontProvider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",

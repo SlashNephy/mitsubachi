@@ -12,5 +12,25 @@
     <string name="widget_update_on_wifi_only_supporting">Update widget only when connected to Wi-Fi or other unmetered networks</string>
     <string name="widget_update_interval_headline">Update interval</string>
     <string name="save_button">Save</string>
-    <string name="widget_update_interval_supporting">Configure the widget’s refresh interval.</string>
+    <string name="widget_update_interval_supporting">Configure the widget's refresh interval.</string>
+    <string name="appearance_section_title">Appearance</string>
+    <string name="dynamic_color_headline">Material You (Dynamic Colors)</string>
+    <string name="dynamic_color_supporting">Use colors from your wallpaper (Android 12+)</string>
+    <string name="color_scheme_headline">Color Scheme</string>
+    <string name="color_scheme_supporting">Choose between light, dark, or system theme</string>
+    <string name="color_scheme_light">Light</string>
+    <string name="color_scheme_dark">Dark</string>
+    <string name="color_scheme_system">System</string>
+    <string name="font_family_headline">Font</string>
+    <string name="font_family_supporting">Choose your preferred font</string>
+    <string name="font_family_ibm_plex_sans">IBM Plex Sans</string>
+    <string name="font_family_roboto">Roboto</string>
+    <string name="font_family_noto_sans">Noto Sans</string>
+    <string name="font_family_open_sans">Open Sans</string>
+    <string name="font_family_lato">Lato</string>
+    <string name="font_family_montserrat">Montserrat</string>
+    <string name="font_family_poppins">Poppins</string>
+    <string name="font_family_oswald">Oswald</string>
+    <string name="font_family_source_sans_pro">Source Sans Pro</string>
+    <string name="font_family_raleway">Raleway</string>
 </resources>

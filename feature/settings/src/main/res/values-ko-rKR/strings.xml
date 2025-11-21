@@ -13,4 +13,24 @@
     <string name="widget_update_interval_headline">업데이트 간격</string>
     <string name="save_button">저장</string>
     <string name="widget_update_interval_supporting">위젯의 업데이트 빈도를 조정합니다.</string>
+    <string name="appearance_section_title">외관</string>
+    <string name="dynamic_color_headline">Material You (다이나믹 컬러)</string>
+    <string name="dynamic_color_supporting">배경화면의 색상 사용 (Android 12 이상)</string>
+    <string name="color_scheme_headline">색상 구성표</string>
+    <string name="color_scheme_supporting">라이트, 다크, 시스템 중 선택</string>
+    <string name="color_scheme_light">라이트</string>
+    <string name="color_scheme_dark">다크</string>
+    <string name="color_scheme_system">시스템</string>
+    <string name="font_family_headline">글꼴</string>
+    <string name="font_family_supporting">원하는 글꼴 선택</string>
+    <string name="font_family_ibm_plex_sans">IBM Plex Sans</string>
+    <string name="font_family_roboto">Roboto</string>
+    <string name="font_family_noto_sans">Noto Sans</string>
+    <string name="font_family_open_sans">Open Sans</string>
+    <string name="font_family_lato">Lato</string>
+    <string name="font_family_montserrat">Montserrat</string>
+    <string name="font_family_poppins">Poppins</string>
+    <string name="font_family_oswald">Oswald</string>
+    <string name="font_family_source_sans_pro">Source Sans Pro</string>
+    <string name="font_family_raleway">Raleway</string>
 </resources>

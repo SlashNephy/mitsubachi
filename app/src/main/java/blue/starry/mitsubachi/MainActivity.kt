@@ -7,8 +7,12 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +44,22 @@ class MainActivity : ComponentActivity() {
         viewModel.onReady()
       }
 
-      MitsubachiTheme {
+      val applicationSettings by viewModel.applicationSettings.collectAsState(
+        initial = blue.starry.mitsubachi.core.domain.model.ApplicationSettings.Default,
+      )
+
+      val systemDarkTheme = isSystemInDarkTheme()
+      val darkTheme = when (applicationSettings.colorSchemePreference) {
+        ColorSchemePreference.Light -> false
+        ColorSchemePreference.Dark -> true
+        ColorSchemePreference.System -> systemDarkTheme
+      }
+
+      MitsubachiTheme(
+        darkTheme = darkTheme,
+        dynamicColor = applicationSettings.isDynamicColorEnabled,
+        fontFamilyPreference = applicationSettings.fontFamilyPreference,
+      ) {
         App(initialRouteKeys = viewModel.buildInitialRouteKeys(intent))
       }
     }

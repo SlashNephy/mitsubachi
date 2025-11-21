@@ -8,7 +8,8 @@ object MitsubachiTypography {
   private val baseline = Typography()
 
   val English by lazy {
-    baseline.with(
+    with(
+      baseline,
       fontFamily = FontFamily(
         listOf(
           MitsubachiFont.IBMPlexSans,
@@ -20,7 +21,8 @@ object MitsubachiTypography {
   }
 
   val Japanese by lazy {
-    baseline.with(
+    with(
+      baseline,
       fontFamily = FontFamily(
         // JP → KR の順に試行する。JP フォントには欧文フォントも含まれるので無印フォントを読み込む必要はない
         listOf(MitsubachiFont.IBMPlexSansJP, MitsubachiFont.IBMPlexSansKR).flatten(),
@@ -29,7 +31,8 @@ object MitsubachiTypography {
   }
 
   val Korean by lazy {
-    baseline.with(
+    with(
+      baseline,
       fontFamily = FontFamily(
         // KR → JP の順に試行する。KR フォントには欧文グリフも含まれるので欧文フォントを読み込む必要はない
         listOf(MitsubachiFont.IBMPlexSansKR, MitsubachiFont.IBMPlexSansJP).flatten(),
@@ -38,38 +41,38 @@ object MitsubachiTypography {
   }
 
   @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-  private fun Typography.with(fontFamily: FontFamily): Typography {
-    return copy(
-      displayLarge = displayLarge.copy(fontFamily = fontFamily),
-      displayMedium = displayMedium.copy(fontFamily = fontFamily),
-      displaySmall = displaySmall.copy(fontFamily = fontFamily),
-      headlineLarge = headlineLarge.copy(fontFamily = fontFamily),
-      headlineMedium = headlineMedium.copy(fontFamily = fontFamily),
-      headlineSmall = headlineSmall.copy(fontFamily = fontFamily),
-      titleLarge = titleLarge.copy(fontFamily = fontFamily),
-      titleMedium = titleMedium.copy(fontFamily = fontFamily),
-      titleSmall = titleSmall.copy(fontFamily = fontFamily),
-      bodyLarge = bodyLarge.copy(fontFamily = fontFamily),
-      bodyMedium = bodyMedium.copy(fontFamily = fontFamily),
-      bodySmall = bodySmall.copy(fontFamily = fontFamily),
-      labelLarge = labelLarge.copy(fontFamily = fontFamily),
-      labelMedium = labelMedium.copy(fontFamily = fontFamily),
-      labelSmall = labelSmall.copy(fontFamily = fontFamily),
-      displayLargeEmphasized = displayLargeEmphasized.copy(fontFamily = fontFamily),
-      displayMediumEmphasized = displayMediumEmphasized.copy(fontFamily = fontFamily),
-      displaySmallEmphasized = displaySmallEmphasized.copy(fontFamily = fontFamily),
-      headlineLargeEmphasized = headlineLargeEmphasized.copy(fontFamily = fontFamily),
-      headlineMediumEmphasized = headlineMediumEmphasized.copy(fontFamily = fontFamily),
-      headlineSmallEmphasized = headlineSmallEmphasized.copy(fontFamily = fontFamily),
-      titleLargeEmphasized = titleLargeEmphasized.copy(fontFamily = fontFamily),
-      titleMediumEmphasized = titleMediumEmphasized.copy(fontFamily = fontFamily),
-      titleSmallEmphasized = titleSmallEmphasized.copy(fontFamily = fontFamily),
-      bodyLargeEmphasized = bodyLargeEmphasized.copy(fontFamily = fontFamily),
-      bodyMediumEmphasized = bodyMediumEmphasized.copy(fontFamily = fontFamily),
-      bodySmallEmphasized = bodySmallEmphasized.copy(fontFamily = fontFamily),
-      labelLargeEmphasized = labelLargeEmphasized.copy(fontFamily = fontFamily),
-      labelMediumEmphasized = labelMediumEmphasized.copy(fontFamily = fontFamily),
-      labelSmallEmphasized = labelSmallEmphasized.copy(fontFamily = fontFamily),
+  internal fun with(typography: Typography, fontFamily: FontFamily): Typography {
+    return typography.copy(
+      displayLarge = typography.displayLarge.copy(fontFamily = fontFamily),
+      displayMedium = typography.displayMedium.copy(fontFamily = fontFamily),
+      displaySmall = typography.displaySmall.copy(fontFamily = fontFamily),
+      headlineLarge = typography.headlineLarge.copy(fontFamily = fontFamily),
+      headlineMedium = typography.headlineMedium.copy(fontFamily = fontFamily),
+      headlineSmall = typography.headlineSmall.copy(fontFamily = fontFamily),
+      titleLarge = typography.titleLarge.copy(fontFamily = fontFamily),
+      titleMedium = typography.titleMedium.copy(fontFamily = fontFamily),
+      titleSmall = typography.titleSmall.copy(fontFamily = fontFamily),
+      bodyLarge = typography.bodyLarge.copy(fontFamily = fontFamily),
+      bodyMedium = typography.bodyMedium.copy(fontFamily = fontFamily),
+      bodySmall = typography.bodySmall.copy(fontFamily = fontFamily),
+      labelLarge = typography.labelLarge.copy(fontFamily = fontFamily),
+      labelMedium = typography.labelMedium.copy(fontFamily = fontFamily),
+      labelSmall = typography.labelSmall.copy(fontFamily = fontFamily),
+      displayLargeEmphasized = typography.displayLargeEmphasized.copy(fontFamily = fontFamily),
+      displayMediumEmphasized = typography.displayMediumEmphasized.copy(fontFamily = fontFamily),
+      displaySmallEmphasized = typography.displaySmallEmphasized.copy(fontFamily = fontFamily),
+      headlineLargeEmphasized = typography.headlineLargeEmphasized.copy(fontFamily = fontFamily),
+      headlineMediumEmphasized = typography.headlineMediumEmphasized.copy(fontFamily = fontFamily),
+      headlineSmallEmphasized = typography.headlineSmallEmphasized.copy(fontFamily = fontFamily),
+      titleLargeEmphasized = typography.titleLargeEmphasized.copy(fontFamily = fontFamily),
+      titleMediumEmphasized = typography.titleMediumEmphasized.copy(fontFamily = fontFamily),
+      titleSmallEmphasized = typography.titleSmallEmphasized.copy(fontFamily = fontFamily),
+      bodyLargeEmphasized = typography.bodyLargeEmphasized.copy(fontFamily = fontFamily),
+      bodyMediumEmphasized = typography.bodyMediumEmphasized.copy(fontFamily = fontFamily),
+      bodySmallEmphasized = typography.bodySmallEmphasized.copy(fontFamily = fontFamily),
+      labelLargeEmphasized = typography.labelLargeEmphasized.copy(fontFamily = fontFamily),
+      labelMediumEmphasized = typography.labelMediumEmphasized.copy(fontFamily = fontFamily),
+      labelSmallEmphasized = typography.labelSmallEmphasized.copy(fontFamily = fontFamily),
     )
   }
 }

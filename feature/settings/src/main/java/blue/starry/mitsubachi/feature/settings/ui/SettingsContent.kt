@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.ColorLens
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.FontDownload
 import androidx.compose.material.icons.filled.NetworkWifi
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -29,6 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
+import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
+import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
 import blue.starry.mitsubachi.feature.settings.R
@@ -52,6 +58,31 @@ fun SettingsContent(
     ) {
       AccountSection(
         onClickSignOut = onSignOut,
+      )
+
+      AppearanceSection(
+        applicationSettings = applicationSettings,
+        onChangeIsDynamicColorEnabled = {
+          onChangeApplicationSettings { settings ->
+            settings.copy(
+              isDynamicColorEnabled = it,
+            )
+          }
+        },
+        onChangeColorSchemePreference = {
+          onChangeApplicationSettings { settings ->
+            settings.copy(
+              colorSchemePreference = it,
+            )
+          }
+        },
+        onChangeFontFamilyPreference = {
+          onChangeApplicationSettings { settings ->
+            settings.copy(
+              fontFamilyPreference = it,
+            )
+          }
+        },
       )
 
       WidgetSection(
@@ -263,6 +294,214 @@ private fun DurationSlider(
     valueRange = min.inWholeSeconds.toFloat()..max.inWholeSeconds.toFloat(),
     onValueChange = {
       onChange(it.roundToLong().seconds)
+    },
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AppearanceSection(
+  applicationSettings: ApplicationSettings,
+  onChangeIsDynamicColorEnabled: (Boolean) -> Unit,
+  onChangeColorSchemePreference: (ColorSchemePreference) -> Unit,
+  onChangeFontFamilyPreference: (FontFamilyPreference) -> Unit,
+) {
+  var showColorSchemeDialog by remember { mutableStateOf(false) }
+  var showFontFamilyDialog by remember { mutableStateOf(false) }
+
+  SettingSection(title = stringResource(R.string.appearance_section_title)) {
+    item(
+      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.ColorLens),
+      headline = {
+        Text(stringResource(R.string.dynamic_color_headline))
+      },
+      supporting = {
+        Text(stringResource(R.string.dynamic_color_supporting))
+      },
+      trailing = {
+        Switch(
+          checked = applicationSettings.isDynamicColorEnabled,
+          onCheckedChange = onChangeIsDynamicColorEnabled,
+        )
+      },
+    )
+
+    item(
+      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.DarkMode),
+      headline = {
+        Text(stringResource(R.string.color_scheme_headline))
+      },
+      supporting = {
+        Text(stringResource(R.string.color_scheme_supporting))
+      },
+      trailing = {
+        Text(
+          when (applicationSettings.colorSchemePreference) {
+            ColorSchemePreference.Light -> stringResource(R.string.color_scheme_light)
+            ColorSchemePreference.Dark -> stringResource(R.string.color_scheme_dark)
+            ColorSchemePreference.System -> stringResource(R.string.color_scheme_system)
+          },
+        )
+      },
+      modifier = Modifier.clickable(onClick = { showColorSchemeDialog = true }),
+    )
+
+    item(
+      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.FontDownload),
+      headline = {
+        Text(stringResource(R.string.font_family_headline))
+      },
+      supporting = {
+        Text(stringResource(R.string.font_family_supporting))
+      },
+      trailing = {
+        Text(getFontFamilyName(applicationSettings.fontFamilyPreference))
+      },
+      modifier = Modifier.clickable(onClick = { showFontFamilyDialog = true }),
+    )
+  }
+
+  if (showColorSchemeDialog) {
+    ColorSchemeDialog(
+      currentPreference = applicationSettings.colorSchemePreference,
+      onConfirm = {
+        showColorSchemeDialog = false
+        onChangeColorSchemePreference(it)
+      },
+      onDismiss = {
+        showColorSchemeDialog = false
+      },
+    )
+  }
+
+  if (showFontFamilyDialog) {
+    FontFamilyDialog(
+      currentPreference = applicationSettings.fontFamilyPreference,
+      onConfirm = {
+        showFontFamilyDialog = false
+        onChangeFontFamilyPreference(it)
+      },
+      onDismiss = {
+        showFontFamilyDialog = false
+      },
+    )
+  }
+}
+
+@Composable
+private fun getFontFamilyName(fontFamilyPreference: FontFamilyPreference): String {
+  return when (fontFamilyPreference) {
+    FontFamilyPreference.IBMPlexSans -> stringResource(R.string.font_family_ibm_plex_sans)
+    FontFamilyPreference.Roboto -> stringResource(R.string.font_family_roboto)
+    FontFamilyPreference.NotoSans -> stringResource(R.string.font_family_noto_sans)
+    FontFamilyPreference.OpenSans -> stringResource(R.string.font_family_open_sans)
+    FontFamilyPreference.Lato -> stringResource(R.string.font_family_lato)
+    FontFamilyPreference.Montserrat -> stringResource(R.string.font_family_montserrat)
+    FontFamilyPreference.Poppins -> stringResource(R.string.font_family_poppins)
+    FontFamilyPreference.Oswald -> stringResource(R.string.font_family_oswald)
+    FontFamilyPreference.SourceSansPro -> stringResource(R.string.font_family_source_sans_pro)
+    FontFamilyPreference.Raleway -> stringResource(R.string.font_family_raleway)
+  }
+}
+
+@Composable
+private fun ColorSchemeDialog(
+  currentPreference: ColorSchemePreference,
+  onConfirm: (ColorSchemePreference) -> Unit,
+  onDismiss: () -> Unit,
+) {
+  var selectedPreference by remember { mutableStateOf(currentPreference) }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text(
+        text = stringResource(R.string.color_scheme_headline),
+        style = MaterialTheme.typography.titleMedium,
+      )
+    },
+    text = {
+      Column {
+        ColorSchemePreference.entries.forEach { preference ->
+          SettingItem(
+            leadingIcon = SettingItem.LeadingIcon.None,
+            headline = {
+              Text(
+                when (preference) {
+                  ColorSchemePreference.Light -> stringResource(R.string.color_scheme_light)
+                  ColorSchemePreference.Dark -> stringResource(R.string.color_scheme_dark)
+                  ColorSchemePreference.System -> stringResource(R.string.color_scheme_system)
+                },
+              )
+            },
+            trailing = {
+              RadioButton(
+                selected = selectedPreference == preference,
+                onClick = { selectedPreference = preference },
+              )
+            },
+            modifier = Modifier.clickable { selectedPreference = preference },
+          )
+        }
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text(text = stringResource(R.string.cancel_button))
+      }
+    },
+    confirmButton = {
+      TextButton(onClick = { onConfirm(selectedPreference) }) {
+        Text(text = stringResource(R.string.save_button))
+      }
+    },
+  )
+}
+
+@Composable
+private fun FontFamilyDialog(
+  currentPreference: FontFamilyPreference,
+  onConfirm: (FontFamilyPreference) -> Unit,
+  onDismiss: () -> Unit,
+) {
+  var selectedPreference by remember { mutableStateOf(currentPreference) }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text(
+        text = stringResource(R.string.font_family_headline),
+        style = MaterialTheme.typography.titleMedium,
+      )
+    },
+    text = {
+      Column {
+        FontFamilyPreference.entries.forEach { preference ->
+          SettingItem(
+            leadingIcon = SettingItem.LeadingIcon.None,
+            headline = {
+              Text(getFontFamilyName(preference))
+            },
+            trailing = {
+              RadioButton(
+                selected = selectedPreference == preference,
+                onClick = { selectedPreference = preference },
+              )
+            },
+            modifier = Modifier.clickable { selectedPreference = preference },
+          )
+        }
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text(text = stringResource(R.string.cancel_button))
+      }
+    },
+    confirmButton = {
+      TextButton(onClick = { onConfirm(selectedPreference) }) {
+        Text(text = stringResource(R.string.save_button))
+      }
     },
   )
 }
