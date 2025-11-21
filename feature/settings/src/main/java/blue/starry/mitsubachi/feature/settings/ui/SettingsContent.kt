@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package blue.starry.mitsubachi.feature.settings.ui
 
 import androidx.compose.foundation.clickable
@@ -44,6 +46,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
+@Suppress("LongMethod")
 @Composable
 fun SettingsContent(
   applicationSettings: ApplicationSettings,
@@ -298,6 +301,7 @@ private fun DurationSlider(
   )
 }
 
+@Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppearanceSection(

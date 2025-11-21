@@ -1,10 +1,7 @@
 package blue.starry.mitsubachi
 
 import android.content.Intent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.lifecycle.ViewModel
-import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
-import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
 import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLink
 import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkSerializer

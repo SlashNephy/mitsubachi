@@ -46,14 +46,23 @@ private fun getTypographyForFont(fontFamilyPreference: FontFamilyPreference): Ty
         MitsubachiFont.IBMPlexSansKR,
       ).flatten(),
     )
+
     FontFamilyPreference.Roboto -> FontFamily(MitsubachiFont.Roboto)
+
     FontFamilyPreference.NotoSans -> FontFamily(MitsubachiFont.NotoSans)
+
     FontFamilyPreference.OpenSans -> FontFamily(MitsubachiFont.OpenSans)
+
     FontFamilyPreference.Lato -> FontFamily(MitsubachiFont.Lato)
+
     FontFamilyPreference.Montserrat -> FontFamily(MitsubachiFont.Montserrat)
+
     FontFamilyPreference.Poppins -> FontFamily(MitsubachiFont.Poppins)
+
     FontFamilyPreference.Oswald -> FontFamily(MitsubachiFont.Oswald)
+
     FontFamilyPreference.SourceSansPro -> FontFamily(MitsubachiFont.SourceSansPro)
+
     FontFamilyPreference.Raleway -> FontFamily(MitsubachiFont.Raleway)
   }
   return MitsubachiTypography.with(baseline, fontFamily)
