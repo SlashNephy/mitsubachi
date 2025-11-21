@@ -22,15 +22,6 @@
     <string name="color_scheme_dark">Dark</string>
     <string name="color_scheme_system">System</string>
     <string name="font_family_headline">Font</string>
-    <string name="font_family_supporting">Choose your preferred font</string>
-    <string name="font_family_ibm_plex_sans">IBM Plex Sans</string>
-    <string name="font_family_roboto">Roboto</string>
-    <string name="font_family_noto_sans">Noto Sans</string>
-    <string name="font_family_open_sans">Open Sans</string>
-    <string name="font_family_lato">Lato</string>
-    <string name="font_family_montserrat">Montserrat</string>
-    <string name="font_family_poppins">Poppins</string>
-    <string name="font_family_oswald">Oswald</string>
-    <string name="font_family_source_sans_pro">Source Sans Pro</string>
-    <string name="font_family_raleway">Raleway</string>
+    <string name="font_family_supporting">Choose your preferred font from Google Fonts</string>
+    <string name="font_family_input_hint">Enter Google Font name</string>
 </resources>

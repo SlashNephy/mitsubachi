@@ -1,14 +1,11 @@
 package blue.starry.mitsubachi.core.domain.model
 
-enum class FontFamilyPreference {
-  IBMPlexSans,
-  Roboto,
-  NotoSans,
-  OpenSans,
-  Lato,
-  Montserrat,
-  Poppins,
-  Oswald,
-  SourceSansPro,
-  Raleway,
+sealed interface FontFamilyPreference {
+  val fontName: String
+
+  data object IBMPlexSans : FontFamilyPreference {
+    override val fontName: String = "IBM Plex Sans"
+  }
+
+  data class GoogleFont(override val fontName: String) : FontFamilyPreference
 }

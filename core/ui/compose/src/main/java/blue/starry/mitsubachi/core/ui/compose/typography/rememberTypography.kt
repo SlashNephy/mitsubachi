@@ -37,7 +37,6 @@ fun rememberTypography(fontFamilyPreference: FontFamilyPreference? = null): Typo
 }
 
 private fun getTypographyForFont(fontFamilyPreference: FontFamilyPreference): Typography {
-  val baseline = Typography()
   val fontFamily = when (fontFamilyPreference) {
     FontFamilyPreference.IBMPlexSans -> FontFamily(
       listOf(
@@ -47,23 +46,9 @@ private fun getTypographyForFont(fontFamilyPreference: FontFamilyPreference): Ty
       ).flatten(),
     )
 
-    FontFamilyPreference.Roboto -> FontFamily(MitsubachiFont.Roboto)
-
-    FontFamilyPreference.NotoSans -> FontFamily(MitsubachiFont.NotoSans)
-
-    FontFamilyPreference.OpenSans -> FontFamily(MitsubachiFont.OpenSans)
-
-    FontFamilyPreference.Lato -> FontFamily(MitsubachiFont.Lato)
-
-    FontFamilyPreference.Montserrat -> FontFamily(MitsubachiFont.Montserrat)
-
-    FontFamilyPreference.Poppins -> FontFamily(MitsubachiFont.Poppins)
-
-    FontFamilyPreference.Oswald -> FontFamily(MitsubachiFont.Oswald)
-
-    FontFamilyPreference.SourceSansPro -> FontFamily(MitsubachiFont.SourceSansPro)
-
-    FontFamilyPreference.Raleway -> FontFamily(MitsubachiFont.Raleway)
+    is FontFamilyPreference.GoogleFont -> FontFamily(
+      MitsubachiFont.fromName(fontFamilyPreference.fontName),
+    )
   }
-  return MitsubachiTypography.with(baseline, fontFamily)
+  return Typography().with(fontFamily)
 }

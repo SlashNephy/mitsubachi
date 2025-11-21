@@ -34,9 +34,12 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
     } else {
       DomainApplicationSettings.Default.colorSchemePreference
     },
-    fontFamilyPreference = if (hasFontFamilyPreference()) {
-      FontFamilyPreference.entries.getOrNull(fontFamilyPreference)
-        ?: DomainApplicationSettings.Default.fontFamilyPreference
+    fontFamilyPreference = if (hasFontFamilyName()) {
+      if (fontFamilyName == FontFamilyPreference.IBMPlexSans.fontName) {
+        FontFamilyPreference.IBMPlexSans
+      } else {
+        FontFamilyPreference.GoogleFont(fontFamilyName)
+      }
     } else {
       DomainApplicationSettings.Default.fontFamilyPreference
     },
@@ -50,6 +53,6 @@ internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
     .setWidgetUpdateIntervalMillis(widgetUpdateInterval.inWholeMilliseconds)
     .setIsDynamicColorEnabled(isDynamicColorEnabled)
     .setColorSchemePreference(colorSchemePreference.ordinal)
-    .setFontFamilyPreference(fontFamilyPreference.ordinal)
+    .setFontFamilyName(fontFamilyPreference.fontName)
     .build()
 }

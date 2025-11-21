@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -359,7 +361,7 @@ private fun AppearanceSection(
         Text(stringResource(R.string.font_family_supporting))
       },
       trailing = {
-        Text(getFontFamilyName(applicationSettings.fontFamilyPreference))
+        Text(applicationSettings.fontFamilyPreference.fontName)
       },
       modifier = Modifier.clickable(onClick = { showFontFamilyDialog = true }),
     )
@@ -389,22 +391,6 @@ private fun AppearanceSection(
         showFontFamilyDialog = false
       },
     )
-  }
-}
-
-@Composable
-private fun getFontFamilyName(fontFamilyPreference: FontFamilyPreference): String {
-  return when (fontFamilyPreference) {
-    FontFamilyPreference.IBMPlexSans -> stringResource(R.string.font_family_ibm_plex_sans)
-    FontFamilyPreference.Roboto -> stringResource(R.string.font_family_roboto)
-    FontFamilyPreference.NotoSans -> stringResource(R.string.font_family_noto_sans)
-    FontFamilyPreference.OpenSans -> stringResource(R.string.font_family_open_sans)
-    FontFamilyPreference.Lato -> stringResource(R.string.font_family_lato)
-    FontFamilyPreference.Montserrat -> stringResource(R.string.font_family_montserrat)
-    FontFamilyPreference.Poppins -> stringResource(R.string.font_family_poppins)
-    FontFamilyPreference.Oswald -> stringResource(R.string.font_family_oswald)
-    FontFamilyPreference.SourceSansPro -> stringResource(R.string.font_family_source_sans_pro)
-    FontFamilyPreference.Raleway -> stringResource(R.string.font_family_raleway)
   }
 }
 
@@ -468,7 +454,7 @@ private fun FontFamilyDialog(
   onConfirm: (FontFamilyPreference) -> Unit,
   onDismiss: () -> Unit,
 ) {
-  var selectedPreference by remember { mutableStateOf(currentPreference) }
+  var fontName by remember { mutableStateOf(currentPreference.fontName) }
 
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -479,22 +465,21 @@ private fun FontFamilyDialog(
       )
     },
     text = {
-      Column {
-        FontFamilyPreference.entries.forEach { preference ->
-          SettingItem(
-            leadingIcon = SettingItem.LeadingIcon.None,
-            headline = {
-              Text(getFontFamilyName(preference))
-            },
-            trailing = {
-              RadioButton(
-                selected = selectedPreference == preference,
-                onClick = { selectedPreference = preference },
-              )
-            },
-            modifier = Modifier.clickable { selectedPreference = preference },
-          )
-        }
+      Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        Text(
+          text = stringResource(R.string.font_family_supporting),
+          style = MaterialTheme.typography.bodyMedium,
+        )
+        OutlinedTextField(
+          value = fontName,
+          onValueChange = { fontName = it },
+          label = { Text(stringResource(R.string.font_family_input_hint)) },
+          modifier = Modifier.fillMaxWidth(),
+          singleLine = true,
+        )
       }
     },
     dismissButton = {
@@ -503,7 +488,17 @@ private fun FontFamilyDialog(
       }
     },
     confirmButton = {
-      TextButton(onClick = { onConfirm(selectedPreference) }) {
+      TextButton(
+        onClick = {
+          val newPreference = if (fontName == FontFamilyPreference.IBMPlexSans.fontName) {
+            FontFamilyPreference.IBMPlexSans
+          } else {
+            FontFamilyPreference.GoogleFont(fontName)
+          }
+          onConfirm(newPreference)
+        },
+        enabled = fontName.isNotBlank(),
+      ) {
         Text(text = stringResource(R.string.save_button))
       }
     },
