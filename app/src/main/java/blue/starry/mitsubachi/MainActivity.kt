@@ -7,8 +7,11 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,12 +39,29 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     setContent {
-      LaunchedEffect(viewModel) {
-        viewModel.onReady()
-      }
+      val uiState by viewModel.state.collectAsState()
 
-      MitsubachiTheme {
-        App(initialRouteKeys = viewModel.buildInitialRouteKeys(intent))
+      when (val state = uiState) {
+        is MainActivityViewModel.UiState.Initializing -> {
+          // Show nothing or splash screen while initializing
+        }
+
+        is MainActivityViewModel.UiState.Ready -> {
+          val systemDarkTheme = isSystemInDarkTheme()
+          val darkTheme = when (state.applicationSettings.colorSchemePreference) {
+            ColorSchemePreference.Light -> false
+            ColorSchemePreference.Dark -> true
+            ColorSchemePreference.System -> systemDarkTheme
+          }
+
+          MitsubachiTheme(
+            darkTheme = darkTheme,
+            dynamicColor = state.applicationSettings.isDynamicColorEnabled,
+            fontFamilyPreference = state.applicationSettings.fontFamilyPreference,
+          ) {
+            App(initialRouteKeys = viewModel.buildInitialRouteKeys(intent))
+          }
+        }
       }
     }
   }

@@ -56,7 +56,7 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
     // - isWidgetUpdateOnUnmeteredNetworkOnlyEnabled が有効
     // - データセーバーモードが有効
     return applicationSettingsRepository.select { it.isWidgetUpdateOnUnmeteredNetworkOnlyEnabled } ||
-            deviceNetworkRepository.isDataSaverEnabled()
+      deviceNetworkRepository.isDataSaverEnabled()
   }
 
   override suspend fun cancel() {

@@ -6,6 +6,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import blue.starry.mitsubachi.core.ui.common.MitsubachiColorScheme
 import blue.starry.mitsubachi.core.ui.compose.typography.rememberTypography
 
@@ -14,6 +15,7 @@ fun MitsubachiTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   // Dynamic color is available on Android 12+
   dynamicColor: Boolean = true,
+  fontFamilyPreference: FontFamilyPreference? = null,
   content: @Composable () -> Unit,
 ) {
   val colorScheme = when {
@@ -37,7 +39,7 @@ fun MitsubachiTheme(
 
   MaterialTheme(
     colorScheme = colorScheme,
-    typography = rememberTypography(),
+    typography = rememberTypography(fontFamilyPreference),
     content = content,
   )
 }
