@@ -8,6 +8,8 @@ data class Cache(
   val key: String,
   val format: CacheFormat,
   val payload: ByteArray,
+  val cachedAt: Long,
+  val expiresAt: Long? = null,
 ) {
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -18,6 +20,8 @@ data class Cache(
     if (key != other.key) return false
     if (format != other.format) return false
     if (!payload.contentEquals(other.payload)) return false
+    if (cachedAt != other.cachedAt) return false
+    if (expiresAt != other.expiresAt) return false
 
     return true
   }
@@ -26,6 +30,8 @@ data class Cache(
     var result = key.hashCode()
     result = 31 * result + format.hashCode()
     result = 31 * result + payload.contentHashCode()
+    result = 31 * result + cachedAt.hashCode()
+    result = 31 * result + (expiresAt?.hashCode() ?: 0)
     return result
   }
 }

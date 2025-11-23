@@ -11,7 +11,7 @@ import blue.starry.mitsubachi.core.data.database.entity.CacheFormatConverter
 import blue.starry.mitsubachi.core.data.database.entity.FoursquareAccount
 import blue.starry.mitsubachi.core.data.database.entity.Settings
 
-@Database(version = 4, entities = [FoursquareAccount::class, Cache::class, Settings::class])
+@Database(version = 5, entities = [FoursquareAccount::class, Cache::class, Settings::class])
 @TypeConverters(CacheFormatConverter::class)
 abstract class EncryptedAppDatabase : RoomDatabase() {
   abstract fun foursquareAccount(): FoursquareAccountDao
