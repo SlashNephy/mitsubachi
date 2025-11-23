@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.core.data.di
 import android.content.Context
 import androidx.room.Room
 import blue.starry.mitsubachi.core.data.database.EncryptedAppDatabase
+import blue.starry.mitsubachi.core.data.database.dao.CacheDao
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
 import dagger.Binds
@@ -42,6 +43,11 @@ internal abstract class EncryptedAppDatabaseModule {
         .addMigrations(blue.starry.mitsubachi.core.data.database.MIGRATION_4_5)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
+    }
+
+    @Provides
+    internal fun provideCacheDao(database: EncryptedAppDatabase): CacheDao {
+      return database.cache()
     }
   }
 }
