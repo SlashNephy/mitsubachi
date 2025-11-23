@@ -25,6 +25,9 @@ class ApiResponseCache @Inject constructor(
   /**
    * Fetch data with the specified policy.
    *
+   * Note: For [FetchPolicy.CacheAndNetwork], use [fetchFlow] instead as it returns a Flow
+   * that emits cached data first, then network data.
+   *
    * @param policy The fetch policy to use
    * @param cacheKey Unique key for caching this request
    * @param serializer Serializer for the response type
@@ -34,7 +37,7 @@ class ApiResponseCache @Inject constructor(
    * @throws NoSuchElementException if policy is CacheOnly and cache miss occurs
    * @throws UnsupportedOperationException if policy is CacheAndNetwork (use fetchFlow instead)
    */
-  @Suppress("OutdatedDocumentation")
+  @Suppress("OutdatedDocumentation") // Documentation is accurate but detekt incorrectly flags it
   suspend fun <T> fetch(
     policy: FetchPolicy,
     cacheKey: String,
@@ -92,10 +95,13 @@ class ApiResponseCache @Inject constructor(
     val currentTime = System.currentTimeMillis()
     val cache = cacheDao.get(key, CacheFormat.JSON, currentTime) ?: return null
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    @Suppress("TooGenericExceptionCaught")
     return try {
       json.decodeFromString(serializer, cache.payload.decodeToString())
     } catch (e: Exception) {
+      // Log error and delete corrupted cache entry
+      // Using println as there's no logger configured in this module
+      println("Failed to deserialize cache for key=$key: ${e.message}")
       cacheDao.delete(key, CacheFormat.JSON)
       null
     }
