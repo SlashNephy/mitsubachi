@@ -58,6 +58,13 @@ import io.morfly.compose.bottomsheet.material3.BottomSheetScaffold as AdvancedBo
 private val DEFAULT_LOCATION = LatLng(35.6812, 139.7671) // 東京駅
 private const val DEFAULT_ZOOM_LEVEL = 15f
 
+// Foursquare API section constants
+private const val SECTION_FOOD = "food"
+private const val SECTION_COFFEE = "coffee"
+private const val SECTION_SIGHTS = "sights"
+private const val SECTION_SHOPS = "shops"
+private const val SECTION_ARTS = "arts"
+
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 fun SearchMapScreen() {
@@ -160,7 +167,7 @@ private fun Content(
 }
 
 @Composable
-@Suppress("LongMethod") // TODO: リファクタリング
+@Suppress("LongMethod", "CognitiveComplexMethod") // TODO: リファクタリング
 @OptIn(ExperimentalLayoutApi::class)
 private fun BottomSheetContent(
   modifier: Modifier = Modifier,
@@ -223,33 +230,28 @@ private fun BottomSheetContent(
       ) {
         CategoryFilterChip(
           label = stringResource(R.string.search_map_category_food),
-          section = "food",
-          selected = selectedSection == "food",
-          onClick = { viewModel.selectSection(if (selectedSection == "food") null else "food") }
+          selected = selectedSection == SECTION_FOOD,
+          onClick = { viewModel.selectSection(if (selectedSection == SECTION_FOOD) null else SECTION_FOOD) },
         )
         CategoryFilterChip(
           label = stringResource(R.string.search_map_category_coffee),
-          section = "coffee",
-          selected = selectedSection == "coffee",
-          onClick = { viewModel.selectSection(if (selectedSection == "coffee") null else "coffee") }
+          selected = selectedSection == SECTION_COFFEE,
+          onClick = { viewModel.selectSection(if (selectedSection == SECTION_COFFEE) null else SECTION_COFFEE) },
         )
         CategoryFilterChip(
           label = stringResource(R.string.search_map_category_sights),
-          section = "sights",
-          selected = selectedSection == "sights",
-          onClick = { viewModel.selectSection(if (selectedSection == "sights") null else "sights") }
+          selected = selectedSection == SECTION_SIGHTS,
+          onClick = { viewModel.selectSection(if (selectedSection == SECTION_SIGHTS) null else SECTION_SIGHTS) },
         )
         CategoryFilterChip(
           label = stringResource(R.string.search_map_category_shops),
-          section = "shops",
-          selected = selectedSection == "shops",
-          onClick = { viewModel.selectSection(if (selectedSection == "shops") null else "shops") }
+          selected = selectedSection == SECTION_SHOPS,
+          onClick = { viewModel.selectSection(if (selectedSection == SECTION_SHOPS) null else SECTION_SHOPS) },
         )
         CategoryFilterChip(
           label = stringResource(R.string.search_map_category_arts),
-          section = "arts",
-          selected = selectedSection == "arts",
-          onClick = { viewModel.selectSection(if (selectedSection == "arts") null else "arts") }
+          selected = selectedSection == SECTION_ARTS,
+          onClick = { viewModel.selectSection(if (selectedSection == SECTION_ARTS) null else SECTION_ARTS) },
         )
       }
 
@@ -297,7 +299,6 @@ private fun BottomSheetContent(
 @Composable
 private fun CategoryFilterChip(
   label: String,
-  section: String,
   selected: Boolean,
   onClick: () -> Unit,
 ) {

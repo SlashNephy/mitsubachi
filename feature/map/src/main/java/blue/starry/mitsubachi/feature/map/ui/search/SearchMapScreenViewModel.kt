@@ -49,14 +49,15 @@ class SearchMapScreenViewModel @Inject constructor(
   private var lastLocation: LatLng? = null
 
   suspend fun loadCurrentLocation() {
+    @Suppress("TooGenericExceptionCaught")
     try {
       val location = deviceLocationRepository.findCurrentLocation(timeout = 5.seconds)
       if (location != null) {
         val userLocation = LatLng(location.latitude, location.longitude)
         _currentLocation.value = userLocation
       }
-    } catch (e: Exception) {
-      // エラーの場合は何もしない
+    } catch (_: Exception) {
+      // エラーの場合は何もしない（デフォルト位置が使用される）
     }
   }
 
