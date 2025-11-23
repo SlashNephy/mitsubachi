@@ -39,6 +39,7 @@ internal abstract class EncryptedAppDatabaseModule {
       return Room
         .databaseBuilder<EncryptedAppDatabase>(context, name = "mitsubachi.db")
         .openHelperFactory(factory)
+        .addMigrations(blue.starry.mitsubachi.core.data.database.MIGRATION_4_5)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
     }
