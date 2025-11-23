@@ -57,7 +57,12 @@ class SearchMapScreenViewModel @Inject constructor(
         _currentLocation.value = userLocation
       }
     } catch (_: Exception) {
-      // エラーの場合は何もしない（デフォルト位置が使用される）
+      // 位置情報の取得に失敗した場合は何もしない
+      // 可能性のあるエラー:
+      // - タイムアウト
+      // - 位置情報が無効
+      // - 権限エラー
+      // いずれの場合もデフォルト位置（東京駅）が使用される
     }
   }
 
