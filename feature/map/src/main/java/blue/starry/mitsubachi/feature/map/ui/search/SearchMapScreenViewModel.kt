@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.core.domain.model.Coordinates
 import blue.starry.mitsubachi.core.domain.model.VenueRecommendation
+import blue.starry.mitsubachi.core.domain.usecase.DeviceLocationRepository
 import blue.starry.mitsubachi.core.domain.usecase.SearchVenueRecommendationsUseCase
 import blue.starry.mitsubachi.core.ui.compose.error.onException
 import com.google.android.gms.maps.model.LatLng
@@ -13,10 +14,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SearchMapScreenViewModel @Inject constructor(
   private val searchVenueRecommendationsUseCase: SearchVenueRecommendationsUseCase,
+  private val deviceLocationRepository: DeviceLocationRepository,
 ) : ViewModel() {
   sealed interface UiState {
     data object Loading : UiState
@@ -34,7 +37,46 @@ class SearchMapScreenViewModel @Inject constructor(
   private val _selectedVenue = MutableStateFlow<VenueRecommendation?>(null)
   val selectedVenue: StateFlow<VenueRecommendation?> = _selectedVenue.asStateFlow()
 
+  private val _searchQuery = MutableStateFlow("")
+  val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+  private val _selectedSection = MutableStateFlow<String?>(null)
+  val selectedSection: StateFlow<String?> = _selectedSection.asStateFlow()
+
+  private val _currentLocation = MutableStateFlow<LatLng?>(null)
+  val currentLocation: StateFlow<LatLng?> = _currentLocation.asStateFlow()
+
+  private var lastLocation: LatLng? = null
+
+  suspend fun loadCurrentLocation() {
+    try {
+      val location = deviceLocationRepository.findCurrentLocation(timeout = 5.seconds)
+      if (location != null) {
+        val userLocation = LatLng(location.latitude, location.longitude)
+        _currentLocation.value = userLocation
+      }
+    } catch (e: Exception) {
+      // エラーの場合は何もしない
+    }
+  }
+
   fun updateCurrentLocation(location: LatLng) {
+    lastLocation = location
+    refreshVenues()
+  }
+
+  fun updateSearchQuery(query: String) {
+    _searchQuery.value = query
+    lastLocation?.let { refreshVenues() }
+  }
+
+  fun selectSection(section: String?) {
+    _selectedSection.value = section
+    lastLocation?.let { refreshVenues() }
+  }
+
+  private fun refreshVenues() {
+    val location = lastLocation ?: return
     viewModelScope.launch {
       val currentState = state.value
       _state.value = UiState.Loading
@@ -44,7 +86,11 @@ class SearchMapScreenViewModel @Inject constructor(
           latitude = location.latitude,
           longitude = location.longitude,
         )
-        searchVenueRecommendationsUseCase(coordinates)
+        searchVenueRecommendationsUseCase(
+          coordinates = coordinates,
+          query = _searchQuery.value.ifBlank { null },
+          section = _selectedSection.value,
+        )
       }.onSuccess { venues ->
         _state.value = UiState.Success(
           venueRecommendations = venues,

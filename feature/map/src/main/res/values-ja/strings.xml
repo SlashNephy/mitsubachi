@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="map">マップ</string>
+    <string name="search_map_search_hint">場所を検索</string>
+    <string name="search_map_category_food">飲食店</string>
+    <string name="search_map_category_coffee">カフェ</string>
+    <string name="search_map_category_sights">観光</string>
+    <string name="search_map_category_shops">ショップ</string>
+    <string name="search_map_category_arts">アート</string>
+    <string name="search_map_header_area_info">この地域の情報</string>
+    <string name="search_map_back">← 戻る</string>
 </resources>

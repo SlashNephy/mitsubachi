@@ -87,9 +87,13 @@ class FoursquareApiClientImpl @Inject constructor(
 
   override suspend fun searchVenueRecommendations(
     coordinates: Coordinates,
+    query: String?,
+    section: String?,
   ): List<VenueRecommendation> {
     val data = ktorfit.searchVenueRecommendations(
       ll = "${coordinates.latitude},${coordinates.longitude}",
+      query = query?.ifBlank { null },
+      section = section,
     )
     return data.response.group.results.orEmpty().map { it.toDomain() }
   }

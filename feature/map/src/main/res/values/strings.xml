@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="map">Map</string>
+    <string name="search_map_search_hint">Search for places</string>
+    <string name="search_map_category_food">Food</string>
+    <string name="search_map_category_coffee">Coffee</string>
+    <string name="search_map_category_sights">Sights</string>
+    <string name="search_map_category_shops">Shops</string>
+    <string name="search_map_category_arts">Arts</string>
+    <string name="search_map_header_area_info">Places in this area</string>
+    <string name="search_map_back">← Back</string>
 </resources>

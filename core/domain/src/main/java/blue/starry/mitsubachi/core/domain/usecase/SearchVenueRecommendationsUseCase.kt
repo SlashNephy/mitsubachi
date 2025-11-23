@@ -11,7 +11,13 @@ class SearchVenueRecommendationsUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(
     coordinates: Coordinates,
+    query: String? = null,
+    section: String? = null,
   ): List<VenueRecommendation> {
-    return client.searchVenueRecommendations(coordinates)
+    return client.searchVenueRecommendations(
+      coordinates = coordinates,
+      query = query,
+      section = section,
+    )
   }
 }

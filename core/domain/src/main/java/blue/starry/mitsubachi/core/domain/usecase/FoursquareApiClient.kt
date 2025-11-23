@@ -27,6 +27,8 @@ interface FoursquareApiClient {
 
   suspend fun searchVenueRecommendations(
     coordinates: Coordinates,
+    query: String? = null,
+    section: String? = null,
   ): List<VenueRecommendation>
 
   suspend fun addCheckIn(
