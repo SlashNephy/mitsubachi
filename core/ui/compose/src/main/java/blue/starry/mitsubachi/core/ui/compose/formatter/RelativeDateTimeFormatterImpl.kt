@@ -47,9 +47,14 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
       seconds >= 3600 -> {
         val hours = duration.inWholeHours
         val remainingMinutes = seconds % 3600 / 60
-        val hourMeasure = Measure(hours, MeasureUnit.HOUR)
-        val minuteMeasure = Measure(remainingMinutes, MeasureUnit.MINUTE)
-        formatter.formatMeasures(hourMeasure, minuteMeasure)
+        if (remainingMinutes > 0) {
+          val hourMeasure = Measure(hours, MeasureUnit.HOUR)
+          val minuteMeasure = Measure(remainingMinutes, MeasureUnit.MINUTE)
+          formatter.formatMeasures(hourMeasure, minuteMeasure)
+        } else {
+          val measure = Measure(hours, MeasureUnit.HOUR)
+          formatter.format(measure)
+        }
       }
 
       seconds >= 60 -> {
