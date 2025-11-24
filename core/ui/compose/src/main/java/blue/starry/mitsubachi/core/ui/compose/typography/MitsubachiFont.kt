@@ -18,7 +18,7 @@ object MitsubachiFont {
     GoogleFont("IBM Plex Sans KR").toFontVariants()
   }
 
-  fun fromName(fontName: String): List<Font> {
+  fun from(fontName: String): List<Font> {
     return GoogleFont(fontName).toFontVariants()
   }
 

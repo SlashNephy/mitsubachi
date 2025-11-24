@@ -34,8 +34,8 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
     } else {
       DomainApplicationSettings.Default.colorSchemePreference
     },
-    fontFamilyPreference = if (hasFontFamilyName()) {
-      FontFamilyPreference(fontFamilyName)
+    fontFamilyPreference = if (hasGoogleFont()) {
+      FontFamilyPreference.GoogleFont(googleFont)
     } else {
       DomainApplicationSettings.Default.fontFamilyPreference
     },
@@ -49,6 +49,12 @@ internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
     .setWidgetUpdateIntervalMillis(widgetUpdateInterval.inWholeMilliseconds)
     .setIsDynamicColorEnabled(isDynamicColorEnabled)
     .setColorSchemePreference(colorSchemePreference.ordinal)
-    .setFontFamilyName(fontFamilyPreference.fontName)
+    .apply {
+      when (fontFamilyPreference) {
+        is FontFamilyPreference.GoogleFont -> {
+          setGoogleFont(fontFamilyPreference.fontName)
+        }
+      }
+    }
     .build()
 }
