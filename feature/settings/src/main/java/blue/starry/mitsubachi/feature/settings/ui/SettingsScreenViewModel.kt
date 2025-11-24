@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
 import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
+import blue.starry.mitsubachi.core.domain.usecase.PhotoWidgetWorkerScheduler
 import blue.starry.mitsubachi.core.domain.usecase.SignOutUseCase
 import blue.starry.mitsubachi.core.ui.compose.error.SnackbarErrorPresenter
 import blue.starry.mitsubachi.core.ui.compose.error.onException
@@ -23,6 +24,7 @@ class SettingsScreenViewModel @Inject constructor(
   private val signOutUseCase: SignOutUseCase,
   private val applicationSettingsRepository: ApplicationSettingsRepository,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
+  private val photoWidgetWorkerScheduler: PhotoWidgetWorkerScheduler,
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
 ) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
   sealed interface UiState {
@@ -57,6 +59,12 @@ class SettingsScreenViewModel @Inject constructor(
       }.onException { e ->
         snackbarErrorHandler.handle(e)
       }
+    }
+  }
+
+  fun onUpdatePhotoWidgetSchedule() {
+    viewModelScope.launch {
+      photoWidgetWorkerScheduler.enqueue()
     }
   }
 }
