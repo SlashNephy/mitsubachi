@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import blue.starry.mitsubachi.core.domain.ApplicationScope
-import blue.starry.mitsubachi.feature.widget.photo.worker.PhotoWidgetWorkerScheduler
+import blue.starry.mitsubachi.core.domain.usecase.PhotoWidgetWorkerScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
