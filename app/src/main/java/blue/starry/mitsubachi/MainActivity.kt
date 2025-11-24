@@ -8,9 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,9 +40,8 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     setContent {
-      val uiState by viewModel.state.collectAsState()
-
-      when (val state = uiState) {
+      val state by viewModel.state.collectAsStateWithLifecycle()
+      when (val state = state) {
         is MainActivityViewModel.UiState.Initializing -> {
           // Show nothing or splash screen while initializing
         }
@@ -59,7 +59,8 @@ class MainActivity : ComponentActivity() {
             dynamicColor = state.applicationSettings.isDynamicColorEnabled,
             fontFamilyPreference = state.applicationSettings.fontFamilyPreference,
           ) {
-            App(initialRouteKeys = viewModel.buildInitialRouteKeys(intent))
+            val routeKeys = remember(intent) { viewModel.buildInitialRouteKeys(intent) }
+            App(initialRouteKeys = routeKeys)
           }
         }
       }
