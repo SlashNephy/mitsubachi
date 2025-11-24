@@ -47,33 +47,32 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
     val formatter = MeasureFormat.getInstance(uLocale, MeasureFormat.FormatWidth.SHORT)
 
     val measures = buildList {
-      val factor = ceil(duration / precision)
-      var duration = precision * factor
+      var remainingDuration = precision * ceil(duration / precision)
 
-      val days = duration.inWholeDays
+      val days = remainingDuration.inWholeDays
       if (days > 0) {
         add(Measure(days, MeasureUnit.DAY))
-        duration -= days.days
+        remainingDuration -= days.days
       }
 
-      val hours = duration.inWholeHours
+      val hours = remainingDuration.inWholeHours
       if (hours > 0) {
         add(Measure(hours, MeasureUnit.HOUR))
-        duration -= hours.hours
+        remainingDuration -= hours.hours
       }
 
-      val minutes = duration.inWholeMinutes
+      val minutes = remainingDuration.inWholeMinutes
       if (minutes > 0) {
         add(Measure(minutes, MeasureUnit.MINUTE))
-        duration -= minutes.minutes
+        remainingDuration -= minutes.minutes
       }
 
-      val seconds = duration.inWholeSeconds - 60 * minutes
+      val seconds = remainingDuration.inWholeSeconds - 60 * minutes
       if (seconds > 0) {
         add(Measure(seconds, MeasureUnit.SECOND))
       }
-    }
+    }.toTypedArray()
 
-    return formatter.formatMeasures(*measures.toTypedArray())
+    return formatter.formatMeasures(*measures)
   }
 }
