@@ -67,7 +67,7 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
         remainingDuration -= minutes.minutes
       }
 
-      val seconds = remainingDuration.inWholeSeconds - 60 * minutes
+      val seconds = remainingDuration.inWholeSeconds
       if (seconds > 0) {
         add(Measure(seconds, MeasureUnit.SECOND))
       }
