@@ -30,6 +30,7 @@ fun SettingsScreen(
         onSignOut = {
           viewModel.signOut().invokeOnCompletion { onSignOut() }
         },
+        onUpdateWidgetSchedule = viewModel::onUpdatePhotoWidgetSchedule,
         formatDuration = { duration ->
           viewModel.formatDuration(duration, 5.minutes)
         },

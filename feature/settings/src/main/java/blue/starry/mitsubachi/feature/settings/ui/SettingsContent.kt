@@ -64,6 +64,7 @@ fun SettingsContent(
   applicationSettings: ApplicationSettings,
   onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
   onSignOut: () -> Unit,
+  onUpdateWidgetSchedule: () -> Unit,
   formatDuration: (Duration) -> String,
 ) {
   Surface(modifier = Modifier.fillMaxSize()) {
@@ -108,6 +109,7 @@ fun SettingsContent(
               isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = it,
             )
           }
+          onUpdateWidgetSchedule()
         },
         onChangeWidgetUpdateInterval = {
           onChangeApplicationSettings { settings ->
@@ -115,6 +117,7 @@ fun SettingsContent(
               widgetUpdateInterval = it,
             )
           }
+          onUpdateWidgetSchedule()
         },
         formatDuration = formatDuration,
       )
@@ -593,6 +596,7 @@ private fun SettingsContentPreview() {
     applicationSettings = ApplicationSettings.Default,
     onChangeApplicationSettings = { ApplicationSettings.Default },
     onSignOut = {},
+    onUpdateWidgetSchedule = {},
     formatDuration = { "1 hour" },
   )
 }

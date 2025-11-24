@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.feature.widget.photo.di
 
-import blue.starry.mitsubachi.feature.widget.photo.worker.PhotoWidgetWorkerScheduler
+import blue.starry.mitsubachi.core.domain.usecase.PhotoWidgetWorkerScheduler
 import blue.starry.mitsubachi.feature.widget.photo.worker.PhotoWidgetWorkerSchedulerImpl
 import dagger.Binds
 import dagger.Module
