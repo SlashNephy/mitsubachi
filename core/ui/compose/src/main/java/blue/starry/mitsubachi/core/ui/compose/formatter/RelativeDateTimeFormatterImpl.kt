@@ -10,7 +10,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZonedDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.ceil
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 @Singleton
 class RelativeDateTimeFormatterImpl @Inject constructor(
@@ -38,35 +42,38 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
       .toString()
   }
 
-  override fun formatDuration(duration: Duration): String {
+  override fun formatDuration(duration: Duration, precision: Duration): String {
     val uLocale = ULocale.getDefault()
     val formatter = MeasureFormat.getInstance(uLocale, MeasureFormat.FormatWidth.SHORT)
 
-    val seconds = duration.inWholeSeconds
-    return when {
-      seconds >= 3600 -> {
-        val hours = duration.inWholeHours
-        val remainingMinutes = seconds % 3600 / 60
-        if (remainingMinutes > 0) {
-          val hourMeasure = Measure(hours, MeasureUnit.HOUR)
-          val minuteMeasure = Measure(remainingMinutes, MeasureUnit.MINUTE)
-          formatter.formatMeasures(hourMeasure, minuteMeasure)
-        } else {
-          val measure = Measure(hours, MeasureUnit.HOUR)
-          formatter.format(measure)
-        }
+    val measures = buildList {
+      val factor = ceil(duration / precision)
+      var duration = precision * factor
+
+      val days = duration.inWholeDays
+      if (days > 0) {
+        add(Measure(days, MeasureUnit.DAY))
+        duration -= days.days
       }
 
-      seconds >= 60 -> {
-        val minutes = duration.inWholeMinutes
-        val measure = Measure(minutes, MeasureUnit.MINUTE)
-        formatter.format(measure)
+      val hours = duration.inWholeHours
+      if (hours > 0) {
+        add(Measure(hours, MeasureUnit.HOUR))
+        duration -= hours.hours
       }
 
-      else -> {
-        val measure = Measure(seconds, MeasureUnit.SECOND)
-        formatter.format(measure)
+      val minutes = duration.inWholeMinutes
+      if (minutes > 0) {
+        add(Measure(minutes, MeasureUnit.MINUTE))
+        duration -= minutes.minutes
+      }
+
+      val seconds = duration.inWholeSeconds - 60 * minutes
+      if (seconds > 0) {
+        add(Measure(seconds, MeasureUnit.SECOND))
       }
     }
+
+    return formatter.formatMeasures(*measures.toTypedArray())
   }
 }
