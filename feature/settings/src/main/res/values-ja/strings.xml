@@ -23,5 +23,4 @@
     <string name="color_scheme_system">システム</string>
     <string name="font_family_headline">フォント</string>
     <string name="font_family_supporting">Google Fonts からお好みのフォントを選択</string>
-    <string name="font_family_input_hint">Google Font名を入力</string>
 </resources>

@@ -23,5 +23,4 @@
     <string name="color_scheme_system">시스템</string>
     <string name="font_family_headline">글꼴</string>
     <string name="font_family_supporting">Google Fonts에서 원하는 글꼴 선택</string>
-    <string name="font_family_input_hint">Google Font 이름 입력</string>
 </resources>

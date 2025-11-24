@@ -6,11 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.BugReport
@@ -419,27 +421,21 @@ private fun ColorSchemeDialog(
       )
     },
     text = {
-      Column {
+      Column(modifier = Modifier.selectableGroup()) {
         ColorSchemePreference.entries.forEach { preference ->
-          SettingItem(
-            leadingIcon = SettingItem.LeadingIcon.None,
-            headline = {
-              Text(
-                when (preference) {
-                  ColorSchemePreference.Light -> stringResource(R.string.color_scheme_light)
-                  ColorSchemePreference.Dark -> stringResource(R.string.color_scheme_dark)
-                  ColorSchemePreference.System -> stringResource(R.string.color_scheme_system)
-                },
-              )
-            },
-            trailing = {
-              RadioButton(
-                selected = selectedPreference == preference,
-                onClick = { selectedPreference = preference },
-              )
-            },
-            modifier = Modifier.clickable { selectedPreference = preference },
-          )
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+              selected = selectedPreference == preference,
+              onClick = { selectedPreference = preference },
+            )
+            Text(
+              when (preference) {
+                ColorSchemePreference.Light -> stringResource(R.string.color_scheme_light)
+                ColorSchemePreference.Dark -> stringResource(R.string.color_scheme_dark)
+                ColorSchemePreference.System -> stringResource(R.string.color_scheme_system)
+              },
+            )
+          }
         }
       }
     },
@@ -466,7 +462,6 @@ private fun FontFamilyDialog(
   var selectedFont by remember { mutableStateOf(currentPreference.fontName) }
   var fontList by remember { mutableStateOf<List<String>>(emptyList()) }
   var isLoading by remember { mutableStateOf(true) }
-  var errorMessage by remember { mutableStateOf<String?>(null) }
   val scope = rememberCoroutineScope()
 
   LaunchedEffect(Unit) {
@@ -474,8 +469,7 @@ private fun FontFamilyDialog(
       try {
         fontList = fetchGoogleFonts()
         isLoading = false
-      } catch (e: Exception) {
-        errorMessage = e.message
+      } catch (_: Exception) {
         isLoading = false
       }
     }
@@ -496,39 +490,27 @@ private fun FontFamilyDialog(
         when {
           isLoading -> {
             Box(
-              modifier = Modifier.fillMaxWidth().padding(32.dp),
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
               contentAlignment = Alignment.Center,
             ) {
               CircularProgressIndicator()
             }
           }
 
-          errorMessage != null -> {
-            Text(
-              text = "Error loading fonts: $errorMessage",
-              style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.error,
-            )
-          }
-
           else -> {
             LazyColumn(
-              modifier = Modifier.fillMaxWidth(),
+              modifier = Modifier.fillMaxWidth().selectableGroup(),
             ) {
               items(fontList) { fontName ->
-                SettingItem(
-                  leadingIcon = SettingItem.LeadingIcon.None,
-                  headline = {
-                    Text(fontName)
-                  },
-                  trailing = {
-                    RadioButton(
-                      selected = selectedFont == fontName,
-                      onClick = { selectedFont = fontName },
-                    )
-                  },
-                  modifier = Modifier.clickable { selectedFont = fontName },
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                  RadioButton(
+                    selected = selectedFont == fontName,
+                    onClick = { selectedFont = fontName },
+                  )
+                  Text(fontName)
+                }
               }
             }
           }
@@ -543,9 +525,9 @@ private fun FontFamilyDialog(
     confirmButton = {
       TextButton(
         onClick = {
-          onConfirm(FontFamilyPreference(selectedFont))
+          onConfirm(FontFamilyPreference.GoogleFont(selectedFont))
         },
-        enabled = !isLoading && errorMessage == null,
+        enabled = !isLoading,
       ) {
         Text(text = stringResource(R.string.save_button))
       }
@@ -554,9 +536,8 @@ private fun FontFamilyDialog(
 }
 
 private suspend fun fetchGoogleFonts(): List<String> = withContext(Dispatchers.IO) {
-  // Using Google Fonts API to fetch popular fonts
-  // For this demo, returning a curated list of popular fonts
-  // In production, you would use the Google Fonts API with an API key
+  // TODO: API から取得できるようにする
+  // https://developers.google.com/fonts/docs/developer_api
   listOf(
     "IBM Plex Sans",
     "Roboto",
