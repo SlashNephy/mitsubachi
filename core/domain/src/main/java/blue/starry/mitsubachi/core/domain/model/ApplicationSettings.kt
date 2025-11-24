@@ -16,7 +16,7 @@ data class ApplicationSettings(
       isFirebaseCrashlyticsEnabled = true,
       isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = false,
       widgetUpdateInterval = 1.hours,
-      isDynamicColorEnabled = true,
+      isDynamicColorEnabled = false,
       colorSchemePreference = ColorSchemePreference.System,
       fontFamilyPreference = FontFamilyPreference.GoogleFont.IBMPlexSans,
     )
