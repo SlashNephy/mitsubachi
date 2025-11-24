@@ -64,7 +64,11 @@ class SettingsScreenViewModel @Inject constructor(
 
   fun onUpdatePhotoWidgetSchedule() {
     viewModelScope.launch {
-      photoWidgetWorkerScheduler.enqueue()
+      runCatching {
+        photoWidgetWorkerScheduler.enqueue()
+      }.onException { e ->
+        snackbarErrorHandler.handle(e)
+      }
     }
   }
 }
