@@ -33,6 +33,8 @@ dependencies {
 
   // androidx.lifecycle
   api(libs.androidx.lifecycle.runtime.ktx)
+  api(libs.androidx.lifecycle.runtime.compose)
+  testImplementation(libs.androidx.lifecycle.runtime.testing)
   api(libs.androidx.lifecycle.viewmodel.ktx)
   api(libs.androidx.lifecycle.viewmodel.compose)
   api(libs.androidx.lifecycle.viewmodel.navigation3)
