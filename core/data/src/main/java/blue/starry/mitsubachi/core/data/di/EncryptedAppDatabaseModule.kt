@@ -8,6 +8,7 @@ import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
 import blue.starry.mitsubachi.core.data.database.dao.SettingsDao
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
+import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,10 +26,11 @@ internal abstract class EncryptedAppDatabaseModule {
   @Binds
   internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 
-  companion object {
+  internal companion object {
     @Provides
     @Singleton
     internal fun provide(
+      applicationConfig: ApplicationConfig,
       @ApplicationContext context: Context,
       passphraseProvider: DatabasePassphraseProvider,
     ): EncryptedAppDatabase {
@@ -41,8 +43,13 @@ internal abstract class EncryptedAppDatabaseModule {
 
       return Room
         .databaseBuilder<EncryptedAppDatabase>(context, name = "mitsubachi.db")
-        .openHelperFactory(factory)
-        .addMigrations(blue.starry.mitsubachi.core.data.database.MIGRATION_4_5)
+        .apply {
+          if (applicationConfig.isDebugBuild) {
+            // 開発中は利便性のためデータベースを暗号化しないでおく
+          } else {
+            openHelperFactory(factory)
+          }
+        }
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
     }
