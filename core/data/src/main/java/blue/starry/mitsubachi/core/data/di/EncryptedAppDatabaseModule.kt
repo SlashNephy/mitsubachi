@@ -3,8 +3,12 @@ package blue.starry.mitsubachi.core.data.di
 import android.content.Context
 import androidx.room.Room
 import blue.starry.mitsubachi.core.data.database.EncryptedAppDatabase
+import blue.starry.mitsubachi.core.data.database.dao.CacheDao
+import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
+import blue.starry.mitsubachi.core.data.database.dao.SettingsDao
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
+import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,10 +26,11 @@ internal abstract class EncryptedAppDatabaseModule {
   @Binds
   internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 
-  companion object {
+  internal companion object {
     @Provides
     @Singleton
     internal fun provide(
+      applicationConfig: ApplicationConfig,
       @ApplicationContext context: Context,
       passphraseProvider: DatabasePassphraseProvider,
     ): EncryptedAppDatabase {
@@ -38,9 +43,30 @@ internal abstract class EncryptedAppDatabaseModule {
 
       return Room
         .databaseBuilder<EncryptedAppDatabase>(context, name = "mitsubachi.db")
-        .openHelperFactory(factory)
+        .apply {
+          if (applicationConfig.isDebugBuild) {
+            // 開発中は利便性のためデータベースを暗号化しないでおく
+          } else {
+            openHelperFactory(factory)
+          }
+        }
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
+    }
+
+    @Provides
+    internal fun provideFoursquareAccountDao(database: EncryptedAppDatabase): FoursquareAccountDao {
+      return database.foursquareAccount()
+    }
+
+    @Provides
+    internal fun provideCacheDao(database: EncryptedAppDatabase): CacheDao {
+      return database.cache()
+    }
+
+    @Provides
+    internal fun provideSettingsDao(database: EncryptedAppDatabase): SettingsDao {
+      return database.settings()
     }
   }
 }

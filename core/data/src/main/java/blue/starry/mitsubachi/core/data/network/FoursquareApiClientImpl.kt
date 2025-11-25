@@ -1,11 +1,11 @@
 package blue.starry.mitsubachi.core.data.network
 
+import blue.starry.mitsubachi.core.data.network.cache.CachePlugin
 import blue.starry.mitsubachi.core.data.network.model.FoursquareCheckIn
-import blue.starry.mitsubachi.core.data.network.model.FoursquareUserVenueHistoriesResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareVenue
 import blue.starry.mitsubachi.core.data.network.model.toDomain
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.Coordinates
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.model.FilePart
 import blue.starry.mitsubachi.core.domain.model.FoursquareUser
 import blue.starry.mitsubachi.core.domain.model.Venue
@@ -31,7 +31,12 @@ import javax.inject.Inject
 class FoursquareApiClientImpl @Inject constructor(
   private val httpClient: HttpClient,
   private val bearerTokenSource: FoursquareBearerTokenSource,
+  cachePlugin: CachePlugin,
 ) : FoursquareApiClient {
+  private companion object {
+    const val SELF_USER_ID = "self"
+  }
+
   private val ktorfit = Ktorfit
     .Builder()
     .baseUrl(
@@ -51,6 +56,7 @@ class FoursquareApiClientImpl @Inject constructor(
             }
           }
         }
+        install(cachePlugin)
       },
     )
     .build()
@@ -60,36 +66,93 @@ class FoursquareApiClientImpl @Inject constructor(
     limit: Int?,
     after: ZonedDateTime?,
     coordinates: Coordinates?,
+    policy: FetchPolicy,
   ): List<CheckIn> {
     val data = ktorfit.getRecentCheckIns(
       limit = limit,
       afterTimeStamp = after?.toEpochSecond(),
       ll = coordinates?.let { "${it.latitude},${it.longitude}" },
+      policy = policy,
     )
     return data.response.recent.map(FoursquareCheckIn::toDomain)
   }
 
-  override suspend fun getCheckIn(checkInId: String): CheckIn {
-    val data = ktorfit.getCheckIn(checkInId = checkInId)
+  override suspend fun getCheckIn(
+    checkInId: String,
+    policy: FetchPolicy,
+  ): CheckIn {
+    val data = ktorfit.getCheckIn(checkInId = checkInId, policy = policy)
     return data.response.checkIn.toDomain()
   }
 
   override suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String?,
+    near: String?,
+    radius: Int?,
+    categoryId: String?,
+    limit: Int?,
+    url: String?,
+    policy: FetchPolicy,
   ): List<Venue> {
     val data = ktorfit.searchNearbyVenues(
-      ll = "${coordinates.latitude},${coordinates.longitude}",
       query = query?.ifBlank { null },
+      ll = "${coordinates.latitude},${coordinates.longitude}",
+      near = near?.ifBlank { null },
+      radius = radius,
+      categoryId = categoryId?.ifBlank { null },
+      limit = limit,
+      url = url?.ifBlank { null },
+      policy = policy,
     )
-    return data.response.venues.map(FoursquareVenue::toDomain)
+    return data.response.venues.map { it.toDomain() }
   }
 
   override suspend fun searchVenueRecommendations(
     coordinates: Coordinates,
+    query: String?,
+    radius: Int?,
+    sw: String?,
+    ne: String?,
+    near: String?,
+    section: String?,
+    categoryId: String?,
+    novelty: String?,
+    friendVisits: String?,
+    time: String?,
+    day: String?,
+    lastVenue: String?,
+    openNow: Boolean?,
+    price: String?,
+    saved: Boolean?,
+    sortByDistance: Boolean?,
+    sortByPopularity: Boolean?,
+    limit: Int?,
+    offset: Int?,
+    policy: FetchPolicy,
   ): List<VenueRecommendation> {
     val data = ktorfit.searchVenueRecommendations(
       ll = "${coordinates.latitude},${coordinates.longitude}",
+      query = query,
+      radius = radius,
+      sw = sw?.ifBlank { null },
+      ne = ne?.ifBlank { null },
+      near = near?.ifBlank { null },
+      section = section?.ifBlank { null },
+      categoryId = categoryId?.ifBlank { null },
+      novelty = novelty?.ifBlank { null },
+      friendVisits = friendVisits?.ifBlank { null },
+      time = time?.ifBlank { null },
+      day = day?.ifBlank { null },
+      lastVenue = lastVenue?.ifBlank { null },
+      openNow = openNow,
+      price = price?.ifBlank { null },
+      saved = saved,
+      sortByDistance = sortByDistance,
+      sortByPopularity = sortByPopularity,
+      limit = limit,
+      offset = offset,
+      policy = policy,
     )
     return data.response.group.results.orEmpty().map { it.toDomain() }
   }
@@ -123,14 +186,20 @@ class FoursquareApiClientImpl @Inject constructor(
     ktorfit.deleteCheckIn(checkInId = checkInId)
   }
 
-  override suspend fun getUser(userId: String?): FoursquareUser {
-    val data = ktorfit.getUser(userId = userId ?: "self")
+  override suspend fun getUser(
+    userId: String?,
+    policy: FetchPolicy,
+  ): FoursquareUser {
+    val data = ktorfit.getUser(userId = userId ?: SELF_USER_ID, policy = policy)
     return data.response.user.toDomain()
   }
 
-  override suspend fun getUserVenueHistories(userId: String?): List<VenueHistory> {
-    val data = ktorfit.getUserVenueHistories(userId = userId ?: "self")
-    return data.response.venues.items.map(FoursquareUserVenueHistoriesResponse.Venues.Item::toDomain)
+  override suspend fun getUserVenueHistories(
+    userId: String?,
+    policy: FetchPolicy,
+  ): List<VenueHistory> {
+    val data = ktorfit.getUserVenueHistories(userId = userId ?: SELF_USER_ID, policy = policy)
+    return data.response.venues.items.map { it.toDomain() }
   }
 
   override suspend fun addPhotoToCheckIn(
@@ -164,11 +233,13 @@ class FoursquareApiClientImpl @Inject constructor(
     userId: String?,
     limit: Int?,
     offset: Int?,
+    policy: FetchPolicy,
   ): List<CheckIn> {
     val data = ktorfit.getUserCheckIns(
-      userId = userId ?: "self",
+      userId = userId ?: SELF_USER_ID,
       limit = limit,
       offset = offset,
+      policy = policy,
     )
     return data.response.checkins.items.map(FoursquareCheckIn::toDomain)
   }
@@ -177,11 +248,13 @@ class FoursquareApiClientImpl @Inject constructor(
     userId: String?,
     limit: Int?,
     offset: Int?,
+    policy: FetchPolicy,
   ): List<Photo> {
     val data = ktorfit.getUserPhotos(
-      userId = userId ?: "self",
+      userId = userId ?: SELF_USER_ID,
       limit = limit,
       offset = offset,
+      policy = policy,
     )
     return data.response.photos.items.map { it.toDomain() }
   }
