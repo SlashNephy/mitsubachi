@@ -1,17 +1,7 @@
 package blue.starry.mitsubachi.core.data.network
 
-import blue.starry.mitsubachi.core.data.cache.ApiResponseCache
-import blue.starry.mitsubachi.core.data.cache.CacheKeyGenerator
-import blue.starry.mitsubachi.core.data.network.model.FoursquareApiResponse
+import blue.starry.mitsubachi.core.data.network.cache.CachePlugin
 import blue.starry.mitsubachi.core.data.network.model.FoursquareCheckIn
-import blue.starry.mitsubachi.core.data.network.model.FoursquareCheckInResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareRecentCheckinsResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareSearchVenueRecommendationsResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareSearchVenuesResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareUserCheckinsResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareUserPhotosResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareUserResponse
-import blue.starry.mitsubachi.core.data.network.model.FoursquareUserVenueHistoriesResponse
 import blue.starry.mitsubachi.core.data.network.model.toDomain
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.Coordinates
@@ -37,15 +27,16 @@ import io.ktor.http.HttpHeaders
 import java.time.ZonedDateTime
 import javax.inject.Inject
 
-/**
- * Implementation of [FoursquareApiClient] with caching support using encrypted Room database.
- */
 @Suppress("TooManyFunctions")
 class FoursquareApiClientImpl @Inject constructor(
   private val httpClient: HttpClient,
   private val bearerTokenSource: FoursquareBearerTokenSource,
-  private val cache: ApiResponseCache,
+  cachePlugin: CachePlugin,
 ) : FoursquareApiClient {
+  private companion object {
+    const val SELF_USER_ID = "self"
+  }
+
   private val ktorfit = Ktorfit
     .Builder()
     .baseUrl(
@@ -65,14 +56,11 @@ class FoursquareApiClientImpl @Inject constructor(
             }
           }
         }
+        install(cachePlugin)
       },
     )
     .build()
     .createFoursquareNetworkApi()
-
-  private companion object {
-    const val DEFAULT_USER_ID = "self"
-  }
 
   override suspend fun getRecentCheckIns(
     limit: Int?,
@@ -80,93 +68,93 @@ class FoursquareApiClientImpl @Inject constructor(
     coordinates: Coordinates?,
     policy: FetchPolicy,
   ): List<CheckIn> {
-    val cacheKey = CacheKeyGenerator.forRecentCheckIns(
+    val data = ktorfit.getRecentCheckIns(
       limit = limit,
-      after = after?.toEpochSecond(),
-      coordinates = coordinates?.let { "${it.latitude},${it.longitude}" },
-    )
-
-    val response = cache.fetch(
+      afterTimeStamp = after?.toEpochSecond(),
+      ll = coordinates?.let { "${it.latitude},${it.longitude}" },
       policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareRecentCheckinsResponse.serializer()),
-      networkFetch = {
-        ktorfit.getRecentCheckIns(
-          limit = limit,
-          afterTimeStamp = after?.toEpochSecond(),
-          ll = coordinates?.let { "${it.latitude},${it.longitude}" },
-        )
-      },
     )
-
-    return response.response.recent.map(FoursquareCheckIn::toDomain)
+    return data.response.recent.map(FoursquareCheckIn::toDomain)
   }
 
   override suspend fun getCheckIn(
     checkInId: String,
     policy: FetchPolicy,
   ): CheckIn {
-    val cacheKey = CacheKeyGenerator.forCheckIn(checkInId)
-
-    val response = cache.fetch(
-      policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareCheckInResponse.serializer()),
-      networkFetch = {
-        ktorfit.getCheckIn(checkInId = checkInId)
-      },
-    )
-
-    return response.response.checkIn.toDomain()
+    val data = ktorfit.getCheckIn(checkInId = checkInId, policy = policy)
+    return data.response.checkIn.toDomain()
   }
 
   override suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String?,
+    near: String?,
+    radius: Int?,
+    categoryId: String?,
+    limit: Int?,
+    url: String?,
     policy: FetchPolicy,
   ): List<Venue> {
-    val coordinatesString = "${coordinates.latitude},${coordinates.longitude}"
-    val cacheKey = CacheKeyGenerator.forSearchNearVenues(
-      coordinates = coordinatesString,
-      query = query,
-    )
-
-    val response = cache.fetch(
+    val data = ktorfit.searchNearbyVenues(
+      query = query?.ifBlank { null },
+      ll = "${coordinates.latitude},${coordinates.longitude}",
+      near = near?.ifBlank { null },
+      radius = radius,
+      categoryId = categoryId?.ifBlank { null },
+      limit = limit,
+      url = url?.ifBlank { null },
       policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareSearchVenuesResponse.serializer()),
-      networkFetch = {
-        ktorfit.searchNearbyVenues(
-          ll = coordinatesString,
-          query = query?.ifBlank { null },
-        )
-      },
     )
-
-    return response.response.venues.map { it.toDomain() }
+    return data.response.venues.map { it.toDomain() }
   }
 
   override suspend fun searchVenueRecommendations(
     coordinates: Coordinates,
+    query: String?,
+    radius: Int?,
+    sw: String?,
+    ne: String?,
+    near: String?,
+    section: String?,
+    categoryId: String?,
+    novelty: String?,
+    friendVisits: String?,
+    time: String?,
+    day: String?,
+    lastVenue: String?,
+    openNow: Boolean?,
+    price: String?,
+    saved: Boolean?,
+    sortByDistance: Boolean?,
+    sortByPopularity: Boolean?,
+    limit: Int?,
+    offset: Int?,
     policy: FetchPolicy,
   ): List<VenueRecommendation> {
-    val coordinatesString = "${coordinates.latitude},${coordinates.longitude}"
-    val cacheKey = CacheKeyGenerator.forSearchVenueRecommendations(
-      coordinates = coordinatesString,
-    )
-
-    val response = cache.fetch(
+    val data = ktorfit.searchVenueRecommendations(
+      ll = "${coordinates.latitude},${coordinates.longitude}",
+      query = query,
+      radius = radius,
+      sw = sw?.ifBlank { null },
+      ne = ne?.ifBlank { null },
+      near = near?.ifBlank { null },
+      section = section?.ifBlank { null },
+      categoryId = categoryId?.ifBlank { null },
+      novelty = novelty?.ifBlank { null },
+      friendVisits = friendVisits?.ifBlank { null },
+      time = time?.ifBlank { null },
+      day = day?.ifBlank { null },
+      lastVenue = lastVenue?.ifBlank { null },
+      openNow = openNow,
+      price = price?.ifBlank { null },
+      saved = saved,
+      sortByDistance = sortByDistance,
+      sortByPopularity = sortByPopularity,
+      limit = limit,
+      offset = offset,
       policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareSearchVenueRecommendationsResponse.serializer()),
-      networkFetch = {
-        ktorfit.searchVenueRecommendations(
-          ll = coordinatesString,
-        )
-      },
     )
-
-    return response.response.group.results.orEmpty().map { it.toDomain() }
+    return data.response.group.results.orEmpty().map { it.toDomain() }
   }
 
   override suspend fun addCheckIn(
@@ -202,38 +190,16 @@ class FoursquareApiClientImpl @Inject constructor(
     userId: String?,
     policy: FetchPolicy,
   ): FoursquareUser {
-    val effectiveUserId = userId ?: DEFAULT_USER_ID
-    val cacheKey = CacheKeyGenerator.forUser(effectiveUserId)
-
-    val response = cache.fetch(
-      policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareUserResponse.serializer()),
-      networkFetch = {
-        ktorfit.getUser(userId = effectiveUserId)
-      },
-    )
-
-    return response.response.user.toDomain()
+    val data = ktorfit.getUser(userId = userId ?: SELF_USER_ID, policy = policy)
+    return data.response.user.toDomain()
   }
 
   override suspend fun getUserVenueHistories(
     userId: String?,
     policy: FetchPolicy,
   ): List<VenueHistory> {
-    val effectiveUserId = userId ?: DEFAULT_USER_ID
-    val cacheKey = CacheKeyGenerator.forUserVenueHistories(effectiveUserId)
-
-    val response = cache.fetch(
-      policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareUserVenueHistoriesResponse.serializer()),
-      networkFetch = {
-        ktorfit.getUserVenueHistories(userId = effectiveUserId)
-      },
-    )
-
-    return response.response.venues.items.map { it.toDomain() }
+    val data = ktorfit.getUserVenueHistories(userId = userId ?: SELF_USER_ID, policy = policy)
+    return data.response.venues.items.map { it.toDomain() }
   }
 
   override suspend fun addPhotoToCheckIn(
@@ -269,27 +235,13 @@ class FoursquareApiClientImpl @Inject constructor(
     offset: Int?,
     policy: FetchPolicy,
   ): List<CheckIn> {
-    val effectiveUserId = userId ?: DEFAULT_USER_ID
-    val cacheKey = CacheKeyGenerator.forUserCheckIns(
-      userId = effectiveUserId,
+    val data = ktorfit.getUserCheckIns(
+      userId = userId ?: SELF_USER_ID,
       limit = limit,
       offset = offset,
-    )
-
-    val response = cache.fetch(
       policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareUserCheckinsResponse.serializer()),
-      networkFetch = {
-        ktorfit.getUserCheckIns(
-          userId = effectiveUserId,
-          limit = limit,
-          offset = offset,
-        )
-      },
     )
-
-    return response.response.checkins.items.map(FoursquareCheckIn::toDomain)
+    return data.response.checkins.items.map(FoursquareCheckIn::toDomain)
   }
 
   override suspend fun getUserPhotos(
@@ -298,27 +250,13 @@ class FoursquareApiClientImpl @Inject constructor(
     offset: Int?,
     policy: FetchPolicy,
   ): List<Photo> {
-    val effectiveUserId = userId ?: DEFAULT_USER_ID
-    val cacheKey = CacheKeyGenerator.forUserPhotos(
-      userId = effectiveUserId,
+    val data = ktorfit.getUserPhotos(
+      userId = userId ?: SELF_USER_ID,
       limit = limit,
       offset = offset,
-    )
-
-    val response = cache.fetch(
       policy = policy,
-      cacheKey = cacheKey,
-      serializer = FoursquareApiResponse.serializer(FoursquareUserPhotosResponse.serializer()),
-      networkFetch = {
-        ktorfit.getUserPhotos(
-          userId = effectiveUserId,
-          limit = limit,
-          offset = offset,
-        )
-      },
     )
-
-    return response.response.photos.items.map { it.toDomain() }
+    return data.response.photos.items.map { it.toDomain() }
   }
 }
 

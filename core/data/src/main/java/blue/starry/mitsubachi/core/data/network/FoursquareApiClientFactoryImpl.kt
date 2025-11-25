@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.core.data.network
 
-import blue.starry.mitsubachi.core.data.cache.ApiResponseCache
+import blue.starry.mitsubachi.core.data.network.cache.CachePlugin
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClientFactory
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareBearerTokenSource
@@ -11,9 +11,9 @@ import javax.inject.Singleton
 @Singleton
 class FoursquareApiClientFactoryImpl @Inject constructor(
   private val httpClient: HttpClient,
-  private val cache: ApiResponseCache,
+  private val cachePlugin: CachePlugin,
 ) : FoursquareApiClientFactory {
   override fun create(bearerTokenSource: FoursquareBearerTokenSource): FoursquareApiClient {
-    return FoursquareApiClientImpl(httpClient, bearerTokenSource, cache)
+    return FoursquareApiClientImpl(httpClient, bearerTokenSource, cachePlugin)
   }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "b300cb3fbdadd83fcaa2fc8139d7d05d",
+    "identityHash": "db5be7ef8f090835a16a7eaaa2797b63",
     "entities": [
       {
         "tableName": "foursquare_accounts",
@@ -42,17 +42,11 @@
       },
       {
         "tableName": "caches",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `format` TEXT NOT NULL, `payload` BLOB NOT NULL, `cachedAt` INTEGER NOT NULL, `expiresAt` INTEGER, PRIMARY KEY(`key`, `format`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `payload` BLOB NOT NULL, `created_at` INTEGER NOT NULL, `expires_at` INTEGER NOT NULL, PRIMARY KEY(`key`))",
         "fields": [
           {
             "fieldPath": "key",
             "columnName": "key",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "format",
-            "columnName": "format",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -63,22 +57,22 @@
             "notNull": true
           },
           {
-            "fieldPath": "cachedAt",
-            "columnName": "cachedAt",
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "expiresAt",
-            "columnName": "expiresAt",
-            "affinity": "INTEGER"
+            "columnName": "expires_at",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "key",
-            "format"
+            "key"
           ]
         }
       },
@@ -103,7 +97,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b300cb3fbdadd83fcaa2fc8139d7d05d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db5be7ef8f090835a16a7eaaa2797b63')"
     ]
   }
 }

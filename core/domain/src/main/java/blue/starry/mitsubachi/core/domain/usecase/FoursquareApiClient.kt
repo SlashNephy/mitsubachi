@@ -17,23 +17,47 @@ interface FoursquareApiClient {
     limit: Int? = null,
     after: ZonedDateTime? = null,
     coordinates: Coordinates? = null,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): List<CheckIn>
 
   suspend fun getCheckIn(
     checkInId: String,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): CheckIn
 
   suspend fun searchNearVenues(
     coordinates: Coordinates,
     query: String? = null,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    near: String? = null,
+    radius: Int? = null,
+    categoryId: String? = null,
+    limit: Int? = null,
+    url: String? = null,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): List<Venue>
 
   suspend fun searchVenueRecommendations(
     coordinates: Coordinates,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    query: String? = null,
+    radius: Int? = null,
+    sw: String? = null,
+    ne: String? = null,
+    near: String? = null,
+    section: String? = null,
+    categoryId: String? = null,
+    novelty: String? = null,
+    friendVisits: String? = null,
+    time: String? = null,
+    day: String? = null,
+    lastVenue: String? = null,
+    openNow: Boolean? = null,
+    price: String? = null,
+    saved: Boolean? = null,
+    sortByDistance: Boolean? = null,
+    sortByPopularity: Boolean? = null,
+    limit: Int? = null,
+    offset: Int? = null,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): List<VenueRecommendation>
 
   suspend fun addCheckIn(
@@ -47,12 +71,12 @@ interface FoursquareApiClient {
   suspend fun deleteCheckIn(checkInId: String)
   suspend fun getUser(
     userId: String? = null,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): FoursquareUser
 
   suspend fun getUserVenueHistories(
     userId: String? = null,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): List<VenueHistory>
 
   suspend fun addPhotoToCheckIn(
@@ -66,13 +90,13 @@ interface FoursquareApiClient {
     userId: String? = null,
     limit: Int? = null,
     offset: Int? = null,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): List<CheckIn>
 
   suspend fun getUserPhotos(
     userId: String? = null,
     limit: Int? = null,
     offset: Int? = null,
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
+    policy: FetchPolicy = FetchPolicy.NetworkOnly,
   ): List<Photo>
 }

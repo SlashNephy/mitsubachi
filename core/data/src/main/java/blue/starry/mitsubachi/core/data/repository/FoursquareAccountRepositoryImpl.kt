@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.core.data.repository
 
-import blue.starry.mitsubachi.core.data.database.EncryptedAppDatabase
+import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
 import blue.starry.mitsubachi.core.data.database.entity.fromDomain
 import blue.starry.mitsubachi.core.data.database.entity.toDomain
 import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
@@ -10,17 +10,17 @@ import javax.inject.Singleton
 import blue.starry.mitsubachi.core.data.database.entity.FoursquareAccount as EntityFoursquareAccount
 
 @Singleton
-class FoursquareAccountRepositoryImpl @Inject constructor(private val database: EncryptedAppDatabase) :
+class FoursquareAccountRepositoryImpl @Inject constructor(private val dao: FoursquareAccountDao) :
   FoursquareAccountRepository {
   override suspend fun list(): List<FoursquareAccount> {
-    return database.foursquareAccount().list().map(EntityFoursquareAccount::toDomain)
+    return dao.list().map(EntityFoursquareAccount::toDomain)
   }
 
   override suspend fun update(account: FoursquareAccount) {
-    database.foursquareAccount().insertOrUpdate(EntityFoursquareAccount.fromDomain(account))
+    dao.insertOrUpdate(EntityFoursquareAccount.fromDomain(account))
   }
 
   override suspend fun delete(account: FoursquareAccount) {
-    database.foursquareAccount().deleteById(account.id)
+    dao.deleteById(account.id)
   }
 }
