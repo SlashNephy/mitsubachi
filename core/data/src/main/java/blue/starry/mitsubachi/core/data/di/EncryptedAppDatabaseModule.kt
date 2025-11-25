@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import blue.starry.mitsubachi.core.data.database.EncryptedAppDatabase
 import blue.starry.mitsubachi.core.data.database.dao.CacheDao
+import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
+import blue.starry.mitsubachi.core.data.database.dao.SettingsDao
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
 import dagger.Binds
@@ -46,8 +48,18 @@ internal abstract class EncryptedAppDatabaseModule {
     }
 
     @Provides
+    internal fun provideFoursquareAccountDao(database: EncryptedAppDatabase): FoursquareAccountDao {
+      return database.foursquareAccount()
+    }
+
+    @Provides
     internal fun provideCacheDao(database: EncryptedAppDatabase): CacheDao {
       return database.cache()
+    }
+
+    @Provides
+    internal fun provideSettingsDao(database: EncryptedAppDatabase): SettingsDao {
+      return database.settings()
     }
   }
 }
