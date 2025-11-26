@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.core.data.network
 import blue.starry.mitsubachi.core.data.network.cache.CachePlugin
 import blue.starry.mitsubachi.core.data.network.model.FoursquareCheckIn
 import blue.starry.mitsubachi.core.data.network.model.toDomain
+import blue.starry.mitsubachi.core.data.network.model.toQuery
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.Coordinates
 import blue.starry.mitsubachi.core.domain.model.FetchPolicy
@@ -15,6 +16,7 @@ import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClient
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareBearerTokenSource
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareCheckInBroadcastFlag
+import blue.starry.mitsubachi.core.domain.usecase.VenueRecommendationSection
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
@@ -115,7 +117,7 @@ class FoursquareApiClientImpl @Inject constructor(
     sw: String?,
     ne: String?,
     near: String?,
-    section: String?,
+    section: VenueRecommendationSection?,
     categoryId: String?,
     novelty: String?,
     friendVisits: String?,
@@ -138,7 +140,7 @@ class FoursquareApiClientImpl @Inject constructor(
       sw = sw?.ifBlank { null },
       ne = ne?.ifBlank { null },
       near = near?.ifBlank { null },
-      section = section?.ifBlank { null },
+      section = section?.toQuery(),
       categoryId = categoryId?.ifBlank { null },
       novelty = novelty?.ifBlank { null },
       friendVisits = friendVisits?.ifBlank { null },
@@ -168,7 +170,7 @@ class FoursquareApiClientImpl @Inject constructor(
       shout = shout?.ifBlank { null },
       broadcast = broadcastFlags?.joinToString(
         ",",
-        transform = FoursquareCheckInBroadcastFlag::serialize,
+        transform = FoursquareCheckInBroadcastFlag::toQuery,
       ),
       stickerId = stickerId?.ifBlank { null },
     )
@@ -257,14 +259,5 @@ class FoursquareApiClientImpl @Inject constructor(
       policy = policy,
     )
     return data.response.photos.items.map { it.toDomain() }
-  }
-}
-
-private fun FoursquareCheckInBroadcastFlag.serialize(): String {
-  return when (this) {
-    FoursquareCheckInBroadcastFlag.Public -> "public"
-    FoursquareCheckInBroadcastFlag.Private -> "private"
-    FoursquareCheckInBroadcastFlag.Facebook -> "facebook"
-    FoursquareCheckInBroadcastFlag.Twitter -> "twitter"
   }
 }

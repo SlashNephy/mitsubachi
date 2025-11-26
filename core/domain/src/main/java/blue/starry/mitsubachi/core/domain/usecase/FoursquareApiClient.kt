@@ -43,7 +43,7 @@ interface FoursquareApiClient {
     sw: String? = null,
     ne: String? = null,
     near: String? = null,
-    section: String? = null,
+    section: VenueRecommendationSection? = null,
     categoryId: String? = null,
     novelty: String? = null,
     friendVisits: String? = null,

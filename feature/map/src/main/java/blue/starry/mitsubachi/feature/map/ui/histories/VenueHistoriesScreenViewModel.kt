@@ -64,12 +64,7 @@ class VenueHistoriesScreenViewModel @Inject constructor(
           isRefreshing = false,
         )
     }.onException { e ->
-      if (currentState is UiState.Success) {
-        // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
-        _state.value = currentState.copy(isRefreshing = false)
-      } else {
-        _state.value = UiState.Error(e)
-      }
+      _state.value = UiState.Error(e)
     }
   }
 

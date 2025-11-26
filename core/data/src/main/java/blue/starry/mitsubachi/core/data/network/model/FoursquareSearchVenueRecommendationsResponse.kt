@@ -102,7 +102,7 @@ data class FoursquareSearchVenueRecommendationsResponse(
     data class Result(
       val displayType: String, // venue
       val id: String, // 69060976c9e2c646608e1620
-      val photo: Photo,
+      val photo: Photo?,
       val photos: Photos,
       val snippets: Snippets,
       val venue: FoursquareVenue,
@@ -222,7 +222,7 @@ fun FoursquareSearchVenueRecommendationsResponse.Group.Result.toDomain(): VenueR
   return VenueRecommendation(
     id = id,
     venue = venue.toDomain(),
-    photo = photo.let {
+    photo = photo?.let {
       VenueRecommendation.Photo(
         id = it.id,
         prefix = it.prefix,

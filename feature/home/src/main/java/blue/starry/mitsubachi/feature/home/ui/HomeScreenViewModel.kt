@@ -60,12 +60,7 @@ class HomeScreenViewModel @Inject constructor(
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
     }.onException { e ->
-      if (currentState is UiState.Success) {
-        // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
-        _state.value = currentState.copy(isRefreshing = false)
-      } else {
-        _state.value = UiState.Error(e)
-      }
+      _state.value = UiState.Error(e)
     }
   }
 
