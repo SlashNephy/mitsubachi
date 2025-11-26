@@ -1,5 +1,9 @@
 package blue.starry.mitsubachi.feature.map.ui.search
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.core.domain.model.Coordinates
@@ -10,6 +14,7 @@ import blue.starry.mitsubachi.core.domain.usecase.VenueRecommendationSection
 import blue.starry.mitsubachi.core.ui.compose.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +24,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SearchMapScreenViewModel @Inject constructor(
+  @param:ApplicationContext private val context: Context,
   private val searchVenueRecommendationsUseCase: SearchVenueRecommendationsUseCase,
   private val deviceLocationRepository: DeviceLocationRepository,
 ) : ViewModel() {
@@ -50,20 +56,23 @@ class SearchMapScreenViewModel @Inject constructor(
   private var lastLocation: LatLng? = null
 
   suspend fun loadCurrentLocation() {
-    @Suppress("TooGenericExceptionCaught")
-    try {
-      val location = deviceLocationRepository.findCurrentLocation(timeout = 5.seconds)
-      if (location != null) {
-        val userLocation = LatLng(location.latitude, location.longitude)
-        _currentLocation.value = userLocation
+    if (ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+      ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+      ) != PackageManager.PERMISSION_GRANTED
+    ) {
+      return
+    }
+
+    runCatching {
+      deviceLocationRepository.findCurrentLocation(timeout = 5.seconds)
+    }.onSuccess { location ->
+      location?.also {
+        _currentLocation.value = LatLng(it.latitude, it.longitude)
       }
-    } catch (_: Exception) {
-      // 位置情報の取得に失敗した場合は何もしない
-      // 可能性のあるエラー:
-      // - タイムアウト
-      // - 位置情報が無効
-      // - 権限エラー
-      // いずれの場合もデフォルト位置（東京駅）が使用される
     }
   }
 
