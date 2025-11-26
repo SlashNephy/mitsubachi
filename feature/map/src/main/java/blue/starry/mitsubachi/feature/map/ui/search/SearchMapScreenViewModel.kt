@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.core.domain.model.Coordinates
 import blue.starry.mitsubachi.core.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.core.domain.usecase.DeviceLocationRepository
 import blue.starry.mitsubachi.core.domain.usecase.SearchVenueRecommendationsUseCase
+import blue.starry.mitsubachi.core.domain.usecase.VenueRecommendationSection
 import blue.starry.mitsubachi.core.ui.compose.error.onException
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,8 +41,8 @@ class SearchMapScreenViewModel @Inject constructor(
   private val _searchQuery = MutableStateFlow("")
   val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-  private val _selectedSection = MutableStateFlow<String?>(null)
-  val selectedSection: StateFlow<String?> = _selectedSection.asStateFlow()
+  private val _selectedSection = MutableStateFlow<VenueRecommendationSection?>(null)
+  val selectedSection: StateFlow<VenueRecommendationSection?> = _selectedSection.asStateFlow()
 
   private val _currentLocation = MutableStateFlow<LatLng?>(null)
   val currentLocation: StateFlow<LatLng?> = _currentLocation.asStateFlow()
@@ -76,7 +77,7 @@ class SearchMapScreenViewModel @Inject constructor(
     lastLocation?.let { refreshVenues() }
   }
 
-  fun selectSection(section: String?) {
+  fun selectSection(section: VenueRecommendationSection?) {
     _selectedSection.value = section
     lastLocation?.let { refreshVenues() }
   }
