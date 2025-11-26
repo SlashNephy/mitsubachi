@@ -13,21 +13,21 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DaoModule {
-  @Provides
-  @Singleton
-  internal fun provideFoursquareAccountDao(database: MitsubachiDatabase): FoursquareAccountDao {
-    return database.foursquareAccount()
-  }
+    @Provides
+    @Singleton
+    internal fun provideFoursquareAccountDao(database: MitsubachiDatabase): FoursquareAccountDao {
+        return database.foursquareAccount()
+    }
 
-  @Provides
-  @Singleton
-  internal fun provideCacheDao(database: MitsubachiDatabase): CacheDao {
-    return database.cache()
-  }
+    @Provides
+    @Singleton
+    internal fun provideCacheDao(database: MitsubachiDatabase): CacheDao {
+        return database.cache()
+    }
 
-  @Provides
-  @Singleton
-  internal fun provideSettingsDao(database: MitsubachiDatabase): SettingsDao {
-    return database.settings()
-  }
+    @Provides
+    @Singleton
+    internal fun provideSettingsDao(database: MitsubachiDatabase): SettingsDao {
+        return database.settings()
+    }
 }

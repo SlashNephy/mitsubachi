@@ -9,9 +9,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object ReleaseKtorConfigModule {
-  @Provides
-  @Singleton
-  fun provide(): KtorConfig {
-    return ReleaseKtorConfig
-  }
+    @Provides
+    @Singleton
+    fun provide(): KtorConfig {
+        return ReleaseKtorConfig
+    }
 }

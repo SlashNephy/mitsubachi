@@ -9,9 +9,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DebugImageLoaderConfigModule {
-  @Provides
-  @Singleton
-  fun provide(): ImageLoaderConfig {
-    return DebugImageLoaderConfig
-  }
+    @Provides
+    @Singleton
+    fun provide(): ImageLoaderConfig {
+        return DebugImageLoaderConfig
+    }
 }

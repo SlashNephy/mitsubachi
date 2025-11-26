@@ -4,5 +4,5 @@ import io.ktor.client.HttpClientConfig
 
 @Suppress("EmptyFunctionBlock")
 internal object ReleaseKtorConfig : KtorConfig {
-  override fun HttpClientConfig<*>.configure() {}
+    override fun HttpClientConfig<*>.configure() {}
 }

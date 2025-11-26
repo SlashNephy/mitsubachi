@@ -19,28 +19,28 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class EncryptedMitsubachiDatabaseModule {
-  @Binds
-  internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
+    @Binds
+    internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 
-  internal companion object {
-    @Provides
-    @Singleton
-    internal fun provide(
-      @ApplicationContext context: Context,
-      passphraseProvider: DatabasePassphraseProvider,
-    ): MitsubachiDatabase {
-      System.loadLibrary("sqlcipher")
+    internal companion object {
+        @Provides
+        @Singleton
+        internal fun provide(
+            @ApplicationContext context: Context,
+            passphraseProvider: DatabasePassphraseProvider,
+        ): MitsubachiDatabase {
+            System.loadLibrary("sqlcipher")
 
-      val passphrase = runBlocking(Dispatchers.IO) {
-        passphraseProvider.getPassphrase()
-      }
-      val factory = SupportOpenHelperFactory(passphrase)
+            val passphrase = runBlocking(Dispatchers.IO) {
+                passphraseProvider.getPassphrase()
+            }
+            val factory = SupportOpenHelperFactory(passphrase)
 
-      return Room
-        .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi.db")
-        .openHelperFactory(factory)
-        .fallbackToDestructiveMigration(dropAllTables = true)
-        .build()
+            return Room
+                .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi.db")
+                .openHelperFactory(factory)
+                .fallbackToDestructiveMigration(dropAllTables = true)
+                .build()
+        }
     }
-  }
 }

@@ -13,13 +13,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object PlainMitsubachiDatabaseModule {
-  @Provides
-  @Singleton
-  internal fun provide(@ApplicationContext context: Context): MitsubachiDatabase {
-    // デバッグビルドでは利便性のためデータベースを暗号化しない
-    return Room
-      .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi_debug.db")
-      .fallbackToDestructiveMigration(dropAllTables = true)
-      .build()
-  }
+    @Provides
+    @Singleton
+    internal fun provide(@ApplicationContext context: Context): MitsubachiDatabase {
+        // デバッグビルドでは利便性のためデータベースを暗号化しない
+        return Room
+            .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi_debug.db")
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
+    }
 }

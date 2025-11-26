@@ -9,21 +9,21 @@ import io.ktor.client.plugins.logging.LoggingFormat
 import io.ktor.http.HttpHeaders
 
 internal object DebugKtorConfig : KtorConfig {
-  override fun HttpClientConfig<*>.configure() {
-    // リリースビルドのサイズを削減するために設定を分割
+    override fun HttpClientConfig<*>.configure() {
+        // リリースビルドのサイズを削減するために設定を分割
 
-    install(Logging) {
-      logger = Logger.ANDROID
-      format = LoggingFormat.Default
-      level = LogLevel.ALL
+        install(Logging) {
+            logger = Logger.ANDROID
+            format = LoggingFormat.Default
+            level = LogLevel.ALL
 
-      sanitizeHeader(predicate = sensitiveHeaders::contains)
+            sanitizeHeader(predicate = sensitiveHeaders::contains)
+        }
     }
-  }
 
-  private val sensitiveHeaders = listOf(
-    HttpHeaders.Authorization,
-    HttpHeaders.Cookie,
-    HttpHeaders.SetCookie,
-  )
+    private val sensitiveHeaders = listOf(
+        HttpHeaders.Authorization,
+        HttpHeaders.Cookie,
+        HttpHeaders.SetCookie,
+    )
 }

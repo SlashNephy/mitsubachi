@@ -19,61 +19,61 @@ import kotlin.time.Duration.Companion.minutes
 
 @Singleton
 class RelativeDateTimeFormatterImpl @Inject constructor(
-  @param:ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
 ) : RelativeDateTimeFormatter {
-  override fun formatAsRelativeDateTime(at: ZonedDateTime): String {
-    return DateUtils
-      .getRelativeTimeSpanString(
-        context,
-        at.toInstant().toEpochMilli(),
-        false,
-      )
-      .toString()
-  }
+    override fun formatAsRelativeDateTime(at: ZonedDateTime): String {
+        return DateUtils
+            .getRelativeTimeSpanString(
+                context,
+                at.toInstant().toEpochMilli(),
+                false,
+            )
+            .toString()
+    }
 
-  override fun formatAsRelativeTimeSpan(at: ZonedDateTime): String {
-    val now = Instant.now()
-    return DateUtils
-      .getRelativeTimeSpanString(
-        at.toInstant().toEpochMilli(),
-        now.toEpochMilli(),
-        DateUtils.MINUTE_IN_MILLIS,
-        DateUtils.FORMAT_ABBREV_RELATIVE,
-      )
-      .toString()
-  }
+    override fun formatAsRelativeTimeSpan(at: ZonedDateTime): String {
+        val now = Instant.now()
+        return DateUtils
+            .getRelativeTimeSpanString(
+                at.toInstant().toEpochMilli(),
+                now.toEpochMilli(),
+                DateUtils.MINUTE_IN_MILLIS,
+                DateUtils.FORMAT_ABBREV_RELATIVE,
+            )
+            .toString()
+    }
 
-  override fun formatDuration(duration: Duration, precision: Duration): String {
-    val uLocale = ULocale.getDefault()
-    val formatter = MeasureFormat.getInstance(uLocale, MeasureFormat.FormatWidth.SHORT)
+    override fun formatDuration(duration: Duration, precision: Duration): String {
+        val uLocale = ULocale.getDefault()
+        val formatter = MeasureFormat.getInstance(uLocale, MeasureFormat.FormatWidth.SHORT)
 
-    val measures = buildList {
-      var remainingDuration = precision * ceil(duration / precision)
+        val measures = buildList {
+            var remainingDuration = precision * ceil(duration / precision)
 
-      val days = remainingDuration.inWholeDays
-      if (days > 0) {
-        add(Measure(days, MeasureUnit.DAY))
-        remainingDuration -= days.days
-      }
+            val days = remainingDuration.inWholeDays
+            if (days > 0) {
+                add(Measure(days, MeasureUnit.DAY))
+                remainingDuration -= days.days
+            }
 
-      val hours = remainingDuration.inWholeHours
-      if (hours > 0) {
-        add(Measure(hours, MeasureUnit.HOUR))
-        remainingDuration -= hours.hours
-      }
+            val hours = remainingDuration.inWholeHours
+            if (hours > 0) {
+                add(Measure(hours, MeasureUnit.HOUR))
+                remainingDuration -= hours.hours
+            }
 
-      val minutes = remainingDuration.inWholeMinutes
-      if (minutes > 0) {
-        add(Measure(minutes, MeasureUnit.MINUTE))
-        remainingDuration -= minutes.minutes
-      }
+            val minutes = remainingDuration.inWholeMinutes
+            if (minutes > 0) {
+                add(Measure(minutes, MeasureUnit.MINUTE))
+                remainingDuration -= minutes.minutes
+            }
 
-      val seconds = remainingDuration.inWholeSeconds
-      if (seconds > 0) {
-        add(Measure(seconds, MeasureUnit.SECOND))
-      }
-    }.toTypedArray()
+            val seconds = remainingDuration.inWholeSeconds
+            if (seconds > 0) {
+                add(Measure(seconds, MeasureUnit.SECOND))
+            }
+        }.toTypedArray()
 
-    return formatter.formatMeasures(*measures)
-  }
+        return formatter.formatMeasures(*measures)
+    }
 }

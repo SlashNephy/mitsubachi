@@ -20,39 +20,39 @@ import kotlin.time.ExperimentalTime
 @Module
 @InstallIn(SingletonComponent::class)
 internal object ImageLoaderModule {
-  @Provides
-  @Singleton
-  @OptIn(ExperimentalTime::class, ExperimentalCoilApi::class)
-  fun provide(
-    config: ImageLoaderConfig,
-    @ApplicationContext context: Context,
-    httpClient: HttpClient,
-  ): ImageLoader {
-    return ImageLoader
-      .Builder(context)
-      .components {
-        add(
-          KtorNetworkFetcherFactory(
-            httpClient = { httpClient },
-            cacheStrategy = {
-              CacheControlCacheStrategy()
-            },
-          ),
-        )
-      }
-      .diskCachePolicy(CachePolicy.ENABLED)
-      .memoryCache(
-        MemoryCache
-          .Builder()
-          .maxSizePercent(context, 0.10)
-          .build(),
-      )
-      .crossfade(true)
-      .apply {
-        with(config) {
-          configure()
-        }
-      }
-      .build()
-  }
+    @Provides
+    @Singleton
+    @OptIn(ExperimentalTime::class, ExperimentalCoilApi::class)
+    fun provide(
+        config: ImageLoaderConfig,
+        @ApplicationContext context: Context,
+        httpClient: HttpClient,
+    ): ImageLoader {
+        return ImageLoader
+            .Builder(context)
+            .components {
+                add(
+                    KtorNetworkFetcherFactory(
+                        httpClient = { httpClient },
+                        cacheStrategy = {
+                            CacheControlCacheStrategy()
+                        },
+                    ),
+                )
+            }
+            .diskCachePolicy(CachePolicy.ENABLED)
+            .memoryCache(
+                MemoryCache
+                    .Builder()
+                    .maxSizePercent(context, 0.10)
+                    .build(),
+            )
+            .crossfade(true)
+            .apply {
+                with(config) {
+                    configure()
+                }
+            }
+            .build()
+    }
 }

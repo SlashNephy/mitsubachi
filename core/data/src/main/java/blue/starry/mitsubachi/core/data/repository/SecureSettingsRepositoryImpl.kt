@@ -7,5 +7,5 @@ import javax.inject.Singleton
 
 @Singleton
 internal class SecureSettingsRepositoryImpl @Inject constructor(
-  private val dao: SettingsDao,
+    private val dao: SettingsDao,
 ) : SecureSettingsRepository

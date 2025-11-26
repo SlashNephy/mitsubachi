@@ -32,85 +32,85 @@ import kotlin.time.Duration.Companion.seconds
 @Module
 @InstallIn(SingletonComponent::class)
 internal object KtorClientModule {
-  @Provides
-  @Singleton
-  @Suppress("ThrowsCount")
-  fun provide(
-    config: ApplicationConfig,
-    ktorConfig: KtorConfig,
-    connectivityManager: ConnectivityManager,
-  ): HttpClient {
-    return HttpClient(OkHttp) {
-      expectSuccess = true
+    @Provides
+    @Singleton
+    @Suppress("ThrowsCount")
+    fun provide(
+        config: ApplicationConfig,
+        ktorConfig: KtorConfig,
+        connectivityManager: ConnectivityManager,
+    ): HttpClient {
+        return HttpClient(OkHttp) {
+            expectSuccess = true
 
-      install(HttpTimeout) {
-        val timeout = 10.seconds.inWholeMilliseconds
-        requestTimeoutMillis = timeout
-        connectTimeoutMillis = timeout
-        socketTimeoutMillis = timeout
-      }
-
-      install(UserAgent) {
-        agent =
-          "Mitsubachi/${config.versionName}-${config.versionCode}-${config.buildType}-${config.flavor} (Android; +https://github.com/SlashNephy/mitsubachi)"
-      }
-
-      defaultRequest {
-        header(HttpHeaders.AcceptLanguage, findPrimaryLanguageTag())
-      }
-
-      install(ContentNegotiation) {
-        json(
-          Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-          },
-        )
-      }
-
-      install("PreRequestCheck") {
-        sendPipeline.intercept(HttpSendPipeline.Monitoring) {
-          if (!connectivityManager.isNetworkAvailable()) {
-            throw NetworkUnavailableError()
-          }
-
-          proceed()
-        }
-      }
-
-      install(HttpCallValidator) {
-        handleResponseExceptionWithRequest { throwable, _ ->
-          when (throwable) {
-            is HttpRequestTimeoutException, is ConnectTimeoutException, is SocketTimeoutException -> {
-              throw NetworkTimeoutError(throwable)
+            install(HttpTimeout) {
+                val timeout = 10.seconds.inWholeMilliseconds
+                requestTimeoutMillis = timeout
+                connectTimeoutMillis = timeout
+                socketTimeoutMillis = timeout
             }
 
-            else -> {
-              throw throwable
+            install(UserAgent) {
+                agent =
+                    "Mitsubachi/${config.versionName}-${config.versionCode}-${config.buildType}-${config.flavor} (Android; +https://github.com/SlashNephy/mitsubachi)"
             }
-          }
-        }
-      }
 
-      with(ktorConfig) {
-        configure()
-      }
+            defaultRequest {
+                header(HttpHeaders.AcceptLanguage, findPrimaryLanguageTag())
+            }
+
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                        explicitNulls = false
+                    },
+                )
+            }
+
+            install("PreRequestCheck") {
+                sendPipeline.intercept(HttpSendPipeline.Monitoring) {
+                    if (!connectivityManager.isNetworkAvailable()) {
+                        throw NetworkUnavailableError()
+                    }
+
+                    proceed()
+                }
+            }
+
+            install(HttpCallValidator) {
+                handleResponseExceptionWithRequest { throwable, _ ->
+                    when (throwable) {
+                        is HttpRequestTimeoutException, is ConnectTimeoutException, is SocketTimeoutException -> {
+                            throw NetworkTimeoutError(throwable)
+                        }
+
+                        else -> {
+                            throw throwable
+                        }
+                    }
+                }
+            }
+
+            with(ktorConfig) {
+                configure()
+            }
+        }
     }
-  }
 
-  private fun findPrimaryLanguageTag(): String {
-    val locales = ConfigurationCompat.getLocales(Resources.getSystem().configuration)
-    val primaryLocale = locales.get(0)
+    private fun findPrimaryLanguageTag(): String {
+        val locales = ConfigurationCompat.getLocales(Resources.getSystem().configuration)
+        val primaryLocale = locales.get(0)
 
-    return primaryLocale?.toLanguageTag() ?: "en-US"
-  }
+        return primaryLocale?.toLanguageTag() ?: "en-US"
+    }
 
-  private fun ConnectivityManager.isNetworkAvailable(): Boolean {
-    val network = activeNetwork ?: return false
-    val capabilities = getNetworkCapabilities(network) ?: return false
+    private fun ConnectivityManager.isNetworkAvailable(): Boolean {
+        val network = activeNetwork ?: return false
+        val capabilities = getNetworkCapabilities(network) ?: return false
 
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) && capabilities.hasCapability(
-      NetworkCapabilities.NET_CAPABILITY_VALIDATED,
-    )
-  }
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) && capabilities.hasCapability(
+            NetworkCapabilities.NET_CAPABILITY_VALIDATED,
+        )
+    }
 }
