@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +26,6 @@ import blue.starry.mitsubachi.core.domain.model.primaryCategory
 import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
 import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
-import androidx.compose.ui.res.painterResource
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)

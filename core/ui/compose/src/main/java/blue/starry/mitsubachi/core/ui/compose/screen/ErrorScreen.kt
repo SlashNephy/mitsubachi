@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineBreak
@@ -37,9 +38,8 @@ import blue.starry.mitsubachi.core.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.error.ErrorFormatterImpl
 import blue.starry.mitsubachi.core.ui.compose.error.NoOpErrorReporter
-import kotlinx.coroutines.launch
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
-import androidx.compose.ui.res.painterResource
+import kotlinx.coroutines.launch
 
 @Composable
 fun ErrorScreen(

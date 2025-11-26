@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineBreak
@@ -31,7 +32,6 @@ import androidx.core.net.toUri
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
-import androidx.compose.ui.res.painterResource
 
 @Composable
 fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {

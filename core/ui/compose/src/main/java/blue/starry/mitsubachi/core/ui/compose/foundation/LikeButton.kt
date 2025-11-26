@@ -11,12 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.formatter.NumberFormatter
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
-import androidx.compose.ui.res.painterResource
 
 @Composable
 @Suppress("CognitiveComplexMethod")
@@ -45,7 +45,7 @@ fun LikeButton(
             MaterialSymbols.favorite
           } else {
             MaterialSymbols.favorite_border
-          }
+          },
         ),
         contentDescription = if (isLiked) {
           stringResource(R.string.unlike_button)

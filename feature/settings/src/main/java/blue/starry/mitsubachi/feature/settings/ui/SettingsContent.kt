@@ -32,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
 import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.settings.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,8 +51,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
-import androidx.compose.ui.res.painterResource
 
 @Suppress("LongMethod")
 @Composable

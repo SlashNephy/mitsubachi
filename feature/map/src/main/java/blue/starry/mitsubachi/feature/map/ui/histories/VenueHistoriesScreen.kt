@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +23,7 @@ import blue.starry.mitsubachi.core.ui.compose.permission.PermissionStatus
 import blue.starry.mitsubachi.core.ui.compose.permission.rememberPermissionState
 import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.map.ui.common.Map
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -30,8 +32,6 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
-import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
-import androidx.compose.ui.res.painterResource
 
 internal const val DEFAULT_ZOOM_LEVEL = 5f
 
