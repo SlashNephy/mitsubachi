@@ -2,13 +2,9 @@ package blue.starry.mitsubachi.core.data.di
 
 import android.content.Context
 import androidx.room.Room
-import blue.starry.mitsubachi.core.data.database.EncryptedAppDatabase
-import blue.starry.mitsubachi.core.data.database.dao.CacheDao
-import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
-import blue.starry.mitsubachi.core.data.database.dao.SettingsDao
+import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
-import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,18 +18,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class EncryptedAppDatabaseModule {
+internal abstract class EncryptedMitsubachiDatabaseModule {
   @Binds
   internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 
-  internal companion object {
+  companion object {
     @Provides
     @Singleton
     internal fun provide(
-      applicationConfig: ApplicationConfig,
       @ApplicationContext context: Context,
       passphraseProvider: DatabasePassphraseProvider,
-    ): EncryptedAppDatabase {
+    ): MitsubachiDatabase {
       System.loadLibrary("sqlcipher")
 
       val passphrase = runBlocking(Dispatchers.IO) {
@@ -42,31 +37,10 @@ internal abstract class EncryptedAppDatabaseModule {
       val factory = SupportOpenHelperFactory(passphrase)
 
       return Room
-        .databaseBuilder<EncryptedAppDatabase>(context, name = "mitsubachi.db")
-        .apply {
-          if (applicationConfig.isDebugBuild) {
-            // 開発中は利便性のためデータベースを暗号化しないでおく
-          } else {
-            openHelperFactory(factory)
-          }
-        }
+        .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi.db")
+        .openHelperFactory(factory)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
-    }
-
-    @Provides
-    internal fun provideFoursquareAccountDao(database: EncryptedAppDatabase): FoursquareAccountDao {
-      return database.foursquareAccount()
-    }
-
-    @Provides
-    internal fun provideCacheDao(database: EncryptedAppDatabase): CacheDao {
-      return database.cache()
-    }
-
-    @Provides
-    internal fun provideSettingsDao(database: EncryptedAppDatabase): SettingsDao {
-      return database.settings()
     }
   }
 }
