@@ -2,10 +2,10 @@ package blue.starry.mitsubachi.feature.map.ui.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,15 +14,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,16 +50,9 @@ import io.morfly.compose.bottomsheet.material3.BottomSheetScaffold as AdvancedBo
 private val DEFAULT_LOCATION = LatLng(35.6812, 139.7671) // 東京駅
 private const val DEFAULT_ZOOM_LEVEL = 15f
 
-// Foursquare API section constants
-private const val SECTION_FOOD = "food"
-private const val SECTION_COFFEE = "coffee"
-private const val SECTION_SIGHTS = "sights"
-private const val SECTION_SHOPS = "shops"
-private const val SECTION_ARTS = "arts"
-
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-fun SearchMapScreen() {
+fun SearchMapScreen(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
   val sheetState = rememberBottomSheetState(
     initialValue = SheetValue.PartiallyExpanded,
     defineValues = {
@@ -89,13 +74,31 @@ fun SearchMapScreen() {
     },
   ) {
     Content()
+
+    Box(modifier = Modifier.padding(top = 64.dp)) {
+      Column {
+        val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+        SearchTextField(
+          query = searchQuery,
+          onChange = viewModel::updateSearchQuery,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        )
+
+        val selectedSection by viewModel.selectedSection.collectAsStateWithLifecycle()
+        SectionChipRow(
+          selectedSection = selectedSection,
+          onSelect = viewModel::selectSection,
+          contentPadding = PaddingValues(horizontal = 16.dp),
+        )
+      }
+    }
   }
 }
 
 @Composable
-private fun Content(
-  viewModel: SearchMapScreenViewModel = hiltViewModel(),
-) {
+private fun Content(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
   val permissionState = rememberPermissionState(AndroidPermission.Location)
   LaunchedEffect(Unit) {
     if (permissionState.status != PermissionStatus.Granted) {
@@ -107,8 +110,6 @@ private fun Content(
     position = CameraPosition.fromLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM_LEVEL)
   }
 
-  val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
-
   // ユーザーの現在地を取得して、カメラを移動
   LaunchedEffect(permissionState.status) {
     if (permissionState.status == PermissionStatus.Granted) {
@@ -116,9 +117,9 @@ private fun Content(
     }
   }
 
-  // 現在地が取得できたらカメラを移動
+  val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
   LaunchedEffect(currentLocation) {
-    currentLocation?.let { location ->
+    currentLocation?.also { location ->
       cameraPositionState.position = CameraPosition.fromLatLngZoom(location, DEFAULT_ZOOM_LEVEL)
       viewModel.updateCurrentLocation(location)
     }
@@ -136,7 +137,6 @@ private fun Content(
     cameraPositionState = cameraPositionState,
     uiSettings = MapUiSettings(
       mapToolbarEnabled = false,
-      myLocationButtonEnabled = true,
       zoomControlsEnabled = false,
     ),
     properties = MapProperties(
@@ -175,8 +175,6 @@ private fun BottomSheetContent(
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
   val selectedVenue by viewModel.selectedVenue.collectAsStateWithLifecycle()
-  val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-  val selectedSection by viewModel.selectedSection.collectAsStateWithLifecycle()
 
   Column(
     modifier = modifier.fillMaxWidth(),
@@ -199,62 +197,6 @@ private fun BottomSheetContent(
         modifier = Modifier.padding(vertical = 8.dp),
       )
     } else {
-      // 検索入力フィールド
-      OutlinedTextField(
-        value = searchQuery,
-        onValueChange = { viewModel.updateSearchQuery(it) },
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 8.dp),
-        placeholder = { Text(stringResource(R.string.search_map_search_hint)) },
-        leadingIcon = {
-          Icon(Icons.Default.Search, contentDescription = null)
-        },
-        trailingIcon = {
-          if (searchQuery.isNotEmpty()) {
-            IconButton(onClick = { viewModel.updateSearchQuery("") }) {
-              Icon(Icons.Default.Clear, contentDescription = null)
-            }
-          }
-        },
-        shape = RoundedCornerShape(24.dp),
-        singleLine = true,
-      )
-
-      // カテゴリーフィルターボタン
-      FlowRow(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-      ) {
-        CategoryFilterChip(
-          label = stringResource(R.string.search_map_category_food),
-          selected = selectedSection == SECTION_FOOD,
-          onClick = { viewModel.selectSection(if (selectedSection == SECTION_FOOD) null else SECTION_FOOD) },
-        )
-        CategoryFilterChip(
-          label = stringResource(R.string.search_map_category_coffee),
-          selected = selectedSection == SECTION_COFFEE,
-          onClick = { viewModel.selectSection(if (selectedSection == SECTION_COFFEE) null else SECTION_COFFEE) },
-        )
-        CategoryFilterChip(
-          label = stringResource(R.string.search_map_category_sights),
-          selected = selectedSection == SECTION_SIGHTS,
-          onClick = { viewModel.selectSection(if (selectedSection == SECTION_SIGHTS) null else SECTION_SIGHTS) },
-        )
-        CategoryFilterChip(
-          label = stringResource(R.string.search_map_category_shops),
-          selected = selectedSection == SECTION_SHOPS,
-          onClick = { viewModel.selectSection(if (selectedSection == SECTION_SHOPS) null else SECTION_SHOPS) },
-        )
-        CategoryFilterChip(
-          label = stringResource(R.string.search_map_category_arts),
-          selected = selectedSection == SECTION_ARTS,
-          onClick = { viewModel.selectSection(if (selectedSection == SECTION_ARTS) null else SECTION_ARTS) },
-        )
-      }
-
       // 固定ヘッダー
       Text(
         text = stringResource(R.string.search_map_header_area_info),
@@ -294,17 +236,4 @@ private fun BottomSheetContent(
       }
     }
   }
-}
-
-@Composable
-private fun CategoryFilterChip(
-  label: String,
-  selected: Boolean,
-  onClick: () -> Unit,
-) {
-  FilterChip(
-    selected = selected,
-    onClick = onClick,
-    label = { Text(label) },
-  )
 }
