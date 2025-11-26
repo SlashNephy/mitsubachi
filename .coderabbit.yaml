@@ -6,5 +6,4 @@ reviews:
   profile: assertive
   request_changes_workflow: true
   high_level_summary_in_walkthrough: true
-  collapse_walkthrough: true
   auto_apply_labels: true
