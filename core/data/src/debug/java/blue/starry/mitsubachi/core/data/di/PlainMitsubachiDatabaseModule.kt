@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal class PlainMitsubachiDatabaseModule {
+internal object PlainMitsubachiDatabaseModule {
   @Provides
   @Singleton
   internal fun provide(@ApplicationContext context: Context): MitsubachiDatabase {

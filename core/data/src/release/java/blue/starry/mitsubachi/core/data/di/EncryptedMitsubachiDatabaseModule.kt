@@ -22,7 +22,7 @@ internal abstract class EncryptedMitsubachiDatabaseModule {
   @Binds
   internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 
-  companion object {
+  internal companion object {
     @Provides
     @Singleton
     internal fun provide(
