@@ -21,11 +21,6 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.ANDROID
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.logging.LoggingFormat
 import io.ktor.client.request.HttpSendPipeline
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
@@ -42,6 +37,7 @@ internal object KtorClientModule {
   @Suppress("ThrowsCount")
   fun provide(
     config: ApplicationConfig,
+    ktorConfig: KtorConfig,
     connectivityManager: ConnectivityManager,
   ): HttpClient {
     return HttpClient(OkHttp) {
@@ -72,21 +68,6 @@ internal object KtorClientModule {
         )
       }
 
-      if (config.isDebugBuild) {
-        install(Logging) {
-          logger = Logger.ANDROID
-          format = LoggingFormat.Default
-          level = LogLevel.ALL
-
-          val sensitiveHeaders = listOf(
-            HttpHeaders.Authorization,
-            HttpHeaders.Cookie,
-            HttpHeaders.SetCookie,
-          )
-          sanitizeHeader(predicate = sensitiveHeaders::contains)
-        }
-      }
-
       install("PreRequestCheck") {
         sendPipeline.intercept(HttpSendPipeline.Monitoring) {
           if (!connectivityManager.isNetworkAvailable()) {
@@ -109,6 +90,10 @@ internal object KtorClientModule {
             }
           }
         }
+      }
+
+      with(ktorConfig) {
+        apply()
       }
     }
   }
