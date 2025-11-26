@@ -172,7 +172,7 @@ private fun SettingItem.LeadingContent() {
           .size(32.dp),
       ) {
         Icon(
-          imageVector = leadingIcon.imageVector,
+          painter = leadingIcon.painter,
           contentDescription = null,
           modifier = Modifier
             .align(Alignment.Center)
@@ -189,7 +189,7 @@ private fun SettingItem.LeadingContent() {
           .background(MaterialTheme.colorScheme.background),
       ) {
         Icon(
-          imageVector = leadingIcon.imageVector,
+          painter = leadingIcon.painter,
           contentDescription = null,
           modifier = Modifier
             .align(Alignment.Center)

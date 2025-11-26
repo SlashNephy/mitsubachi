@@ -117,7 +117,7 @@ private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
     }
   }
 
-  return Icon(icon, contentDescription = null, modifier = modifier)
+  return Icon(painter = icon, contentDescription = null, modifier = modifier)
 }
 
 @Composable

@@ -19,7 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +44,7 @@ fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
       val (icon, stringResourceId) = rememberResource(deniedPermission)
 
-      Icon(icon, contentDescription = null, modifier = Modifier.scale(1.5f))
+      Icon(painter = icon, contentDescription = null, modifier = Modifier.scale(1.5f))
 
       Spacer(modifier = Modifier.height(32.dp))
 
@@ -62,7 +62,7 @@ fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {
 }
 
 private data class PermissionResource(
-  val icon: ImageVector,
+  val icon: Painter,
   @param:StringRes val stringResourceId: Int,
 )
 
