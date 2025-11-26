@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -36,6 +33,8 @@ import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.PermissionDeniedScreen
 import blue.starry.mitsubachi.feature.checkin.R
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun NearbyVenuesScreen(
@@ -168,7 +167,7 @@ private fun SortButtons(
       label = { Text(stringResource(R.string.sort_by_relevance)) },
       leadingIcon = {
         Icon(
-          imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+          painter = painterResource(MaterialSymbols.trending_up),
           contentDescription = null,
         )
       },
@@ -179,7 +178,7 @@ private fun SortButtons(
       label = { Text(stringResource(R.string.sort_by_distance)) },
       leadingIcon = {
         Icon(
-          imageVector = Icons.Default.Place,
+          painter = painterResource(MaterialSymbols.place),
           contentDescription = null,
         )
       },

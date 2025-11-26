@@ -1,8 +1,6 @@
 package blue.starry.mitsubachi.feature.checkin.ui
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,6 +13,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +50,7 @@ fun NearbyVenuesScreenTopBar(
     navigationIcon = {
       IconButton(onClick = onBack) {
         Icon(
-          imageVector = Icons.AutoMirrored.Default.ArrowBack,
+          painter = painterResource(MaterialSymbols.arrow_back),
           contentDescription = stringResource(blue.starry.mitsubachi.core.ui.compose.R.string.back_button),
         )
       }

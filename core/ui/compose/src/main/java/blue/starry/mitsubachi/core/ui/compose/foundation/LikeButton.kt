@@ -3,9 +3,6 @@ package blue.starry.mitsubachi.core.ui.compose.foundation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.formatter.NumberFormatter
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 @Suppress("CognitiveComplexMethod")
@@ -41,11 +40,13 @@ fun LikeButton(
       },
     ) {
       Icon(
-        imageVector = if (isLiked) {
-          Icons.Filled.Favorite
-        } else {
-          Icons.Filled.FavoriteBorder
-        },
+        painter = painterResource(
+          if (isLiked) {
+            MaterialSymbols.favorite
+          } else {
+            MaterialSymbols.favorite_border
+          }
+        ),
         contentDescription = if (isLiked) {
           stringResource(R.string.unlike_button)
         } else {

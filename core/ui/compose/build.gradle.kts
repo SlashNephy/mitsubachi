@@ -24,8 +24,6 @@ dependencies {
   api(libs.androidx.compose.ui.graphics)
   api(libs.androidx.compose.ui.text.google.fonts)
   api(libs.androidx.compose.material3)
-  api(libs.androidx.compose.material.icons.core)
-  api(libs.androidx.compose.material.icons.extended)
 
   // androidx.navigation3
   api(libs.androidx.navigation3.runtime)

@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -26,6 +24,8 @@ import blue.starry.mitsubachi.core.domain.model.Venue
 import blue.starry.mitsubachi.core.domain.model.primaryCategory
 import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
 import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -56,7 +56,7 @@ fun CreateCheckInScreenTopBar(
     navigationIcon = {
       IconButton(onClick = onBack) {
         Icon(
-          imageVector = Icons.AutoMirrored.Default.ArrowBack,
+          painter = painterResource(MaterialSymbols.arrow_back),
           contentDescription = stringResource(blue.starry.mitsubachi.core.ui.compose.R.string.back_button),
         )
       }

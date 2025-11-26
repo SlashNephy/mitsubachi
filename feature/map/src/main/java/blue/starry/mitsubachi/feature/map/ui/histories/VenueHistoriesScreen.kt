@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -34,6 +30,8 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 internal const val DEFAULT_ZOOM_LEVEL = 5f
 
@@ -116,7 +114,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
                 },
               ) {
                 Icon(
-                  imageVector = Icons.Filled.MyLocation,
+                  painter = painterResource(MaterialSymbols.my_location),
                   contentDescription = "現在地へ移動",
                 )
               }
@@ -131,7 +129,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
               },
             ) {
               Icon(
-                imageVector = Icons.Filled.Add,
+                painter = painterResource(MaterialSymbols.add),
                 contentDescription = "ズームイン",
               )
             }
@@ -145,7 +143,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
               },
             ) {
               Icon(
-                imageVector = Icons.Filled.Remove,
+                painter = painterResource(MaterialSymbols.remove),
                 contentDescription = "ズームアウト",
               )
             }

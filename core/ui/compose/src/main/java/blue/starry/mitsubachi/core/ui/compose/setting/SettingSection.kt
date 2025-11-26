@@ -16,10 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,6 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.typography.OverrideTextStyle
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun SettingSection(
@@ -115,7 +113,7 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
     )
 
     Icon(
-      imageVector = Icons.Default.ExpandLess,
+      painter = painterResource(MaterialSymbols.expand_less),
       contentDescription = if (isExpanded) {
         stringResource(R.string.collapse_button)
       } else {
@@ -220,7 +218,7 @@ private fun SettingSectionPreview() {
       overline = {
         Text("Overline")
       },
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Rounded.Home),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.home_rounded)),
       trailing = {
         Switch(checked = false, onCheckedChange = {})
       },
@@ -233,7 +231,7 @@ private fun SettingSectionPreview() {
       supporting = {
         Text("Supporting")
       },
-      leadingIcon = SettingItem.LeadingIcon.Round(Icons.Rounded.LocationOn),
+      leadingIcon = SettingItem.LeadingIcon.Round(painterResource(MaterialSymbols.location_on_rounded)),
     )
 
     item(

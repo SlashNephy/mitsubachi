@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOff
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {
@@ -72,7 +71,7 @@ private fun rememberResource(permission: AndroidPermission): PermissionResource 
   return remember(permission) {
     when (permission) {
       is AndroidPermission.Location -> {
-        PermissionResource(Icons.Default.LocationOff, R.string.location_permission_missing)
+        PermissionResource(painterResource(MaterialSymbols.location_off), R.string.location_permission_missing)
       }
     }
   }
@@ -99,7 +98,7 @@ private fun OpenSettingsButton(modifier: Modifier = Modifier) {
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       Icon(
-        Icons.Default.Refresh,
+        painterResource(MaterialSymbols.refresh),
         contentDescription = null,
       )
       Text(stringResource(R.string.open_device_settings_button))

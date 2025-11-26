@@ -16,8 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +35,8 @@ import blue.starry.mitsubachi.core.domain.model.primaryCategory
 import blue.starry.mitsubachi.core.ui.compose.foundation.CheckInRow
 import blue.starry.mitsubachi.core.ui.compose.foundation.UserIcon
 import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun CheckInDetailScreen(
@@ -185,7 +185,7 @@ private fun CoinSection(coins: Int) {
       contentAlignment = Alignment.Center,
     ) {
       Icon(
-        imageVector = Icons.Filled.Star,
+        painter = painterResource(MaterialSymbols.star),
         contentDescription = null,
         tint = Color.White,
         modifier = Modifier.size(20.dp),

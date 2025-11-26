@@ -4,9 +4,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +19,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.feature.map.R
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 internal fun SearchTextField(
@@ -46,12 +45,12 @@ internal fun SearchTextField(
         interactionSource = interactionSource,
         placeholder = { Text(stringResource(R.string.search_map_search_hint)) },
         leadingIcon = {
-          Icon(Icons.Default.Search, contentDescription = null)
+          Icon(painterResource(MaterialSymbols.search), contentDescription = null)
         },
         trailingIcon = {
           if (query.isNotEmpty()) {
             IconButton(onClick = { onChange("") }) {
-              Icon(Icons.Default.Clear, contentDescription = null)
+              Icon(painterResource(MaterialSymbols.clear), contentDescription = null)
             }
           }
         },

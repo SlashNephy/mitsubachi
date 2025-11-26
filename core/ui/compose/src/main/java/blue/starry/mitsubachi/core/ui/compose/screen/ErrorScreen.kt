@@ -10,12 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.NetworkCheck
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -44,6 +38,8 @@ import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.error.ErrorFormatterImpl
 import blue.starry.mitsubachi.core.ui.compose.error.NoOpErrorReporter
 import kotlinx.coroutines.launch
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun ErrorScreen(
@@ -103,21 +99,21 @@ private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
     is AppError -> {
       when (exception) {
         is NetworkTimeoutError -> {
-          Icons.Default.AccessTime
+          painterResource(MaterialSymbols.access_time)
         }
 
         is NetworkUnavailableError -> {
-          Icons.Default.NetworkCheck
+          painterResource(MaterialSymbols.network_check)
         }
 
         is UnauthorizedError -> {
-          Icons.Default.Close
+          painterResource(MaterialSymbols.close)
         }
       }
     }
 
     is Exception -> {
-      Icons.Default.ErrorOutline
+      painterResource(MaterialSymbols.error_outline)
     }
   }
 
@@ -147,7 +143,7 @@ private fun RetryButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       Icon(
-        Icons.Default.Refresh,
+        painterResource(MaterialSymbols.refresh),
         contentDescription = null,
         modifier = Modifier.rotate(angle.value),
       )

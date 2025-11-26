@@ -13,14 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.ColorLens
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.FontDownload
-import androidx.compose.material.icons.filled.NetworkWifi
-import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,6 +49,8 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import androidx.compose.ui.res.painterResource
 
 @Suppress("LongMethod")
 @Composable
@@ -142,7 +136,7 @@ private fun AccountSection(onClickSignOut: () -> Unit) {
 
   SettingSection(title = stringResource(R.string.account_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.AutoMirrored.Filled.Logout),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.logout)),
       headline = {
         Text(stringResource(R.string.logout_button))
       },
@@ -207,7 +201,7 @@ private fun WidgetSection(
 
   SettingSection(title = stringResource(R.string.widget_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.NetworkWifi),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.network_wifi)),
       headline = {
         Text(stringResource(R.string.widget_update_on_wifi_only_headline))
       },
@@ -223,7 +217,7 @@ private fun WidgetSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.Timelapse),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.timelapse)),
       headline = {
         Text(stringResource(R.string.widget_update_interval_headline))
       },
@@ -330,7 +324,7 @@ private fun AppearanceSection(
 
   SettingSection(title = stringResource(R.string.appearance_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.ColorLens),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.color_lens)),
       headline = {
         Text(stringResource(R.string.dynamic_color_headline))
       },
@@ -346,7 +340,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.DarkMode),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.dark_mode)),
       headline = {
         Text(stringResource(R.string.color_scheme_headline))
       },
@@ -366,7 +360,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.FontDownload),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.font_download)),
       headline = {
         Text(stringResource(R.string.font_family_headline))
       },
@@ -572,7 +566,7 @@ private fun DataCollectionSection(
 ) {
   SettingSection(title = stringResource(R.string.data_collection_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.BugReport),
+      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.bug_report)),
       headline = {
         Text(stringResource(R.string.optin_firebase_crashlytics_headline))
       },
