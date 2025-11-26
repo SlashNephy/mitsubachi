@@ -85,7 +85,6 @@ class SearchMapScreenViewModel @Inject constructor(
   private fun refreshVenues() {
     val location = lastLocation ?: return
     viewModelScope.launch {
-      val currentState = state.value
       _state.value = UiState.Loading
 
       runCatching {
@@ -104,12 +103,7 @@ class SearchMapScreenViewModel @Inject constructor(
           isBottomSheetVisible = true,
         )
       }.onException { e ->
-        if (currentState is UiState.Success) {
-          // 2回目以降の更新でエラーが起きた場合は、前の成功状態を維持する
-          _state.value = currentState
-        } else {
-          _state.value = UiState.Error(e, location)
-        }
+        _state.value = UiState.Error(e, location)
       }
     }
   }

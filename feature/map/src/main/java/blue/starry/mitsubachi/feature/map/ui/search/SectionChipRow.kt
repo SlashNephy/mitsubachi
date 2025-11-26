@@ -81,7 +81,7 @@ internal fun SectionChipRow(
           )
         },
         icon = icon,
-        label = label
+        label = label,
       )
     }
   }

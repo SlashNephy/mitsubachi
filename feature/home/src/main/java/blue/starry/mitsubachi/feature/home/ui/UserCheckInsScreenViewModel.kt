@@ -59,11 +59,7 @@ class UserCheckInsScreenViewModel @Inject constructor(
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
     }.onException { e ->
-      if (currentState is UiState.Success) {
-        _state.value = currentState.copy(isRefreshing = false)
-      } else {
-        _state.value = UiState.Error(e)
-      }
+      _state.value = UiState.Error(e)
     }
   }
 
