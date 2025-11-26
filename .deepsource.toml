@@ -11,6 +11,3 @@ name = "kotlin"
   [analyzers.meta]
   runtime_version = "21"
   language_version = "2.1"
-
-[[code_formatters]]
-name = "ktlint"
