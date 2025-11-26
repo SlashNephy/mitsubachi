@@ -7,3 +7,7 @@ reviews:
   request_changes_workflow: true
   high_level_summary_in_walkthrough: true
   auto_apply_labels: true
+  auto_review:
+    ignore_usernames:
+      - renovate[bot]
+      - dependabot[bot]
