@@ -93,9 +93,10 @@ class CachePlugin @Inject constructor(
 
     Timber.d("loading cache for $url (key = $cacheKey)")
 
+    val now = Instant.now()
     return cacheDao.get(
       key = cacheKey,
-      now = System.currentTimeMillis(),
+      now = now.toEpochMilli(),
     )
   }
 
