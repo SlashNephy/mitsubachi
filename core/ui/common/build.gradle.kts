@@ -10,6 +10,7 @@ android {
 
 dependencies {
   implementation(projects.core.domain)
+  api(projects.core.ui.symbols)
 
   implementation(platform(libs.androidx.compose.bom))
   api(libs.androidx.compose.material3)
