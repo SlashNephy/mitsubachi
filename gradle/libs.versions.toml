@@ -27,7 +27,7 @@ archunit = "1.4.1"
 cache4k = "0.14.0"
 coil = "3.3.0"
 detekt = "2.0.0-alpha.1"
-detekt-rules-compose = "0.4.27"
+detekt-rules-compose = "0.4.28"
 firebase = "34.6.0"
 firebase-app-distribution-gradle-plugin = "5.2.0"
 firebase-crashlytics-gradle-plugin = "3.0.6"
@@ -40,7 +40,7 @@ kotlinx-coroutines-play-services = "1.10.2"
 kotlinx-serialization = "1.9.0"
 kover = "0.9.3"
 ksp = "2.3.3"
-ktor = "3.3.2"
+ktor = "3.3.3"
 ktorfit = "2.6.4"
 mockk = "1.14.6"
 play-services-location = "21.3.0"
@@ -80,6 +80,8 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 
 # androidx.lifecycle
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-testing = { module = "androidx.lifecycle:lifecycle-runtime-testing", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }

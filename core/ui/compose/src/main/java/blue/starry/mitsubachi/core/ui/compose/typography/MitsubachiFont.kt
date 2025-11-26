@@ -18,6 +18,10 @@ object MitsubachiFont {
     GoogleFont("IBM Plex Sans KR").toFontVariants()
   }
 
+  fun from(fontName: String): List<Font> {
+    return GoogleFont(fontName).toFontVariants()
+  }
+
   private val googleFontProvider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",

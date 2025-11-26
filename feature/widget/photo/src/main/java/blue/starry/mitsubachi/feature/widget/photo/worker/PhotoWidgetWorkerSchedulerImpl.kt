@@ -8,6 +8,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import blue.starry.mitsubachi.core.domain.usecase.DeviceNetworkRepository
+import blue.starry.mitsubachi.core.domain.usecase.PhotoWidgetWorkerScheduler
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,7 +57,7 @@ internal class PhotoWidgetWorkerSchedulerImpl @Inject constructor(
     // - isWidgetUpdateOnUnmeteredNetworkOnlyEnabled が有効
     // - データセーバーモードが有効
     return applicationSettingsRepository.select { it.isWidgetUpdateOnUnmeteredNetworkOnlyEnabled } ||
-            deviceNetworkRepository.isDataSaverEnabled()
+      deviceNetworkRepository.isDataSaverEnabled()
   }
 
   override suspend fun cancel() {

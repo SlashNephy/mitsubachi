@@ -2,7 +2,7 @@ package blue.starry.mitsubachi.core.data.di
 
 import android.content.Context
 import androidx.room.Room
-import blue.starry.mitsubachi.core.data.database.EncryptedAppDatabase
+import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
 import dagger.Binds
@@ -18,17 +18,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class EncryptedAppDatabaseModule {
+internal abstract class EncryptedMitsubachiDatabaseModule {
   @Binds
   internal abstract fun bind(impl: DatabasePassphraseProviderImpl): DatabasePassphraseProvider
 
-  companion object {
+  internal companion object {
     @Provides
     @Singleton
     internal fun provide(
       @ApplicationContext context: Context,
       passphraseProvider: DatabasePassphraseProvider,
-    ): EncryptedAppDatabase {
+    ): MitsubachiDatabase {
       System.loadLibrary("sqlcipher")
 
       val passphrase = runBlocking(Dispatchers.IO) {
@@ -37,7 +37,7 @@ internal abstract class EncryptedAppDatabaseModule {
       val factory = SupportOpenHelperFactory(passphrase)
 
       return Room
-        .databaseBuilder<EncryptedAppDatabase>(context, name = "mitsubachi.db")
+        .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi.db")
         .openHelperFactory(factory)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()

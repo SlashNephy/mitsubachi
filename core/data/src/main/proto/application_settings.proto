@@ -7,4 +7,9 @@ message ApplicationSettings {
   optional bool is_firebase_crashlytics_enabled = 1;
   optional bool is_widget_update_on_unmetered_network_only_enabled = 2;
   optional int64 widget_update_interval_millis = 3;
+  optional bool is_dynamic_color_enabled = 4;
+  optional int32 color_scheme_preference = 5;
+  oneof font_family_name {
+    string google_font = 6;
+  }
 }
