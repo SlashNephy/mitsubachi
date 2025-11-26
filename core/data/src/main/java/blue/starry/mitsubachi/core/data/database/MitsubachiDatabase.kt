@@ -13,7 +13,7 @@ import blue.starry.mitsubachi.core.data.database.entity.converter.InstantConvert
 
 @Database(version = 5, entities = [FoursquareAccount::class, Cache::class, Settings::class])
 @TypeConverters(InstantConverter::class)
-internal abstract class EncryptedAppDatabase : RoomDatabase() {
+internal abstract class MitsubachiDatabase : RoomDatabase() {
   abstract fun foursquareAccount(): FoursquareAccountDao
   abstract fun cache(): CacheDao
   abstract fun settings(): SettingsDao

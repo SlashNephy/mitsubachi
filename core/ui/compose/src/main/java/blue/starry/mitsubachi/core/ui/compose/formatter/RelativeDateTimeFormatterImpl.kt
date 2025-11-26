@@ -7,6 +7,7 @@ import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
 import android.text.format.DateUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.time.Instant
 import java.time.ZonedDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,11 +32,11 @@ class RelativeDateTimeFormatterImpl @Inject constructor(
   }
 
   override fun formatAsRelativeTimeSpan(at: ZonedDateTime): String {
-    val now = System.currentTimeMillis()
+    val now = Instant.now()
     return DateUtils
       .getRelativeTimeSpanString(
         at.toInstant().toEpochMilli(),
-        now,
+        now.toEpochMilli(),
         DateUtils.MINUTE_IN_MILLIS,
         DateUtils.FORMAT_ABBREV_RELATIVE,
       )

@@ -4,7 +4,7 @@ import java.security.MessageDigest
 
 internal object CacheKeyGenerator {
   fun key(vararg keys: String): String {
-    check(keys.isNotEmpty())
+    require(keys.isNotEmpty())
 
     val base = keys.joinToString("_").toByteArray()
     val sha512 = MessageDigest.getInstance("SHA-512")
