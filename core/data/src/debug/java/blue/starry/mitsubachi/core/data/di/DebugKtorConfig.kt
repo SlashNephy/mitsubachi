@@ -9,7 +9,7 @@ import io.ktor.client.plugins.logging.LoggingFormat
 import io.ktor.http.HttpHeaders
 
 internal object DebugKtorConfig : KtorConfig {
-  override fun HttpClientConfig<*>.apply() {
+  override fun HttpClientConfig<*>.configure() {
     // リリースビルドのサイズを削減するために設定を分割
 
     install(Logging) {

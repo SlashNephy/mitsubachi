@@ -50,7 +50,7 @@ internal object ImageLoaderModule {
       .crossfade(true)
       .apply {
         with(config) {
-          apply()
+          configure()
         }
       }
       .build()

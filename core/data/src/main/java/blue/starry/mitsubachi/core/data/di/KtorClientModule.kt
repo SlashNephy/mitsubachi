@@ -93,7 +93,7 @@ internal object KtorClientModule {
       }
 
       with(ktorConfig) {
-        apply()
+        configure()
       }
     }
   }
