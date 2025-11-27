@@ -1,8 +1,8 @@
 package blue.starry.mitsubachi.core.ui.compose.setting
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 
 data class SettingItem(
   val headline: @Composable () -> Unit,
@@ -13,8 +13,8 @@ data class SettingItem(
   val trailing: @Composable (() -> Unit)?,
 ) {
   sealed interface LeadingIcon {
-    data class Flat(val painter: Painter) : LeadingIcon
-    data class Round(val painter: Painter) : LeadingIcon
+    data class Flat(@param:DrawableRes val id: Int) : LeadingIcon
+    data class Round(@param:DrawableRes val id: Int) : LeadingIcon
     data object Blank : LeadingIcon
   }
 }

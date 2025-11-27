@@ -172,7 +172,7 @@ private fun SettingItem.LeadingContent() {
           .size(32.dp),
       ) {
         Icon(
-          painter = leadingIcon.painter,
+          painter = painterResource(leadingIcon.id),
           contentDescription = null,
           modifier = Modifier
             .align(Alignment.Center)
@@ -189,7 +189,7 @@ private fun SettingItem.LeadingContent() {
           .background(MaterialTheme.colorScheme.background),
       ) {
         Icon(
-          painter = leadingIcon.painter,
+          painter = painterResource(leadingIcon.id),
           contentDescription = null,
           modifier = Modifier
             .align(Alignment.Center)
@@ -218,7 +218,7 @@ private fun SettingSectionPreview() {
       overline = {
         Text("Overline")
       },
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.home_rounded)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.home_rounded),
       trailing = {
         Switch(checked = false, onCheckedChange = {})
       },
@@ -231,7 +231,7 @@ private fun SettingSectionPreview() {
       supporting = {
         Text("Supporting")
       },
-      leadingIcon = SettingItem.LeadingIcon.Round(painterResource(MaterialSymbols.location_on_rounded)),
+      leadingIcon = SettingItem.LeadingIcon.Round(MaterialSymbols.location_on_rounded),
     )
 
     item(

@@ -32,7 +32,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -136,7 +135,7 @@ private fun AccountSection(onClickSignOut: () -> Unit) {
 
   SettingSection(title = stringResource(R.string.account_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.logout)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.logout),
       headline = {
         Text(stringResource(R.string.logout_button))
       },
@@ -201,7 +200,7 @@ private fun WidgetSection(
 
   SettingSection(title = stringResource(R.string.widget_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.network_wifi)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.network_wifi),
       headline = {
         Text(stringResource(R.string.widget_update_on_wifi_only_headline))
       },
@@ -217,7 +216,7 @@ private fun WidgetSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.timelapse)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.timelapse),
       headline = {
         Text(stringResource(R.string.widget_update_interval_headline))
       },
@@ -324,7 +323,7 @@ private fun AppearanceSection(
 
   SettingSection(title = stringResource(R.string.appearance_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.color_lens)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.color_lens),
       headline = {
         Text(stringResource(R.string.dynamic_color_headline))
       },
@@ -340,7 +339,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.dark_mode)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.dark_mode),
       headline = {
         Text(stringResource(R.string.color_scheme_headline))
       },
@@ -360,7 +359,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.font_download)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.font_download),
       headline = {
         Text(stringResource(R.string.font_family_headline))
       },
@@ -498,7 +497,9 @@ private fun FontFamilyDialog(
 
           else -> {
             LazyColumn(
-              modifier = Modifier.fillMaxWidth().selectableGroup(),
+              modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
             ) {
               items(fontList) { fontName ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -566,7 +567,7 @@ private fun DataCollectionSection(
 ) {
   SettingSection(title = stringResource(R.string.data_collection_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(painterResource(MaterialSymbols.bug_report)),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.bug_report),
       headline = {
         Text(stringResource(R.string.optin_firebase_crashlytics_headline))
       },

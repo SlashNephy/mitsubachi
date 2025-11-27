@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.core.ui.compose.screen
 
 import android.content.Intent
 import android.provider.Settings
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,9 +42,13 @@ fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {
     contentAlignment = Alignment.Center,
   ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      val (icon, stringResourceId) = rememberResource(deniedPermission)
+      val (iconId, stringResourceId) = rememberResource(deniedPermission)
 
-      Icon(painter = icon, contentDescription = null, modifier = Modifier.scale(1.5f))
+      Icon(
+        painter = painterResource(iconId),
+        contentDescription = null,
+        modifier = Modifier.scale(1.5f),
+      )
 
       Spacer(modifier = Modifier.height(32.dp))
 
@@ -62,7 +66,7 @@ fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {
 }
 
 private data class PermissionResource(
-  val icon: Painter,
+  @param:DrawableRes val iconId: Int,
   @param:StringRes val stringResourceId: Int,
 )
 
@@ -71,7 +75,7 @@ private fun rememberResource(permission: AndroidPermission): PermissionResource 
   return remember(permission) {
     when (permission) {
       is AndroidPermission.Location -> {
-        PermissionResource(painterResource(MaterialSymbols.location_off), R.string.location_permission_missing)
+        PermissionResource(MaterialSymbols.location_off, R.string.location_permission_missing)
       }
     }
   }
