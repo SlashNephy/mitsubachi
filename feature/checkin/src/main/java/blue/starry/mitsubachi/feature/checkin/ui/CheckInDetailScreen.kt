@@ -114,7 +114,7 @@ private fun VenueCard(checkIn: CheckIn) {
             fontWeight = FontWeight.Bold,
           )
           Text(
-            text = checkIn.venue.primaryCategory?.name ?: "",
+            text = checkIn.venue.primaryCategory?.name.orEmpty(),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary,
           )
