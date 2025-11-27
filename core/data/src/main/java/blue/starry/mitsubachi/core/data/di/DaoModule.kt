@@ -3,7 +3,7 @@ package blue.starry.mitsubachi.core.data.di
 import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
 import blue.starry.mitsubachi.core.data.database.dao.CacheDao
 import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
-import blue.starry.mitsubachi.core.data.database.dao.SettingsDao
+import blue.starry.mitsubachi.core.data.database.dao.UserSettingsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,7 @@ internal object DaoModule {
 
   @Provides
   @Singleton
-  internal fun provideSettingsDao(database: MitsubachiDatabase): SettingsDao {
-    return database.settings()
+  internal fun provideUserSettingsDao(database: MitsubachiDatabase): UserSettingsDao {
+    return database.userSettings()
   }
 }

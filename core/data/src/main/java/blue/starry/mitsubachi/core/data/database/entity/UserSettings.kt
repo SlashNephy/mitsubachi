@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "settings")
-data class Settings(
+@Entity(tableName = "user_settings")
+data class UserSettings(
   @PrimaryKey @ColumnInfo("foursquare_account_id") val foursquareAccountId: String,
 )
