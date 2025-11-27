@@ -104,7 +104,9 @@ private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
       }
     }
 
-    is Exception -> MaterialSymbols.error_filled
+    is Exception -> {
+      MaterialSymbols.error_filled
+    }
   }
 
   return Icon(
