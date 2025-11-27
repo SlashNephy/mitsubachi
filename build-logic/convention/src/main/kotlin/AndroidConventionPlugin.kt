@@ -15,6 +15,7 @@ sealed interface AndroidProjectType {
   enum class UiFramework {
     None,
     Compose,
+    WearCompose,
     Glance,
   }
 
@@ -28,6 +29,12 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
   Plugin<Project> {
   override fun apply(target: Project) {
     with(target) {
+      val composePluginEnabled = projectType.framework in setOf(
+        AndroidProjectType.UiFramework.Compose,
+        AndroidProjectType.UiFramework.WearCompose,
+        AndroidProjectType.UiFramework.Glance
+      )
+
       with(pluginManager) {
         apply(versions.plugin("kotlin-android"))
 
@@ -41,7 +48,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
         }
 
-        if (projectType.framework == AndroidProjectType.UiFramework.Compose || projectType.framework == AndroidProjectType.UiFramework.Glance) {
+        if (composePluginEnabled) {
           apply(versions.plugin("kotlin-compose"))
         }
       }
@@ -77,8 +84,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
 
           buildFeatures {
-            compose =
-              projectType.framework == AndroidProjectType.UiFramework.Compose || projectType.framework == AndroidProjectType.UiFramework.Glance
+            compose = composePluginEnabled
           }
 
           compileOptions {
@@ -134,8 +140,8 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
         "androidTestImplementation"(versions.library("androidx-test-ext-junit"))
         "androidTestImplementation"(versions.library("androidx-test-espresso-core"))
 
-        when (projectType.framework) {
-          AndroidProjectType.UiFramework.Compose -> {
+        when (val framework = projectType.framework) {
+          AndroidProjectType.UiFramework.Compose, AndroidProjectType.UiFramework.WearCompose -> {
             // BOM
             "implementation"(platform(versions.library("androidx-compose-bom")))
             "androidTestImplementation"(platform(versions.library("androidx-compose-bom")))
@@ -143,6 +149,9 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
             // @Preview
             "implementation"(versions.library("androidx-compose-ui-tooling-preview"))
             "debugImplementation"(versions.library("androidx-compose-ui-tooling"))
+            if (framework == AndroidProjectType.UiFramework.WearCompose) {
+              "implementation"(versions.library("androidx-wear-compose-ui-tooling"))
+            }
 
             // Test
             "androidTestImplementation"(versions.library("androidx-compose-ui-test-junit4"))
@@ -173,6 +182,10 @@ class AndroidLibraryConventionPlugin : AndroidBaseConventionPlugin(
 
 class AndroidComposeLibraryConventionPlugin : AndroidBaseConventionPlugin(
   AndroidProjectType.Library(AndroidProjectType.UiFramework.Compose),
+)
+
+class AndroidWearComposeLibraryConventionPlugin : AndroidBaseConventionPlugin(
+  AndroidProjectType.Library(AndroidProjectType.UiFramework.WearCompose),
 )
 
 class AndroidGlanceLibraryConventionPlugin : AndroidBaseConventionPlugin(
