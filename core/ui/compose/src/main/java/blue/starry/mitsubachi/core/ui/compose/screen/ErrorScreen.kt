@@ -95,29 +95,23 @@ private fun Exception.isRetryable(): Boolean {
 
 @Composable
 private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
-  val icon = when (exception) {
+  val iconId = when (exception) {
     is AppError -> {
       when (exception) {
-        is NetworkTimeoutError -> {
-          painterResource(MaterialSymbols.hourglass_disabled)
-        }
-
-        is NetworkUnavailableError -> {
-          painterResource(MaterialSymbols.network_check)
-        }
-
-        is UnauthorizedError -> {
-          painterResource(MaterialSymbols.close)
-        }
+        is NetworkTimeoutError -> MaterialSymbols.hourglass_disabled
+        is NetworkUnavailableError -> MaterialSymbols.network_check
+        is UnauthorizedError -> MaterialSymbols.close
       }
     }
 
-    is Exception -> {
-      painterResource(MaterialSymbols.error_filled)
-    }
+    is Exception -> MaterialSymbols.error_filled
   }
 
-  return Icon(painter = icon, contentDescription = null, modifier = modifier)
+  return Icon(
+    painter = painterResource(iconId),
+    contentDescription = null,
+    modifier = modifier,
+  )
 }
 
 @Composable
