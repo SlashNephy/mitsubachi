@@ -47,6 +47,7 @@ include(
   ":core:ui:compose",
   ":core:ui:glance",
   ":core:ui:symbols",
+  ":core:ui:wear",
   ":feature:checkin",
   ":feature:home",
   ":feature:map",
