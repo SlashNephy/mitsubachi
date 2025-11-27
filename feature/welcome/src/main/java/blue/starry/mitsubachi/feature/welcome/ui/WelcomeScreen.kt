@@ -17,12 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +42,7 @@ import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
 import blue.starry.mitsubachi.core.ui.compose.permission.PermissionStatus
 import blue.starry.mitsubachi.core.ui.compose.permission.rememberPermissionState
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.welcome.R
 
 @Composable
@@ -187,7 +183,7 @@ private fun WelcomeStep(
     modifier = Modifier.fillMaxWidth(),
   ) {
     Icon(
-      imageVector = Icons.Default.WavingHand,
+      painter = painterResource(MaterialSymbols.waving_hand),
       contentDescription = null,
       modifier = Modifier.size(80.dp),
       tint = MaterialTheme.colorScheme.primary,
@@ -229,7 +225,7 @@ private fun WelcomeStep(
       Text(stringResource(R.string.onboarding_next))
       Spacer(modifier = Modifier.width(8.dp))
       Icon(
-        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+        painter = painterResource(MaterialSymbols.arrow_forward),
         contentDescription = null,
         modifier = Modifier.size(20.dp),
       )
@@ -277,7 +273,7 @@ private fun PermissionsStepContent(
     modifier = Modifier.fillMaxWidth(),
   ) {
     Icon(
-      imageVector = Icons.Default.LocationOn,
+      painter = painterResource(MaterialSymbols.location_on),
       contentDescription = null,
       modifier = Modifier.size(80.dp),
       tint = MaterialTheme.colorScheme.primary,
@@ -329,7 +325,7 @@ private fun PermissionsStepContent(
         onClick = onPreviousStep,
       ) {
         Icon(
-          imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+          painter = painterResource(MaterialSymbols.arrow_back),
           contentDescription = null,
           modifier = Modifier.size(20.dp),
         )
@@ -356,7 +352,7 @@ private fun LoginStep(
     modifier = Modifier.fillMaxWidth(),
   ) {
     Icon(
-      imageVector = Icons.AutoMirrored.Filled.Login,
+      painter = painterResource(MaterialSymbols.login),
       contentDescription = null,
       modifier = Modifier.size(80.dp),
       tint = MaterialTheme.colorScheme.primary,
@@ -400,7 +396,7 @@ private fun LoginStep(
       modifier = Modifier.fillMaxWidth(),
     ) {
       Icon(
-        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+        painter = painterResource(MaterialSymbols.arrow_back),
         contentDescription = null,
         modifier = Modifier.size(20.dp),
       )

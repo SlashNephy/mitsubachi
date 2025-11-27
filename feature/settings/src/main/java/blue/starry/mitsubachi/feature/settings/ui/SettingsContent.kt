@@ -13,14 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.ColorLens
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.FontDownload
-import androidx.compose.material.icons.filled.NetworkWifi
-import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,6 +40,7 @@ import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
 import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.settings.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -142,7 +135,7 @@ private fun AccountSection(onClickSignOut: () -> Unit) {
 
   SettingSection(title = stringResource(R.string.account_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.AutoMirrored.Filled.Logout),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.logout),
       headline = {
         Text(stringResource(R.string.logout_button))
       },
@@ -207,7 +200,7 @@ private fun WidgetSection(
 
   SettingSection(title = stringResource(R.string.widget_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.NetworkWifi),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.network_wifi),
       headline = {
         Text(stringResource(R.string.widget_update_on_wifi_only_headline))
       },
@@ -223,7 +216,7 @@ private fun WidgetSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.Timelapse),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.timelapse),
       headline = {
         Text(stringResource(R.string.widget_update_interval_headline))
       },
@@ -330,7 +323,7 @@ private fun AppearanceSection(
 
   SettingSection(title = stringResource(R.string.appearance_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.ColorLens),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.palette_filled),
       headline = {
         Text(stringResource(R.string.dynamic_color_headline))
       },
@@ -346,7 +339,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.DarkMode),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.dark_mode_filled),
       headline = {
         Text(stringResource(R.string.color_scheme_headline))
       },
@@ -366,7 +359,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.FontDownload),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.font_download_filled),
       headline = {
         Text(stringResource(R.string.font_family_headline))
       },
@@ -504,7 +497,9 @@ private fun FontFamilyDialog(
 
           else -> {
             LazyColumn(
-              modifier = Modifier.fillMaxWidth().selectableGroup(),
+              modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
             ) {
               items(fontList) { fontName ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -572,7 +567,7 @@ private fun DataCollectionSection(
 ) {
   SettingSection(title = stringResource(R.string.data_collection_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Default.BugReport),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.bug_report),
       headline = {
         Text(stringResource(R.string.optin_firebase_crashlytics_headline))
       },

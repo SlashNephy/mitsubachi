@@ -15,9 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.domain.usecase.VenueRecommendationSection
@@ -26,35 +25,35 @@ import blue.starry.mitsubachi.feature.map.R
 
 private data class Section(
   val section: VenueRecommendationSection,
-  @param:DrawableRes val icon: Int,
-  @param:StringRes val label: Int,
+  @param:DrawableRes val iconId: Int,
+  @param:StringRes val labelId: Int,
 )
 
 private val sections = listOf(
   Section(
     section = VenueRecommendationSection.Food,
-    icon = MaterialSymbols.fork_spoon,
-    label = R.string.search_map_category_food,
+    iconId = MaterialSymbols.fork_spoon,
+    labelId = R.string.search_map_category_food,
   ),
   Section(
     section = VenueRecommendationSection.Coffee,
-    icon = MaterialSymbols.coffee,
-    label = R.string.search_map_category_coffee,
+    iconId = MaterialSymbols.coffee,
+    labelId = R.string.search_map_category_coffee,
   ),
   Section(
     section = VenueRecommendationSection.Shops,
-    icon = MaterialSymbols.shopping_bag,
-    label = R.string.search_map_category_shops,
+    iconId = MaterialSymbols.shopping_bag,
+    labelId = R.string.search_map_category_shops,
   ),
   Section(
     section = VenueRecommendationSection.Sights,
-    icon = MaterialSymbols.attractions,
-    label = R.string.search_map_category_sights,
+    iconId = MaterialSymbols.attractions,
+    labelId = R.string.search_map_category_sights,
   ),
   Section(
     section = VenueRecommendationSection.Arts,
-    icon = MaterialSymbols.palette,
-    label = R.string.search_map_category_arts,
+    iconId = MaterialSymbols.palette,
+    labelId = R.string.search_map_category_arts,
   ),
 )
 
@@ -99,7 +98,7 @@ private fun SectionChip(
     onClick = onClick,
     leadingIcon = {
       Icon(
-        imageVector = ImageVector.vectorResource(icon),
+        painter = painterResource(icon),
         contentDescription = null,
         modifier = Modifier.scale(0.8f),
       )

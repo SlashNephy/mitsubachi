@@ -10,12 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.NetworkCheck
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -28,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineBreak
@@ -43,6 +38,7 @@ import blue.starry.mitsubachi.core.domain.error.UnauthorizedError
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.error.ErrorFormatterImpl
 import blue.starry.mitsubachi.core.ui.compose.error.NoOpErrorReporter
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import kotlinx.coroutines.launch
 
 @Composable
@@ -99,29 +95,25 @@ private fun Exception.isRetryable(): Boolean {
 
 @Composable
 private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
-  val icon = when (exception) {
+  val iconId = when (exception) {
     is AppError -> {
       when (exception) {
-        is NetworkTimeoutError -> {
-          Icons.Default.AccessTime
-        }
-
-        is NetworkUnavailableError -> {
-          Icons.Default.NetworkCheck
-        }
-
-        is UnauthorizedError -> {
-          Icons.Default.Close
-        }
+        is NetworkTimeoutError -> MaterialSymbols.hourglass_disabled
+        is NetworkUnavailableError -> MaterialSymbols.network_check
+        is UnauthorizedError -> MaterialSymbols.close
       }
     }
 
     is Exception -> {
-      Icons.Default.ErrorOutline
+      MaterialSymbols.error_filled
     }
   }
 
-  return Icon(icon, contentDescription = null, modifier = modifier)
+  return Icon(
+    painter = painterResource(iconId),
+    contentDescription = null,
+    modifier = modifier,
+  )
 }
 
 @Composable
@@ -147,7 +139,7 @@ private fun RetryButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       Icon(
-        Icons.Default.Refresh,
+        painterResource(MaterialSymbols.refresh),
         contentDescription = null,
         modifier = Modifier.rotate(angle.value),
       )

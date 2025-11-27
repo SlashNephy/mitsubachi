@@ -16,10 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,11 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.ui.compose.R
 import blue.starry.mitsubachi.core.ui.compose.typography.OverrideTextStyle
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 
 @Composable
 fun SettingSection(
@@ -115,7 +113,7 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
     )
 
     Icon(
-      imageVector = Icons.Default.ExpandLess,
+      painter = painterResource(MaterialSymbols.keyboard_arrow_up),
       contentDescription = if (isExpanded) {
         stringResource(R.string.collapse_button)
       } else {
@@ -174,7 +172,7 @@ private fun SettingItem.LeadingContent() {
           .size(32.dp),
       ) {
         Icon(
-          imageVector = leadingIcon.imageVector,
+          painter = painterResource(leadingIcon.id),
           contentDescription = null,
           modifier = Modifier
             .align(Alignment.Center)
@@ -191,7 +189,7 @@ private fun SettingItem.LeadingContent() {
           .background(MaterialTheme.colorScheme.background),
       ) {
         Icon(
-          imageVector = leadingIcon.imageVector,
+          painter = painterResource(leadingIcon.id),
           contentDescription = null,
           modifier = Modifier
             .align(Alignment.Center)
@@ -220,7 +218,7 @@ private fun SettingSectionPreview() {
       overline = {
         Text("Overline")
       },
-      leadingIcon = SettingItem.LeadingIcon.Flat(Icons.Rounded.Home),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.home_filled),
       trailing = {
         Switch(checked = false, onCheckedChange = {})
       },
@@ -233,7 +231,7 @@ private fun SettingSectionPreview() {
       supporting = {
         Text("Supporting")
       },
-      leadingIcon = SettingItem.LeadingIcon.Round(Icons.Rounded.LocationOn),
+      leadingIcon = SettingItem.LeadingIcon.Round(MaterialSymbols.location_on),
     )
 
     item(

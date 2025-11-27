@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,6 +33,7 @@ import blue.starry.mitsubachi.core.ui.compose.permission.rememberPermissionState
 import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.PermissionDeniedScreen
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.checkin.R
 
 @Composable
@@ -168,7 +167,7 @@ private fun SortButtons(
       label = { Text(stringResource(R.string.sort_by_relevance)) },
       leadingIcon = {
         Icon(
-          imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+          painter = painterResource(MaterialSymbols.trending_up),
           contentDescription = null,
         )
       },
@@ -179,7 +178,7 @@ private fun SortButtons(
       label = { Text(stringResource(R.string.sort_by_distance)) },
       leadingIcon = {
         Icon(
-          imageVector = Icons.Default.Place,
+          painter = painterResource(MaterialSymbols.location_on),
           contentDescription = null,
         )
       },

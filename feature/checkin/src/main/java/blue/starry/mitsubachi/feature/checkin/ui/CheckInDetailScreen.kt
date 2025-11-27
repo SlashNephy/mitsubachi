@@ -16,8 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -37,6 +36,7 @@ import blue.starry.mitsubachi.core.domain.model.primaryCategory
 import blue.starry.mitsubachi.core.ui.compose.foundation.CheckInRow
 import blue.starry.mitsubachi.core.ui.compose.foundation.UserIcon
 import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 
 @Composable
 fun CheckInDetailScreen(
@@ -114,7 +114,7 @@ private fun VenueCard(checkIn: CheckIn) {
             fontWeight = FontWeight.Bold,
           )
           Text(
-            text = checkIn.venue.primaryCategory?.name ?: "",
+            text = checkIn.venue.primaryCategory?.name.orEmpty(),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary,
           )
@@ -185,7 +185,7 @@ private fun CoinSection(coins: Int) {
       contentAlignment = Alignment.Center,
     ) {
       Icon(
-        imageVector = Icons.Filled.Star,
+        painter = painterResource(MaterialSymbols.star_filled),
         contentDescription = null,
         tint = Color.White,
         modifier = Modifier.size(20.dp),

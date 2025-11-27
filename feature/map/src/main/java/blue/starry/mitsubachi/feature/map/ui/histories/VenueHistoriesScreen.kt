@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -18,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,6 +23,7 @@ import blue.starry.mitsubachi.core.ui.compose.permission.PermissionStatus
 import blue.starry.mitsubachi.core.ui.compose.permission.rememberPermissionState
 import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.map.ui.common.Map
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -116,7 +114,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
                 },
               ) {
                 Icon(
-                  imageVector = Icons.Filled.MyLocation,
+                  painter = painterResource(MaterialSymbols.my_location),
                   contentDescription = "現在地へ移動",
                 )
               }
@@ -131,7 +129,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
               },
             ) {
               Icon(
-                imageVector = Icons.Filled.Add,
+                painter = painterResource(MaterialSymbols.add),
                 contentDescription = "ズームイン",
               )
             }
@@ -145,7 +143,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
               },
             ) {
               Icon(
-                imageVector = Icons.Filled.Remove,
+                painter = painterResource(MaterialSymbols.remove),
                 contentDescription = "ズームアウト",
               )
             }

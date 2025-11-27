@@ -1,11 +1,7 @@
 package blue.starry.mitsubachi.feature.home.ui
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,15 +11,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.home.R
 
-private enum class NavigationItem(@param:StringRes val labelId: Int, val icon: ImageVector) {
-  Home(R.string.home_bar, Icons.Filled.Home),
-  Search(R.string.search_bar, Icons.Filled.Search),
-  Map(R.string.map_bar, Icons.Filled.Map),
-  UserCheckIns(R.string.user_checkins_bar, Icons.Filled.Person),
+private enum class NavigationItem(
+  @param:StringRes val labelId: Int,
+  @param:DrawableRes val iconRes: Int,
+) {
+  Home(R.string.home_bar, MaterialSymbols.home_filled),
+  Search(R.string.search_bar, MaterialSymbols.search),
+  Map(R.string.map_bar, MaterialSymbols.map_filled),
+  UserCheckIns(R.string.user_checkins_bar, MaterialSymbols.history),
 }
 
 @Composable
@@ -40,7 +40,7 @@ fun HomeScreenBottomBar(
       NavigationBarItem(
         icon = {
           Icon(
-            imageVector = item.icon,
+            painter = painterResource(item.iconRes),
             contentDescription = stringResource(item.labelId),
           )
         },

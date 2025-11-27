@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -32,10 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 
 @Composable
 @Suppress("LongMethod") // TODO: 後でなんとかする
@@ -82,7 +82,7 @@ fun CreateCheckInScreen(
             )
           },
         ) {
-          Icon(Icons.Filled.CameraAlt, contentDescription = null)
+          Icon(painterResource(MaterialSymbols.photo_camera), contentDescription = null)
         }
       }
 
