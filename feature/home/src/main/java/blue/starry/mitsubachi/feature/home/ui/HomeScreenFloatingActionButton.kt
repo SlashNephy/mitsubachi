@@ -14,7 +14,7 @@ fun HomeScreenFloatingActionButton(onClickCheckInButton: () -> Unit) {
   ExtendedFloatingActionButton(
     icon = {
       Icon(
-        painter = painterResource(MaterialSymbols.place),
+        painter = painterResource(MaterialSymbols.add_location_alt_filled),
         contentDescription = stringResource(R.string.check_in_button),
       )
     },

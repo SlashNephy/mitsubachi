@@ -42,9 +42,9 @@ fun LikeButton(
       Icon(
         painter = painterResource(
           if (isLiked) {
-            MaterialSymbols.favorite
+            MaterialSymbols.favorite_filled
           } else {
-            MaterialSymbols.favorite_border
+            MaterialSymbols.favorite
           },
         ),
         contentDescription = if (isLiked) {

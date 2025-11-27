@@ -82,7 +82,7 @@ fun CreateCheckInScreen(
             )
           },
         ) {
-          Icon(painterResource(MaterialSymbols.camera_alt), contentDescription = null)
+          Icon(painterResource(MaterialSymbols.photo_camera), contentDescription = null)
         }
       }
 

@@ -16,11 +16,14 @@ import androidx.compose.ui.res.stringResource
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.home.R
 
-private enum class NavigationItem(@param:StringRes val labelId: Int, @param:DrawableRes val iconRes: Int) {
-  Home(R.string.home_bar, MaterialSymbols.home),
+private enum class NavigationItem(
+  @param:StringRes val labelId: Int,
+  @param:DrawableRes val iconRes: Int,
+) {
+  Home(R.string.home_bar, MaterialSymbols.home_filled),
   Search(R.string.search_bar, MaterialSymbols.search),
-  Map(R.string.map_bar, MaterialSymbols.map),
-  UserCheckIns(R.string.user_checkins_bar, MaterialSymbols.person),
+  Map(R.string.map_bar, MaterialSymbols.map_filled),
+  UserCheckIns(R.string.user_checkins_bar, MaterialSymbols.history),
 }
 
 @Composable

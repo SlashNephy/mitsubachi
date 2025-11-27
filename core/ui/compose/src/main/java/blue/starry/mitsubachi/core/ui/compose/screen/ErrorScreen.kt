@@ -99,7 +99,7 @@ private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
     is AppError -> {
       when (exception) {
         is NetworkTimeoutError -> {
-          painterResource(MaterialSymbols.access_time)
+          painterResource(MaterialSymbols.hourglass_disabled)
         }
 
         is NetworkUnavailableError -> {
@@ -113,7 +113,7 @@ private fun ErrorIcon(exception: Exception, modifier: Modifier = Modifier) {
     }
 
     is Exception -> {
-      painterResource(MaterialSymbols.error_outline)
+      painterResource(MaterialSymbols.error_filled)
     }
   }
 

@@ -323,7 +323,7 @@ private fun AppearanceSection(
 
   SettingSection(title = stringResource(R.string.appearance_section_title)) {
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.color_lens),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.palette_filled),
       headline = {
         Text(stringResource(R.string.dynamic_color_headline))
       },
@@ -339,7 +339,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.dark_mode),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.dark_mode_filled),
       headline = {
         Text(stringResource(R.string.color_scheme_headline))
       },
@@ -359,7 +359,7 @@ private fun AppearanceSection(
     )
 
     item(
-      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.font_download),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.font_download_filled),
       headline = {
         Text(stringResource(R.string.font_family_headline))
       },

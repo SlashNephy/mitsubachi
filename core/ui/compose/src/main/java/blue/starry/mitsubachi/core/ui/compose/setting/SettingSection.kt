@@ -113,7 +113,7 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
     )
 
     Icon(
-      painter = painterResource(MaterialSymbols.expand_less),
+      painter = painterResource(MaterialSymbols.keyboard_arrow_up),
       contentDescription = if (isExpanded) {
         stringResource(R.string.collapse_button)
       } else {
@@ -218,7 +218,7 @@ private fun SettingSectionPreview() {
       overline = {
         Text("Overline")
       },
-      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.home_rounded),
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.home_filled),
       trailing = {
         Switch(checked = false, onCheckedChange = {})
       },
@@ -231,7 +231,7 @@ private fun SettingSectionPreview() {
       supporting = {
         Text("Supporting")
       },
-      leadingIcon = SettingItem.LeadingIcon.Round(MaterialSymbols.location_on_rounded),
+      leadingIcon = SettingItem.LeadingIcon.Round(MaterialSymbols.location_on),
     )
 
     item(

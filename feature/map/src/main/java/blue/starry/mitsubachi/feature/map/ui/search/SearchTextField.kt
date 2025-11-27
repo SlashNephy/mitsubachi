@@ -50,7 +50,7 @@ internal fun SearchTextField(
         trailingIcon = {
           if (query.isNotEmpty()) {
             IconButton(onClick = { onChange("") }) {
-              Icon(painterResource(MaterialSymbols.clear), contentDescription = null)
+              Icon(painterResource(MaterialSymbols.close), contentDescription = null)
             }
           }
         },

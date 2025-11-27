@@ -185,7 +185,7 @@ private fun CoinSection(coins: Int) {
       contentAlignment = Alignment.Center,
     ) {
       Icon(
-        painter = painterResource(MaterialSymbols.star),
+        painter = painterResource(MaterialSymbols.star_filled),
         contentDescription = null,
         tint = Color.White,
         modifier = Modifier.size(20.dp),

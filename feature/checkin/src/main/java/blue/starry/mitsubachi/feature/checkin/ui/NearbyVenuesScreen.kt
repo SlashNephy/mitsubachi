@@ -178,7 +178,7 @@ private fun SortButtons(
       label = { Text(stringResource(R.string.sort_by_distance)) },
       leadingIcon = {
         Icon(
-          painter = painterResource(MaterialSymbols.place),
+          painter = painterResource(MaterialSymbols.location_on),
           contentDescription = null,
         )
       },
