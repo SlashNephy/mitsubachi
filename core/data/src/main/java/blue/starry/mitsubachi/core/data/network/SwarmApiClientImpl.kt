@@ -43,10 +43,11 @@ class SwarmApiClientImpl @Inject constructor(
     policy: FetchPolicy,
   ): List<CheckIn> {
     val data = ktorfit.getRecentActivities(
-      uniqueDevice = uniqueDevice ?: RandomStringUtils.secure().nextHex(24),
+      uniqueDevice = uniqueDevice?.ifBlank { null } ?: RandomStringUtils.secure().nextHex(24),
       oauthToken = oauthToken,
-      wsid = wsid ?: Uuid.random().toHexDashString(),
-      userAgent = userAgent ?: "com.foursquare.robin:2025081819:20220328:16:Pixel 10:release",
+      wsid = wsid?.ifBlank { null } ?: Uuid.random().toHexDashString(),
+      userAgent = userAgent?.ifBlank { null }
+        ?: "com.foursquare.robin:2025081819:20220328:16:Pixel 10:release",
       policy = policy,
     )
     return data.response.activities.items.map { it.checkin.toDomain() }
