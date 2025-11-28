@@ -1,19 +1,24 @@
 package blue.starry.mitsubachi.core.data.repository.model
 
-import blue.starry.mitsubachi.core.data.datastore.UserSettings
+import blue.starry.mitsubachi.core.data.database.entity.UserSettings
 import blue.starry.mitsubachi.core.domain.model.UserSettings as DomainUserSettings
 
-private val defaultUserSettings = DomainUserSettings(
-  some = 1,
-)
-
-internal fun UserSettings.toDomain(): DomainUserSettings {
+internal fun UserSettings.Payload.toDomain(): DomainUserSettings {
   return DomainUserSettings(
-    some = 1,
+    useSwarmCompatibilityMode = useSwarmCompatibilityMode,
+    swarmOAuthToken = swarmOAuthToken,
+    uniqueDevice = uniqueDevice,
+    wsid = wsid,
+    userAgent = userAgent,
   )
 }
 
-internal fun DomainUserSettings.toEntity(): UserSettings {
-  return UserSettings.newBuilder()
-    .build()
+internal fun DomainUserSettings.toEntity(): UserSettings.Payload {
+  return UserSettings.Payload(
+    useSwarmCompatibilityMode = useSwarmCompatibilityMode,
+    swarmOAuthToken = swarmOAuthToken,
+    uniqueDevice = uniqueDevice,
+    wsid = wsid,
+    userAgent = userAgent,
+  )
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "a4a8364dfa1c87d8f7ecd7550a05455d",
+    "identityHash": "7ebf3934f94086ee8b6c2b969764ed86",
     "entities": [
       {
         "tableName": "foursquare_accounts",
@@ -78,11 +78,17 @@
       },
       {
         "tableName": "user_settings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`foursquare_account_id` TEXT NOT NULL, PRIMARY KEY(`foursquare_account_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`foursquare_account_id` TEXT NOT NULL, `payload` TEXT NOT NULL, PRIMARY KEY(`foursquare_account_id`))",
         "fields": [
           {
             "fieldPath": "foursquareAccountId",
             "columnName": "foursquare_account_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payload",
+            "columnName": "payload",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -97,7 +103,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a4a8364dfa1c87d8f7ecd7550a05455d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ebf3934f94086ee8b6c2b969764ed86')"
     ]
   }
 }

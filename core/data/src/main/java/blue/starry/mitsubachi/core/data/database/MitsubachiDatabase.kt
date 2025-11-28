@@ -10,9 +10,10 @@ import blue.starry.mitsubachi.core.data.database.entity.Cache
 import blue.starry.mitsubachi.core.data.database.entity.FoursquareAccount
 import blue.starry.mitsubachi.core.data.database.entity.UserSettings
 import blue.starry.mitsubachi.core.data.database.entity.converter.InstantConverter
+import blue.starry.mitsubachi.core.data.database.entity.converter.UserSettingsPayloadConverter
 
 @Database(version = 6, entities = [FoursquareAccount::class, Cache::class, UserSettings::class])
-@TypeConverters(InstantConverter::class)
+@TypeConverters(InstantConverter::class, UserSettingsPayloadConverter::class)
 internal abstract class MitsubachiDatabase : RoomDatabase() {
   abstract fun foursquareAccount(): FoursquareAccountDao
   abstract fun cache(): CacheDao
