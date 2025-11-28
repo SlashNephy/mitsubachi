@@ -19,7 +19,6 @@ internal object PlainMitsubachiDatabaseModule {
     // デバッグビルドでは利便性のためデータベースを暗号化しない
     return Room
       .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi_debug.db")
-      .fallbackToDestructiveMigration(dropAllTables = true)
       .build()
   }
 }
