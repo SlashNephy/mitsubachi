@@ -8,4 +8,5 @@ data class FoursquareAccount(
   val displayName: String,
   val iconUrl: String,
   val accessToken: String,
+  val isPrimary: Boolean,
 )
