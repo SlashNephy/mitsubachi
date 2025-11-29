@@ -43,5 +43,6 @@ internal fun FoursquareUser.toDomain(iconSize: String = "120"): DomainFoursquare
     address = address,
     gender = gender,
     isPrivateProfile = privateProfile,
+    email = email,
   )
 }

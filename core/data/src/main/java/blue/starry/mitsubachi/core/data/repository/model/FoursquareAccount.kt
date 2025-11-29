@@ -7,6 +7,7 @@ internal fun FoursquareAccount.toDomain(): DomainFoursquareAccount {
   return DomainFoursquareAccount(
     id = id,
     displayName = displayName,
+    email = email,
     iconUrl = iconUrl,
     accessToken = accessToken,
     isPrimary = isPrimary,
@@ -17,6 +18,7 @@ internal fun DomainFoursquareAccount.toEntity(): FoursquareAccount {
   return FoursquareAccount(
     id = id,
     displayName = displayName,
+    email = email,
     iconUrl = iconUrl,
     accessToken = accessToken,
     isPrimary = isPrimary,

@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class FoursquareAccount(
   @PrimaryKey val id: String,
   @ColumnInfo(name = "display_name") val displayName: String,
+  val email: String,
   @ColumnInfo(name = "icon_url") val iconUrl: String,
   @ColumnInfo(name = "access_token") val accessToken: String,
   @ColumnInfo(name = "is_primary") val isPrimary: Boolean,

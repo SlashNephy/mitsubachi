@@ -6,6 +6,7 @@ import androidx.compose.runtime.Immutable
 data class FoursquareAccount(
   val id: String,
   val displayName: String,
+  val email: String,
   val iconUrl: String,
   val accessToken: String,
   val isPrimary: Boolean,

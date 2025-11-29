@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "ea05cd2d6f26cdf2883e250651b938cb",
+    "identityHash": "2c85e2bcf1fbba4ce816e980a3b6fe3b",
     "entities": [
       {
         "tableName": "foursquare_accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `display_name` TEXT NOT NULL, `icon_url` TEXT NOT NULL, `access_token` TEXT NOT NULL, `is_primary` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `display_name` TEXT NOT NULL, `email` TEXT NOT NULL, `icon_url` TEXT NOT NULL, `access_token` TEXT NOT NULL, `is_primary` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -17,6 +17,12 @@
           {
             "fieldPath": "displayName",
             "columnName": "display_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -109,7 +115,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ea05cd2d6f26cdf2883e250651b938cb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2c85e2bcf1fbba4ce816e980a3b6fe3b')"
     ]
   }
 }

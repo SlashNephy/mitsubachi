@@ -69,6 +69,7 @@ class FoursquareOAuth2ClientImpl @Inject constructor(
     return FoursquareAccount(
       id = user.id,
       displayName = user.displayName,
+      email = requireNotNull(user.email),
       iconUrl = user.iconUrl,
       accessToken = token,
       isPrimary = true, // TODO: 複数アカウント対応
