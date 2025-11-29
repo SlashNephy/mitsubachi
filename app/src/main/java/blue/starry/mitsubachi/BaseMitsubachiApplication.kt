@@ -10,32 +10,26 @@ import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import com.google.firebase.Firebase
-import com.google.firebase.appdistribution.FirebaseAppDistribution
 import com.google.firebase.crashlytics.crashlytics
-import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
-@HiltAndroidApp
-class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Configuration.Provider {
-  @Suppress("LateinitUsage")
+@Suppress("LateinitUsage")
+abstract class BaseMitsubachiApplication : Application(), SingletonImageLoader.Factory,
+  Configuration.Provider {
   @Inject
   lateinit var imageLoader: ImageLoader
 
-  @Suppress("LateinitUsage")
   @Inject
   @ApplicationScope
   lateinit var applicationScope: CoroutineScope
 
-  @Suppress("LateinitUsage")
   @Inject
   lateinit var applicationSettingsRepository: ApplicationSettingsRepository
 
-  @Suppress("LateinitUsage")
   @Inject
   lateinit var workerFactory: HiltWorkerFactory
 
@@ -63,36 +57,9 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Confi
     applicationScope.launch {
       PhotoWidget.updatePreview(applicationContext)
     }
-
-    // staging variant でのみ Firebase App Distribution の更新チェックを実行
-    if (BuildConfig.FLAVOR == "staging") {
-      applicationScope.launch {
-        checkForAppUpdates()
-      }
-    }
-
-    if (BuildConfig.DEBUG) {
-      Timber.plant(Timber.DebugTree())
-    }
   }
 
   override fun newImageLoader(context: PlatformContext): ImageLoader {
     return imageLoader
-  }
-
-  private fun checkForAppUpdates() {
-    FirebaseAppDistribution.getInstance()
-      .updateIfNewReleaseAvailable()
-      .addOnProgressListener { updateProgress ->
-        Timber.d(
-          "Firebase App Distribution update progress: ${updateProgress.apkBytesDownloaded}/${updateProgress.apkFileTotalBytes}",
-        )
-      }
-      .addOnSuccessListener {
-        Timber.d("Firebase App Distribution update check succeeded")
-      }
-      .addOnFailureListener { exception ->
-        Timber.w(exception, "Firebase App Distribution update check failed")
-      }
   }
 }
