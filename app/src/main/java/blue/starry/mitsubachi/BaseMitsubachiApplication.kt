@@ -18,7 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @Suppress("LateinitUsage")
-abstract class BaseMitsubachiApplication : Application(), SingletonImageLoader.Factory,
+abstract class BaseMitsubachiApplication :
+    Application(),
+    SingletonImageLoader.Factory,
   Configuration.Provider {
   @Inject
   lateinit var imageLoader: ImageLoader
