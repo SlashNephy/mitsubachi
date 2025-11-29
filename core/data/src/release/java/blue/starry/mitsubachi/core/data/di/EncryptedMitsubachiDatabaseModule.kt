@@ -39,6 +39,7 @@ internal abstract class EncryptedMitsubachiDatabaseModule {
       return Room
         .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi.db")
         .openHelperFactory(factory)
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
     }
   }
