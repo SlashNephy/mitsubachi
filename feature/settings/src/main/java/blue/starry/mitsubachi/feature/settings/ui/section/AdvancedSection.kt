@@ -193,6 +193,8 @@ private fun TextFieldDialog(
         onValueChange = {
           value = it
         },
+        singleLine = true,
+        maxLines = 1,
       )
     },
     dismissButton = {
