@@ -6,7 +6,6 @@ data class ApplicationConfig(
   val versionCode: Int,
   val buildType: String,
   val flavor: String,
-  val isDebugBuild: Boolean,
   val foursquareClientId: String,
   val foursquareClientSecret: String,
   val foursquareRedirectUri: String,

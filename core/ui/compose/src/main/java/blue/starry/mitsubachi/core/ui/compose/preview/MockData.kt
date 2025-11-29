@@ -21,7 +21,6 @@ object MockData {
     versionCode = 123,
     buildType = "debug",
     flavor = "local",
-    isDebugBuild = true,
     foursquareClientId = "client_id",
     foursquareClientSecret = "client_secret",
     foursquareRedirectUri = "blue.starry.mitsubachi.local://oauth2/callback",

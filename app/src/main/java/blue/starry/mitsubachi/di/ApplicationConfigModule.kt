@@ -20,7 +20,6 @@ internal object ApplicationConfigModule {
       versionCode = BuildConfig.VERSION_CODE,
       buildType = BuildConfig.BUILD_TYPE,
       flavor = BuildConfig.FLAVOR,
-      isDebugBuild = BuildConfig.DEBUG,
       foursquareClientId = BuildConfig.foursquare_client_id,
       foursquareClientSecret = BuildConfig.foursquare_client_secret,
       foursquareRedirectUri = BuildConfig.foursquare_redirect_uri,

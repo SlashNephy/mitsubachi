@@ -30,6 +30,7 @@ coil = "3.3.0"
 detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.4.28"
 firebase = "34.6.0"
+firebase-appdistribution = "16.0.0-beta17"
 firebase-app-distribution-gradle-plugin = "5.2.0"
 firebase-crashlytics-gradle-plugin = "3.0.6"
 google-services = "4.4.4"
@@ -131,6 +132,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-crashlytics-ndk = { module = "com.google.firebase:firebase-crashlytics-ndk" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-appdistribution = { module = "com.google.firebase:firebase-appdistribution", version.ref = "firebase-appdistribution" }
 
 cache4k = { module = "io.github.reactivecircus.cache4k:cache4k", version.ref = "cache4k" }
 apache-commons-lang = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons-lang" }

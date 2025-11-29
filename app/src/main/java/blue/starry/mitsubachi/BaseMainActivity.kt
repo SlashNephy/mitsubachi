@@ -13,10 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.domain.model.ColorSchemePreference
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+abstract class BaseMainActivity : ComponentActivity() {
   private val viewModel: MainActivityViewModel by viewModels()
 
   override fun onCreate(savedInstanceState: Bundle?) {

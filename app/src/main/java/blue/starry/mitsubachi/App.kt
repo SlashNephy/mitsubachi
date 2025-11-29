@@ -46,7 +46,7 @@ fun App(
   viewModel: AppViewModel = hiltViewModel(),
 ) {
   val backStack = rememberNavBackStack(initialRouteKeys)
-  if (viewModel.isDebugBuild) {
+  if (BuildConfig.DEBUG) {
     LaunchedEffect(backStack) {
       snapshotFlow { backStack.toList() }
         .collect { currentBackStack ->
