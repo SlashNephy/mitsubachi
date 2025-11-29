@@ -1,7 +1,6 @@
 package blue.starry.mitsubachi.core.data.repository
 
 import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
-import blue.starry.mitsubachi.core.data.database.entity.FoursquareAccount
 import blue.starry.mitsubachi.core.data.repository.model.toDomain
 import blue.starry.mitsubachi.core.data.repository.model.toEntity
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareAccountRepository
@@ -16,10 +15,6 @@ class FoursquareAccountRepositoryImpl @Inject constructor(
   private val dao: FoursquareAccountDao,
 ) : FoursquareAccountRepository {
   override val primary: Flow<DomainFoursquareAccount?> = dao.primary.map { it?.toDomain() }
-
-  override suspend fun list(): List<DomainFoursquareAccount> {
-    return dao.list().map(FoursquareAccount::toDomain)
-  }
 
   override suspend fun update(account: DomainFoursquareAccount) {
     dao.insertOrUpdate(account.toEntity())

@@ -14,8 +14,7 @@ class FetchFeedUseCase @Inject constructor(
   private val userSettingsRepository: UserSettingsRepository,
 ) {
   suspend operator fun invoke(): List<CheckIn> {
-    // TODO: 複数アカウント対応
-    val account = foursquareAccountRepository.list().firstOrNull() ?: throw UnauthorizedError()
+    val account = foursquareAccountRepository.primary.first() ?: throw UnauthorizedError()
     val settings = userSettingsRepository.flow(account).first()
 
     if (!settings.useSwarmCompatibilityMode || settings.swarmOAuthToken.isBlank()) {

@@ -15,9 +15,6 @@ interface FoursquareAccountDao {
   @get:Query("SELECT * FROM `foursquare_accounts` WHERE `is_primary` = true LIMIT 1")
   val primary: Flow<FoursquareAccount?>
 
-  @Query("SELECT * FROM `foursquare_accounts`")
-  suspend fun list(): List<FoursquareAccount>
-
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertOrUpdate(entity: FoursquareAccount)
 

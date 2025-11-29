@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface FoursquareAccountRepository {
   val primary: Flow<FoursquareAccount?>
-  suspend fun list(): List<FoursquareAccount>
   suspend fun update(account: FoursquareAccount)
   suspend fun delete(account: FoursquareAccount)
 }
