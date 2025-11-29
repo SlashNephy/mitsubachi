@@ -15,6 +15,7 @@ data class SettingItem(
   sealed interface LeadingIcon {
     data class Flat(@param:DrawableRes val id: Int) : LeadingIcon
     data class Round(@param:DrawableRes val id: Int) : LeadingIcon
+    data class Remote(val url: String, val modifier: Modifier = Modifier) : LeadingIcon
     data object Blank : LeadingIcon
   }
 }
