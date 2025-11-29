@@ -149,7 +149,7 @@ private fun StringValue(value: String) {
   if (value.isEmpty()) {
     Text("(未設定)")
   } else {
-    Text(value.intern())
+    Text(value)
   }
 }
 
