@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.core.ui.compose.preview
 
 import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.core.domain.model.FoursquareUser
 import blue.starry.mitsubachi.core.domain.model.Photo
 import blue.starry.mitsubachi.core.domain.model.Source
@@ -9,9 +10,18 @@ import blue.starry.mitsubachi.core.domain.model.VenueCategory
 import blue.starry.mitsubachi.core.domain.model.VenueLocation
 import java.time.ZonedDateTime
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "StringLiteralDuplication")
 object MockData {
   private val now = ZonedDateTime.now()
+
+  val PrimaryFoursquareAccount = FoursquareAccount(
+    id = "account",
+    displayName = "山田太郎",
+    email = "taro@example.com",
+    iconUrl = "https://example.com/photo.png",
+    accessToken = "xxx",
+    isPrimary = true,
+  )
 
   val PrimaryVenueCategory = VenueCategory(
     id = "primary-category",
@@ -64,6 +74,7 @@ object MockData {
     address = "丸の内2-4-1",
     gender = null,
     isPrivateProfile = false,
+    email = "taro@example.com",
   )
 
   val FriendUser = FoursquareUser(
@@ -78,6 +89,7 @@ object MockData {
     address = "丸の内2-4-1",
     gender = null,
     isPrivateProfile = false,
+    email = "taro@example.com",
   )
 
   val CheckIn = CheckIn(

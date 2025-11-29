@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
+import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
+import blue.starry.mitsubachi.core.domain.model.UserSettings
+import blue.starry.mitsubachi.core.ui.compose.preview.MockData
+import blue.starry.mitsubachi.core.ui.compose.preview.PreviewImageProvider
 import blue.starry.mitsubachi.feature.settings.ui.section.AccountSection
 import blue.starry.mitsubachi.feature.settings.ui.section.AppearanceSection
 import blue.starry.mitsubachi.feature.settings.ui.section.DataCollectionSection
@@ -21,8 +25,11 @@ import kotlin.time.Duration
 @Suppress("LongMethod")
 @Composable
 fun SettingsContent(
+  account: FoursquareAccount,
   applicationSettings: ApplicationSettings,
+  userSettings: UserSettings,
   onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeUserSettings: ((UserSettings) -> UserSettings) -> Unit,
   onSignOut: () -> Unit,
   onUpdateWidgetSchedule: () -> Unit,
   formatDuration: (Duration) -> String,
@@ -33,6 +40,7 @@ fun SettingsContent(
       verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       AccountSection(
+        account = account,
         onClickSignOut = onSignOut,
       )
 
@@ -99,11 +107,16 @@ fun SettingsContent(
 @Preview
 @Composable
 private fun SettingsContentPreview() {
-  SettingsContent(
-    applicationSettings = ApplicationSettings.Default,
-    onChangeApplicationSettings = { ApplicationSettings.Default },
-    onSignOut = {},
-    onUpdateWidgetSchedule = {},
-    formatDuration = { "1 hour" },
-  )
+  PreviewImageProvider {
+    SettingsContent(
+      account = MockData.PrimaryFoursquareAccount,
+      applicationSettings = ApplicationSettings.Default,
+      userSettings = UserSettings.Default,
+      onChangeApplicationSettings = { ApplicationSettings.Default },
+      onChangeUserSettings = { UserSettings.Default },
+      onSignOut = {},
+      onUpdateWidgetSchedule = {},
+      formatDuration = { "1 hour" },
+    )
+  }
 }

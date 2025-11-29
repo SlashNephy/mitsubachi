@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.feature.settings.ui.section
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -9,17 +10,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.settings.R
 
 @Composable
-internal fun AccountSection(onClickSignOut: () -> Unit) {
+internal fun AccountSection(
+  account: FoursquareAccount,
+  onClickSignOut: () -> Unit,
+) {
   val showLogoutDialog = remember { mutableStateOf(false) }
 
   SettingSection(title = stringResource(R.string.account_section_title)) {
+    item(
+      leadingIcon = SettingItem.LeadingIcon.Remote(
+        url = account.iconUrl,
+        modifier = Modifier.clip(CircleShape),
+      ),
+      headline = {
+        Text(account.displayName)
+      },
+      supporting = {
+        Text(account.email)
+      },
+    )
+
     item(
       leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.logout),
       headline = {
