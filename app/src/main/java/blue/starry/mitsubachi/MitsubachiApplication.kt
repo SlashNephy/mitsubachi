@@ -10,6 +10,7 @@ import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import com.google.firebase.Firebase
+import com.google.firebase.appdistribution.FirebaseAppDistribution
 import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -63,6 +64,11 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Confi
       PhotoWidget.updatePreview(applicationContext)
     }
 
+    // staging variant でのみ Firebase App Distribution の更新チェックを実行
+    if (BuildConfig.FLAVOR == "staging") {
+      checkForAppUpdates()
+    }
+
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }
@@ -70,5 +76,21 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Confi
 
   override fun newImageLoader(context: PlatformContext): ImageLoader {
     return imageLoader
+  }
+
+  private fun checkForAppUpdates() {
+    FirebaseAppDistribution.getInstance()
+      .updateIfNewReleaseAvailable()
+      .addOnProgressListener { updateProgress ->
+        Timber.d(
+          "Firebase App Distribution update progress: ${updateProgress.apkBytesDownloaded}/${updateProgress.apkFileTotalBytes}",
+        )
+      }
+      .addOnSuccessListener {
+        Timber.d("Firebase App Distribution update check succeeded")
+      }
+      .addOnFailureListener { exception ->
+        Timber.w(exception, "Firebase App Distribution update check failed")
+      }
   }
 }
