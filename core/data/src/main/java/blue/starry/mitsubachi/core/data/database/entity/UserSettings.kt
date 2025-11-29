@@ -13,9 +13,9 @@ data class UserSettings(
   @Serializable
   data class Payload(
     val useSwarmCompatibilityMode: Boolean,
-    val swarmOAuthToken: String,
-    val uniqueDevice: String,
-    val wsid: String,
-    val userAgent: String,
+    val swarmOAuthToken: String?,
+    val uniqueDevice: String?,
+    val wsid: String?,
+    val userAgent: String?,
   )
 }

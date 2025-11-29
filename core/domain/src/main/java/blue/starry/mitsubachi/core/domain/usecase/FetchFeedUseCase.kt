@@ -17,7 +17,7 @@ class FetchFeedUseCase @Inject constructor(
     val account = foursquareAccountRepository.primary.first() ?: throw UnauthorizedError()
     val settings = userSettingsRepository.flow(account).first()
 
-    if (!settings.useSwarmCompatibilityMode || settings.swarmOAuthToken.isBlank()) {
+    if (!settings.useSwarmCompatibilityMode || settings.swarmOAuthToken.isNullOrBlank()) {
       return foursquare.getRecentCheckIns()
     }
 

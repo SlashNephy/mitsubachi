@@ -113,28 +113,29 @@ internal fun AdvancedSection(
     }
 
     TextFieldDialog(
-      initialValue = initialValue,
+      initialValue = initialValue.orEmpty(),
       title = title,
       onDismiss = {
         activeTextFieldDialog = null
       },
       onConfirm = { value ->
         onChangeUserSettings { settings ->
+          val newValue = value.ifBlank { null }
           when (type) {
             TextFieldType.SwarmOAuthToken -> settings.copy(
-              swarmOAuthToken = value,
+              swarmOAuthToken = newValue,
             )
 
             TextFieldType.UniqueDevice -> settings.copy(
-              uniqueDevice = value,
+              uniqueDevice = newValue,
             )
 
             TextFieldType.Wsid -> settings.copy(
-              wsid = value,
+              wsid = newValue,
             )
 
             TextFieldType.UserAgent -> settings.copy(
-              userAgent = value,
+              userAgent = newValue,
             )
           }
         }
@@ -145,8 +146,8 @@ internal fun AdvancedSection(
 }
 
 @Composable
-private fun StringValue(value: String) {
-  if (value.isEmpty()) {
+private fun StringValue(value: String?) {
+  if (value.isNullOrBlank()) {
     Text("(未設定)")
   } else {
     Text(value)
@@ -154,8 +155,8 @@ private fun StringValue(value: String) {
 }
 
 @Composable
-private fun SecretStringValue(value: String) {
-  if (value.isEmpty()) {
+private fun SecretStringValue(value: String?) {
+  if (value.isNullOrBlank()) {
     Text("(未設定)")
   } else {
     Text("***")
