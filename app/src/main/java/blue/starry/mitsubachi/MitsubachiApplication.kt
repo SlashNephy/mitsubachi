@@ -66,7 +66,9 @@ class MitsubachiApplication : Application(), SingletonImageLoader.Factory, Confi
 
     // staging variant でのみ Firebase App Distribution の更新チェックを実行
     if (BuildConfig.FLAVOR == "staging") {
-      checkForAppUpdates()
+      applicationScope.launch {
+        checkForAppUpdates()
+      }
     }
 
     if (BuildConfig.DEBUG) {
