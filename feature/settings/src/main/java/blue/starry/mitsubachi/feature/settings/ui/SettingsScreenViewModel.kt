@@ -75,13 +75,12 @@ class SettingsScreenViewModel @Inject constructor(
     }
   }
 
-  fun updateUserSettings(block: (UserSettings) -> UserSettings): Job {
-    return viewModelScope.launch {
+  fun updateUserSettings(block: (UserSettings) -> UserSettings) {
+    val account = (state.value as? UiState.Loaded)?.account ?: return
+
+    viewModelScope.launch {
       runCatching {
-        val account = (state.value as? UiState.Loaded)?.account
-        account?.also {
-          userSettingsRepository.update(it, block)
-        }
+        userSettingsRepository.update(account, block)
       }.onException { e ->
         snackbarErrorHandler.handle(e)
       }
