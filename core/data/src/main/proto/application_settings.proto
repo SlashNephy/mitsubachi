@@ -12,4 +12,5 @@ message ApplicationSettings {
   oneof font_family_name {
     string google_font = 6;
   }
+  optional bool is_advanced_settings_available = 7;
 }
