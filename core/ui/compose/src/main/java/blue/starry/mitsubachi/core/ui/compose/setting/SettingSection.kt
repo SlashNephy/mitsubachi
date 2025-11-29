@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -39,8 +38,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.ui.compose.R
+import blue.starry.mitsubachi.core.ui.compose.preview.PreviewImageProvider
 import blue.starry.mitsubachi.core.ui.compose.typography.OverrideTextStyle
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import coil3.compose.AsyncImage
 
 @Composable
 fun SettingSection(
@@ -66,13 +67,14 @@ fun SettingSection(
     }
 
     AnimatedVisibility(visible = isExpanded) {
-      LazyColumn(
+      // NOTE: SettingSection の呼び出し側で LazyColumn を使用するためにここはあえて Column で描画している
+      Column(
         modifier = Modifier
           .fillMaxWidth()
           .clip(ShapeDefaults.Large),
       ) {
-        items(scope.items.size) { index ->
-          scope.items[index].Composable()
+        scope.items.forEachIndexed { index, item ->
+          item.Composable()
 
           if (index != scope.items.lastIndex) {
             HorizontalDivider(
@@ -100,7 +102,6 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
 
   Row(
     modifier = Modifier
-      .padding(start = 8.dp)
       .fillMaxWidth()
       .clickable(onClick = onClick),
     horizontalArrangement = Arrangement.SpaceBetween,
@@ -110,6 +111,7 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
       text = text,
       style = MaterialTheme.typography.labelSmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
+      modifier = Modifier.padding(start = 8.dp),
     )
 
     Icon(
@@ -198,6 +200,20 @@ private fun SettingItem.LeadingContent() {
       }
     }
 
+    is SettingItem.LeadingIcon.Remote -> {
+      Box(
+        modifier = Modifier
+          .size(32.dp),
+      ) {
+        AsyncImage(
+          model = leadingIcon.url,
+          contentDescription = null,
+          modifier = leadingIcon.modifier
+            .align(Alignment.Center),
+        )
+      }
+    }
+
     is SettingItem.LeadingIcon.Blank -> {
       Spacer(modifier = Modifier.width(32.dp))
     }
@@ -207,40 +223,52 @@ private fun SettingItem.LeadingContent() {
 @Preview(showBackground = true)
 @Composable
 private fun SettingSectionPreview() {
-  SettingSection(
-    title = "Title",
-    modifier = Modifier.padding(16.dp),
-  ) {
-    item(
-      headline = {
-        Text("Headline")
-      },
-      overline = {
-        Text("Overline")
-      },
-      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.home_filled),
-      trailing = {
-        Switch(checked = false, onCheckedChange = {})
-      },
-    )
+  PreviewImageProvider {
+    SettingSection(
+      title = "Title",
+      modifier = Modifier.padding(16.dp),
+    ) {
+      item(
+        headline = {
+          Text("Headline")
+        },
+        overline = {
+          Text("Overline")
+        },
+        leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.home_filled),
+        trailing = {
+          Switch(checked = false, onCheckedChange = {})
+        },
+      )
 
-    item(
-      headline = {
-        Text("Headline 2")
-      },
-      supporting = {
-        Text("Supporting")
-      },
-      leadingIcon = SettingItem.LeadingIcon.Round(MaterialSymbols.location_on),
-    )
+      item(
+        headline = {
+          Text("Headline 2")
+        },
+        supporting = {
+          Text("Supporting")
+        },
+        leadingIcon = SettingItem.LeadingIcon.Round(MaterialSymbols.location_on),
+      )
 
-    item(
-      headline = {
-        Text("Headline 3")
-      },
-      supporting = {
-        Text("Supporting")
-      },
-    )
+      item(
+        headline = {
+          Text("Headline 3")
+        },
+        leadingIcon = SettingItem.LeadingIcon.Remote(
+          url = "https://example.com/image.png",
+          modifier = Modifier.clip(CircleShape),
+        ),
+      )
+
+      item(
+        headline = {
+          Text("Headline 4")
+        },
+        supporting = {
+          Text("Supporting")
+        },
+      )
+    }
   }
 }

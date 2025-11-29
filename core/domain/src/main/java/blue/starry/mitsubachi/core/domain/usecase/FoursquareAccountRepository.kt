@@ -1,9 +1,10 @@
 package blue.starry.mitsubachi.core.domain.usecase
 
 import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
+import kotlinx.coroutines.flow.Flow
 
 interface FoursquareAccountRepository {
-  suspend fun list(): List<FoursquareAccount>
+  val primary: Flow<FoursquareAccount?>
   suspend fun update(account: FoursquareAccount)
   suspend fun delete(account: FoursquareAccount)
 }

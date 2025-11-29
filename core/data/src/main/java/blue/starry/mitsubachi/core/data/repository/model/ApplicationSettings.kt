@@ -39,6 +39,11 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
     } else {
       DomainApplicationSettings.Default.fontFamilyPreference
     },
+    isAdvancedSettingsAvailable = if (hasIsAdvancedSettingsAvailable()) {
+      isAdvancedSettingsAvailable
+    } else {
+      DomainApplicationSettings.Default.isAdvancedSettingsAvailable
+    },
   )
 }
 
@@ -49,6 +54,7 @@ internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
     .setWidgetUpdateIntervalMillis(widgetUpdateInterval.inWholeMilliseconds)
     .setIsDynamicColorEnabled(isDynamicColorEnabled)
     .setColorSchemePreference(colorSchemePreference.ordinal)
+    .setIsAdvancedSettingsAvailable(isAdvancedSettingsAvailable)
     .apply {
       when (fontFamilyPreference) {
         is FontFamilyPreference.GoogleFont -> {

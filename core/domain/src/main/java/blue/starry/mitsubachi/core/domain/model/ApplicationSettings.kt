@@ -10,6 +10,7 @@ data class ApplicationSettings(
   val isDynamicColorEnabled: Boolean,
   val colorSchemePreference: ColorSchemePreference,
   val fontFamilyPreference: FontFamilyPreference,
+  val isAdvancedSettingsAvailable: Boolean,
 ) {
   companion object {
     val Default = ApplicationSettings(
@@ -19,6 +20,7 @@ data class ApplicationSettings(
       isDynamicColorEnabled = false,
       colorSchemePreference = ColorSchemePreference.System,
       fontFamilyPreference = FontFamilyPreference.GoogleFont.IBMPlexSans,
+      isAdvancedSettingsAvailable = false,
     )
   }
 }

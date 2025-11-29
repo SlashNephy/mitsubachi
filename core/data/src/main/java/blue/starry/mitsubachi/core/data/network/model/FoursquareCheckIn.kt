@@ -9,18 +9,15 @@ import java.time.ZoneId
 
 @Serializable
 data class FoursquareCheckIn(
-  val comments: Comments,
   val createdAt: Long, // 1760321890
   val createdBy: FoursquareUser?,
-  val editableUntil: Long?, // 1760408290000
-  val entities: List<Entity>?,
-  val event: Event?,
   val id: String,
   val isMayor: Boolean,
   val like: Boolean,
   val likes: Likes,
   val photos: Photos,
   val posts: Posts,
+  val score: Score?,
   val ratedAt: Long?, // 1471153590
   val shout: String?,
   val source: Source?,
@@ -32,41 +29,6 @@ data class FoursquareCheckIn(
   val visibility: String?, // closeFriends
   val with: List<FoursquareUser>?,
 ) {
-  @Serializable
-  data class Comments(
-    val count: Int, // 0
-  )
-
-  @Serializable
-  data class Entity(
-    val id: String,
-    val indices: List<Int>,
-    val type: String, // user
-  )
-
-  @Serializable
-  data class Event(
-    val categories: List<Category>,
-    val id: String, // 5799b63e498e308eab5aa642
-    val name: String, // コミックマーケット90
-  ) {
-    @Serializable
-    data class Category(
-      val icon: CategoryIcon,
-      val id: String, // 4e458e3bbd41d66894dbdecc
-      val name: String, // Other
-      val pluralName: String, // Other
-      val primary: Boolean, // true
-      val shortName: String, // Other
-    )
-
-    @Serializable
-    data class CategoryIcon(
-      val prefix: String, // https://ss3.4sqi.net/img/categories_v2/event/default_
-      val suffix: String, // .png
-    )
-  }
-
   @Serializable
   data class Likes(
     val count: Int, // 0
@@ -110,6 +72,11 @@ data class FoursquareCheckIn(
   data class Posts(
     val count: Int, // 0
     val textCount: Int, // 0
+  )
+
+  @Serializable
+  data class Score(
+    val total: Int, // 1
   )
 
   @Serializable
@@ -159,7 +126,7 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
     venue = venue.toDomain(),
     user = user?.toDomain(),
     createdBy = createdBy?.toDomain(),
-    coin = 0, // TODO: API で取得できない？
+    coin = score?.total ?: 0,
     sticker = sticker?.let { "${it.image.prefix}${it.image.sizes.firstOrNull() ?: 60}${it.image.name}" },
     message = shout,
     photos = photos.items.map { it.toDomain() },

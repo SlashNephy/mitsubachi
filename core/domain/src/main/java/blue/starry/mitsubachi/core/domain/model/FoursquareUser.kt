@@ -17,4 +17,5 @@ data class FoursquareUser(
   val address: String?,
   val gender: String?,
   val isPrivateProfile: Boolean,
+  val email: String?,
 )

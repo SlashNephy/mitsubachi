@@ -21,10 +21,18 @@ fun SettingsScreen(
 
     is SettingsScreenViewModel.UiState.Loaded -> {
       SettingsContent(
+        account = state.account,
         applicationSettings = state.applicationSettings,
+        userSettings = state.userSettings,
+        applicationConfig = viewModel.applicationConfig,
         onChangeApplicationSettings = { block ->
-          viewModel.update { settings ->
-            settings.let(block)
+          viewModel.updateApplicationSettings { applicationSettings ->
+            applicationSettings.let(block)
+          }
+        },
+        onChangeUserSettings = { block ->
+          viewModel.updateUserSettings { userSettings ->
+            userSettings.let(block)
           }
         },
         onSignOut = {
