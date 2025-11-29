@@ -112,8 +112,8 @@ fun SettingsContent(
         )
       }
 
-      item {
-        if (applicationSettings.isAdvancedSettingsAvailable) {
+      if (applicationSettings.isAdvancedSettingsAvailable) {
+        item {
           AdvancedSection(
             userSettings = userSettings,
             onChangeUserSettings = onChangeUserSettings,
