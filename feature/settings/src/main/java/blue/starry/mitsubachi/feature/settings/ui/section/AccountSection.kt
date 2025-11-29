@@ -7,8 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -23,7 +25,7 @@ internal fun AccountSection(
   account: FoursquareAccount,
   onClickSignOut: () -> Unit,
 ) {
-  val showLogoutDialog = remember { mutableStateOf(false) }
+  var showLogoutDialog by remember { mutableStateOf(false) }
 
   SettingSection(title = stringResource(R.string.account_section_title)) {
     item(
@@ -44,18 +46,18 @@ internal fun AccountSection(
       headline = {
         Text(stringResource(R.string.logout_button))
       },
-      modifier = Modifier.clickable(onClick = { showLogoutDialog.value = true }),
+      modifier = Modifier.clickable(onClick = { showLogoutDialog = true }),
     )
   }
 
-  if (showLogoutDialog.value) {
+  if (showLogoutDialog) {
     LogoutConfirmationDialog(
       onConfirm = {
-        showLogoutDialog.value = false
+        showLogoutDialog = false
         onClickSignOut()
       },
       onDismiss = {
-        showLogoutDialog.value = false
+        showLogoutDialog = false
       },
     )
   }
