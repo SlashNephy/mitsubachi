@@ -35,7 +35,7 @@ internal fun VersionSection(
         if (applicationSettings.isAdvancedSettingsAvailable) {
           Toast.makeText(context, "すでに高度な設定は有効です。", Toast.LENGTH_SHORT).show()
         } else {
-          if (clickCount++ >= REQUIRED_CLICK_COUNT) {
+          if (++clickCount >= REQUIRED_CLICK_COUNT) {
             onChangeApplicationSettings { settings ->
               settings.copy(
                 isAdvancedSettingsAvailable = true,
