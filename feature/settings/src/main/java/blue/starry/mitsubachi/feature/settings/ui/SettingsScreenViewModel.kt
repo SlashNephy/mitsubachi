@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.feature.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
 import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.core.domain.model.UserSettings
@@ -34,6 +35,7 @@ class SettingsScreenViewModel @Inject constructor(
   private val userSettingsRepository: UserSettingsRepository,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
   private val photoWidgetWorkerScheduler: PhotoWidgetWorkerScheduler,
+  val applicationConfig: ApplicationConfig,
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
 ) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
   sealed interface UiState {

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -68,13 +67,14 @@ fun SettingSection(
     }
 
     AnimatedVisibility(visible = isExpanded) {
-      LazyColumn(
+      // NOTE: SettingSection の呼び出し側で LazyColumn を使用するためにここはあえて Column で描画している
+      Column(
         modifier = Modifier
           .fillMaxWidth()
           .clip(ShapeDefaults.Large),
       ) {
-        items(scope.items.size) { index ->
-          scope.items[index].Composable()
+        scope.items.forEachIndexed { index, item ->
+          item.Composable()
 
           if (index != scope.items.lastIndex) {
             HorizontalDivider(

@@ -24,6 +24,7 @@ fun SettingsScreen(
         account = state.account,
         applicationSettings = state.applicationSettings,
         userSettings = state.userSettings,
+        applicationConfig = viewModel.applicationConfig,
         onChangeApplicationSettings = { block ->
           viewModel.updateApplicationSettings { applicationSettings ->
             applicationSettings.let(block)

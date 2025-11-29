@@ -43,7 +43,7 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
       isAdvancedSettingsAvailable
     } else {
       DomainApplicationSettings.Default.isAdvancedSettingsAvailable
-    }
+    },
   )
 }
 
