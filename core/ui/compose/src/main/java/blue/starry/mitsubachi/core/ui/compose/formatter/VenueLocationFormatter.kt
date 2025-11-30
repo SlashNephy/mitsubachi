@@ -1,48 +1,241 @@
 package blue.starry.mitsubachi.core.ui.compose.formatter
 
 import blue.starry.mitsubachi.core.domain.model.VenueLocation
+import java.util.Locale
 
 object VenueLocationFormatter {
-  fun formatAddress(location: VenueLocation, includeCrossStreet: Boolean = true): String {
+  fun formatAddress(
+    location: VenueLocation,
+    locale: Locale = Locale.getDefault(),
+    withCountry: Boolean = location.countryCode != locale.country,
+    withPostalCode: Boolean = withCountry,
+    withCrossStreet: Boolean = true,
+    withAddress: Boolean = withCrossStreet,
+  ): String {
     return buildString {
-      val base = when {
-        location.neighborhood != null -> {
-          location.neighborhood
+      when (locale.country) {
+        // 漢字圏
+        // (〒)$postalCode $state$city$address $crossStreet ($country)
+        "JP", "CN", "TW", "HK", "MO" -> {
+          appendCjkFormat(
+            location,
+            locale,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress,
+          )
         }
 
-        location.state != null && location.city != null && location.state != location.city -> {
-          when (location.countryCode) {
-            "JP", "CN", "KR", "TW", "VN" -> {
-              // 日本、韓国、中国、台湾、ベトナムは「都道府県＋市区町村」の順番
-              "${location.state}${location.city}"
-            }
-
-            else -> {
-              // それ以外は「市区町村＋都道府県」の順番
-              "${location.city}, ${location.state}"
-            }
-          }
+        // 非漢字圏のアジア・東欧
+        // $postalCode $state $city $address $crossStreet ($country)
+        "KR", "HU" -> {
+          appendAsianEasternEuropeanFormat(
+            location,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress,
+          )
         }
 
-        location.city != null -> {
-          location.city
+        // ヨーロッパ大陸形式
+        // $crossStreet, $address, $postalCode $city, $state, $country
+        "DE", "FR", "IT", "ES", "NL", "SE", "NO", "FI", "DK", "BR" -> {
+          appendContinentalEuropeanFormat(
+            location,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress,
+          )
         }
 
-        location.state != null -> {
-          location.state
-        }
-
+        // アングロサクソン形式
+        // $crossStreet, $address, $city, $state $postalCode, $country
         else -> {
-          location.country
+          appendAngloSaxonFormat(
+            location,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress,
+          )
         }
       }
-      append(base)
+    }.trim().trimEnd(',').ifEmpty { location.country }
+  }
 
-      if (includeCrossStreet && location.crossStreet != null) {
-        append(" (")
-        append(location.crossStreet)
-        append(')')
+  private fun StringBuilder.appendCjkFormat(
+    location: VenueLocation,
+    locale: Locale,
+    withCountry: Boolean,
+    withPostalCode: Boolean,
+    withCrossStreet: Boolean,
+    withAddress: Boolean,
+  ) {
+    if (withPostalCode && location.postalCode != null) {
+      if (locale.country == "JP") {
+        append('〒')
       }
+      append(location.postalCode)
+      append(' ')
+    }
+
+    location.state?.also {
+      append(it)
+    }
+
+    location.city?.also {
+      append(it)
+    }
+
+    if (withAddress) {
+      location.address?.also {
+        append(it)
+      }
+    }
+
+    if (withCrossStreet) {
+      location.crossStreet?.also {
+        append(' ')
+        append(it)
+      }
+    }
+
+    if (withCountry) {
+      append(" (")
+      append(location.country)
+      append(')')
+    }
+  }
+
+  private fun StringBuilder.appendAsianEasternEuropeanFormat(
+    location: VenueLocation,
+    withCountry: Boolean,
+    withPostalCode: Boolean,
+    withCrossStreet: Boolean,
+    withAddress: Boolean,
+  ) {
+    if (withPostalCode) {
+      location.postalCode?.also {
+        append(it)
+        append(' ')
+      }
+    }
+
+    location.state?.also {
+      append(it)
+      append(' ')
+    }
+
+    location.city?.also {
+      append(it)
+      append(' ')
+    }
+
+    if (withAddress) {
+      location.address?.also {
+        append(it)
+        append(' ')
+      }
+    }
+
+    if (withCrossStreet) {
+      location.crossStreet?.also {
+        append(it)
+        append(' ')
+      }
+    }
+
+    if (withCountry) {
+      append("(${location.country})")
+    }
+  }
+
+  private fun StringBuilder.appendContinentalEuropeanFormat(
+    location: VenueLocation,
+    withCountry: Boolean,
+    withPostalCode: Boolean,
+    withCrossStreet: Boolean,
+    withAddress: Boolean,
+  ) {
+    if (withCrossStreet) {
+      location.crossStreet?.also {
+        append(it)
+        append(", ")
+      }
+    }
+
+    if (withAddress) {
+      location.address?.also {
+        append(it)
+        append(", ")
+      }
+    }
+
+    if (withPostalCode) {
+      location.postalCode?.also {
+        append(it)
+        append(' ')
+      }
+    }
+
+    location.city?.also {
+      append(it)
+      append(", ")
+    }
+
+    location.state?.also {
+      append(it)
+      append(", ")
+    }
+
+    if (withCountry) {
+      append(location.country)
+    }
+  }
+
+  private fun StringBuilder.appendAngloSaxonFormat(
+    location: VenueLocation,
+    withCountry: Boolean,
+    withPostalCode: Boolean,
+    withCrossStreet: Boolean,
+    withAddress: Boolean,
+  ) {
+    if (withCrossStreet) {
+      location.crossStreet?.also {
+        append(it)
+        append(", ")
+      }
+    }
+
+    if (withAddress) {
+      location.address?.also {
+        append(it)
+        append(", ")
+      }
+    }
+
+    location.city?.also {
+      append(it)
+      append(", ")
+    }
+
+    location.state?.also {
+      append(it)
+      append(' ')
+    }
+
+    if (withPostalCode) {
+      location.postalCode?.also {
+        append(it)
+        append(", ")
+      }
+    }
+
+    if (withCountry) {
+      append(location.country)
     }
   }
 }

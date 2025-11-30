@@ -62,7 +62,7 @@ fun CheckInRow(
           "${checkIn.venue.primaryCategory?.name}・${
             VenueLocationFormatter.formatAddress(
               checkIn.venue.location,
-              includeCrossStreet = false,
+              withCrossStreet = false,
             )
           }",
           color = MaterialTheme.colorScheme.secondary,
