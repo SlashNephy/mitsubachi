@@ -120,4 +120,6 @@ dependencies {
   implementation(libs.firebase.crashlytics.ndk)
   implementation(libs.firebase.analytics)
   implementation(libs.firebase.appdistribution)
+  implementation(libs.firebase.appcheck.playintegrity)
+  debugImplementation(libs.firebase.appcheck.debug)
 }
