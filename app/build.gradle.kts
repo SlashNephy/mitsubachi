@@ -24,6 +24,10 @@ android {
     versionCode = (project.findProperty("versionCode") as? String)?.toIntOrNull() ?: 1
 
     buildConfigField("String", "NAMESPACE", "\"${namespace}\"")
+
+    System.getenv("FIREBASE_APP_CHECK_DEBUG_TOKEN")?.also {
+      testInstrumentationRunnerArguments["firebaseAppCheckDebugSecret"] = it
+    }
   }
 
   firebaseAppDistributionDefault {
