@@ -1,0 +1,116 @@
+package blue.starry.mitsubachi.feature.checkin.ui
+
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.compose.runtime.Immutable
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.domain.usecase.SearchNearVenuesUseCase
+import blue.starry.mitsubachi.core.ui.compose.error.onException
+import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+enum class NearbyVenuesSortOrder {
+  RELEVANCE,
+  DISTANCE,
+}
+
+@HiltViewModel
+@OptIn(FlowPreview::class)
+class NearbyVenuesScreenViewModel @Inject constructor(
+  @param:ApplicationContext private val context: Context,
+  private val searchNearVenuesUseCase: SearchNearVenuesUseCase,
+) : ViewModel() {
+  @Immutable
+  sealed interface UiState {
+    data class PermissionRequested(val permission: AndroidPermission) : UiState
+    data object Loading : UiState
+    data class Success(
+      val venues: List<Venue>,
+      val isRefreshing: Boolean,
+      val sortOrder: NearbyVenuesSortOrder,
+    ) : UiState
+
+    data class Error(val exception: Exception) : UiState
+  }
+
+  private val _state = MutableStateFlow<UiState>(UiState.Loading)
+  val state = _state.asStateFlow()
+
+  private val _sortOrder = MutableStateFlow(NearbyVenuesSortOrder.RELEVANCE)
+  val sortOrder = _sortOrder.asStateFlow()
+
+  init {
+    refresh()
+  }
+
+  fun refresh(query: String? = null): Job {
+    return viewModelScope.launch {
+      fetch(query)
+    }
+  }
+
+  private suspend fun fetch(query: String? = null) {
+    if (ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+      ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+      ) != PackageManager.PERMISSION_GRANTED
+    ) {
+      _state.value = UiState.PermissionRequested(AndroidPermission.Location)
+      return
+    }
+
+    val currentState = _state.value
+    if (currentState is UiState.Success) {
+      // 2回目以降の更新は isRefreshing=true
+      _state.value = currentState.copy(isRefreshing = true)
+    } else {
+      _state.value = UiState.Loading
+    }
+
+    runCatching {
+      searchNearVenuesUseCase(query = query)
+    }.onSuccess { data ->
+      _state.value = UiState.Success(
+        venues = data,
+        isRefreshing = false,
+        sortOrder = _sortOrder.value,
+      )
+    }.onException { e ->
+      _state.value = UiState.Error(e)
+    }
+  }
+
+  fun onPermissionGranted() {
+    refresh()
+  }
+
+  fun onUpdateSortOrder(order: NearbyVenuesSortOrder) {
+    _sortOrder.value = order
+    val currentState = _state.value
+    if (currentState is UiState.Success) {
+      _state.value = currentState.copy(sortOrder = order)
+    }
+  }
+}
+
+val NearbyVenuesScreenViewModel.UiState.Success.sortedVenues: List<Venue>
+  get() {
+    return when (sortOrder) {
+      NearbyVenuesSortOrder.RELEVANCE -> venues
+      NearbyVenuesSortOrder.DISTANCE -> venues.sortedBy { it.location.distance ?: Int.MAX_VALUE }
+    }
+  }

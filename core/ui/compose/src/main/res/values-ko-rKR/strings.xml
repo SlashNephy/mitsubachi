@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_button">뒤로</string>
+    <string name="network_timeout_error">요청 시간이 초과되었습니다. 다시 시도해 주세요.</string>
+    <string name="unauthorized_error">세션이 만료되었습니다. 다시 로그인해 주세요.</string>
+    <string name="unknown_error">오류가 발생했습니다.</string>
+    <string name="retry_button">리트라이</string>
+    <string name="location_permission_missing">위치 정보에 대한 접근이 허용되지 않았습니다. 다시 허용하려면 기기의 설정 화면에서 허용해 주세요.</string>
+    <string name="open_device_settings_button">단말기 설정을 엽니다</string>
+    <string name="network_unavailable_error">인터넷에 연결되어 있지 않습니다. 다시 시도해 주세요.</string>
+    <string name="like_button">즐겨찾기</string>
+    <string name="unlike_button">즐겨찾기 해제</string>
+    <string name="check_in_created_by">%1$s님의 체크인</string>
+    <string name="collapse_button">접다</string>
+    <string name="expand_button">전개</string>
+</resources>

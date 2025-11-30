@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: ja-JP
+early_access: true
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  high_level_summary_in_walkthrough: true
+  auto_apply_labels: true
+  auto_review:
+    ignore_usernames:
+      - renovate[bot]
+      - dependabot[bot]

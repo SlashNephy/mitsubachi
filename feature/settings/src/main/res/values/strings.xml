@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_section_title">Account</string>
+    <string name="logout_button">Sign Out</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="logout_confirm_body">Are you sure you want to sign out?</string>
+    <string name="data_collection_section_title">Data Collection</string>
+    <string name="optin_firebase_crashlytics_headline">Automatically send bug reports</string>
+    <string name="optin_firebase_crashlytics_supporting">The app reports errors to Firebase Crashlytics when it crashes. The data sent is anonymous.</string>
+    <string name="widget_section_title">Widget</string>
+    <string name="widget_update_on_wifi_only_headline">Update only on unmetered network</string>
+    <string name="widget_update_on_wifi_only_supporting">Update widget only when connected to Wi-Fi or other unmetered networks</string>
+    <string name="widget_update_interval_headline">Update interval</string>
+    <string name="save_button">Save</string>
+    <string name="widget_update_interval_supporting">Configure the widget’s refresh interval.</string>
+    <string name="appearance_section_title">Appearance</string>
+    <string name="dynamic_color_headline">Material You (Dynamic Colors)</string>
+    <string name="dynamic_color_supporting">Use colors from your wallpaper (Android 12+)</string>
+    <string name="color_scheme_headline">Color Scheme</string>
+    <string name="color_scheme_supporting">Choose between light, dark, or system theme</string>
+    <string name="color_scheme_light">Light</string>
+    <string name="color_scheme_dark">Dark</string>
+    <string name="color_scheme_system">System</string>
+    <string name="font_family_headline">Font</string>
+    <string name="font_family_supporting">Choose your preferred font from Google Fonts</string>
+</resources>

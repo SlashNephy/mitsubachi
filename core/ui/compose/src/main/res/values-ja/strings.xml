@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_button">戻る</string>
+    <string name="network_timeout_error">リクエストがタイムアウトしました。もう一度お試しください。</string>
+    <string name="unauthorized_error">ログイン状態が失効しました。再度ログインしてください。</string>
+    <string name="unknown_error">エラーが発生しました。</string>
+    <string name="retry_button">もう一度試す</string>
+    <string name="location_permission_missing">位置情報へのアクセスが許可されていません。改めて許可したい場合は端末の設定画面から許可してください。</string>
+    <string name="open_device_settings_button">端末の設定を開く</string>
+    <string name="network_unavailable_error">インターネットに接続されていません。もう一度お試しください。</string>
+    <string name="like_button">お気に入り</string>
+    <string name="unlike_button">お気に入り解除</string>
+    <string name="check_in_created_by">%1$sさんによるチェックイン</string>
+    <string name="collapse_button">折りたたむ</string>
+    <string name="expand_button">展開する</string>
+</resources>

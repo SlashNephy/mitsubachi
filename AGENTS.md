@@ -40,7 +40,10 @@ Don't hesitate to use early access versions.
 3. **Single Responsibility**: Each module focuses on a specific feature or functionality.
 4. **Security First**: Always strive to write secure code. Be mindful of implementation best
    practices.
-5. **Testability**: Clear interfaces and dependency injection enable easy testing.
+5. **Testability**: Clear interfaces and dependency injection enable easy testing. When implementing
+   Composable functions, ensure they can be previewed and provide a preview implementation.
+6. **Internationalization**: When presenting strings that require localization, add string resources
+   for each language (supported languages: en, ja, ko-rKR).
 
 ## Module Structure
 
@@ -59,12 +62,11 @@ is not violated.
 - **:core/domain**: Business logic and use cases
     - Defines interfaces for data layer
     - Independent of Android framework and implementation details
-- **:core/data**: Implements repositories and data sources, including network and database implementations.
+- **:core/data**: Data sources such as network or database implementations.
     - Provides concrete implementations for interfaces defined in :core/domain
     - Handles data retrieval, caching, and persistence
 - **:core/ui**: Reusable UI components
 - **:core/common**: Shared utilities and extensions
-- **:core/testing** & **:core/ui-testing**: Testing utilities and helpers
 
 ### Feature Modules (:feature:*)
 
@@ -73,6 +75,7 @@ is not violated.
 - **:feature:checkin**: Check-in functionality
 - **:feature:map**: Map view and location display
 - **:feature:settings**: Application settings
+- **:feature:widget**: Widget implementation
 
 ## Data Flow
 
@@ -81,3 +84,16 @@ UI (Composable) → ViewModel → UseCase → Repository → Network/Database
      ↑                                                      ↓
      └──────────────── Flow/State ←───────────────────────┘
 ```
+
+## Commands
+
+The following are typical commands used for local development.
+
+- **Build**: `./gradlew assembleLocalDebug`
+- **Unit Test**: `./gradlew testLocalDebug`
+- **Instrumented Test**: `./gradlew connectedLocalDebugAndroidTest`
+- **Lint (Android Lint)**: `./gradlew lintLocalDebug`
+- **Lint (detekt)**: `./gradlew detekt`
+
+If desired, you can restrict the target by prefixing the module name like
+`./gradlew :core:ui:compose:assembleDebug` for speed-up.

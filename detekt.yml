@@ -17,6 +17,8 @@ comments:
     active: false
 
 complexity:
+  ComplexInterface:
+    active: false
   LongMethod:
     ignoreAnnotated:
       - Preview

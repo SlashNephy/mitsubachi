@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map">지도</string>
+    <string name="search_map_search_hint">장소 검색</string>
+    <string name="search_map_category_food">음식점</string>
+    <string name="search_map_category_coffee">카페</string>
+    <string name="search_map_category_sights">관광</string>
+    <string name="search_map_category_shops">쇼핑</string>
+    <string name="search_map_category_arts">예술</string>
+    <string name="search_map_header_area_info">이 지역 정보</string>
+    <string name="search_map_back">← 뒤로</string>
+</resources>

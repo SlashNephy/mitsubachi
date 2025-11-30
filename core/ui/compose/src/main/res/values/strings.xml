@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_button">Back</string>
+    <string name="network_timeout_error">Request timed out. Please try again.</string>
+    <string name="unauthorized_error">Session expired. Please log in again.</string>
+    <string name="unknown_error">An error occurred.</string>
+    <string name="retry_button">Retry</string>
+    <string name="location_permission_missing">Location access is not permitted. To grant permission again, please do so from your device’s settings screen.</string>
+    <string name="open_device_settings_button">Open device settings</string>
+    <string name="network_unavailable_error">No network available.</string>
+    <string name="like_button">Like</string>
+    <string name="unlike_button">Unlike</string>
+    <string name="check_in_created_by">Created by %1$s</string>
+    <string name="collapse_button">Collapse</string>
+    <string name="expand_button">Expand</string>
+</resources>

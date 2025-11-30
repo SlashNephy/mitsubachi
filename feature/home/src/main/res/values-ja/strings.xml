@@ -3,7 +3,7 @@
     <string name="home_bar">ホーム</string>
     <string name="search_bar">検索</string>
     <string name="map_bar">マップ</string>
+    <string name="user_checkins_bar">履歴</string>
     <string name="settings_button">設定</string>
     <string name="check_in_button">チェックイン</string>
-    <string name="like_button">いいね</string>
 </resources>

@@ -1,6 +1,5 @@
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -13,14 +12,6 @@ plugins {
   alias(libs.plugins.convention.detekt)
 
   alias(libs.plugins.android.mapsplatform.secrets)
-}
-
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-  FileInputStream(localPropertiesFile).use {
-    localProperties.load(it)
-  }
 }
 
 android {
@@ -42,10 +33,14 @@ android {
 
   signingConfigs {
     create("default") {
-      storeFile = localProperties.getProperty("android_keystore_path")?.let { file(it) }
-      storePassword = localProperties.getProperty("android_keystore_password")
-      keyAlias = localProperties.getProperty("android_keystore_alias")
-      keyPassword = localProperties.getProperty("android_keystore_alias_password")
+      val keystoreProperties = Properties().apply {
+        rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
+      }
+
+      storeFile = keystoreProperties.getProperty("android_keystore_path")?.let { file(it) }
+      storePassword = keystoreProperties.getProperty("android_keystore_password")
+      keyAlias = keystoreProperties.getProperty("android_keystore_alias")
+      keyPassword = keystoreProperties.getProperty("android_keystore_alias_password")
     }
   }
 
@@ -87,6 +82,10 @@ android {
     }
   }
 
+  buildFeatures {
+    buildConfig = true
+  }
+
   androidResources {
     @Suppress("UnstableApiUsage")
     generateLocaleConfig = true
@@ -94,33 +93,31 @@ android {
 }
 
 secrets {
-  propertiesFileName = rootProject.relativePath("local.properties")
-  defaultPropertiesFileName = rootProject.relativePath("local.defaults.properties")
+  propertiesFileName = rootProject.relativePath("secrets.properties")
+  defaultPropertiesFileName = rootProject.relativePath("secrets.defaults.properties")
 }
 
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.data)
   implementation(projects.core.domain)
-  implementation(projects.core.ui)
+  implementation(projects.core.ui.common)
+  implementation(projects.core.ui.compose)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
   implementation(projects.feature.map)
   implementation(projects.feature.settings)
   implementation(projects.feature.welcome)
+  implementation(projects.feature.widget.photo)
 
   implementation(libs.androidx.core.splashscreen)
 
+  implementation(libs.androidx.work.runtime.ktx)
+  implementation(libs.androidx.hilt.work)
+
   implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.crashlytics)
   implementation(libs.firebase.crashlytics.ndk)
   implementation(libs.firebase.analytics)
-
-  debugImplementation(libs.slf4j.android)
-  debugImplementation(libs.androidx.compose.ui.tooling)
-  debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-  testImplementation(projects.core.testing)
-  testRuntimeOnly(libs.junit.jupiter.engine)
-  testRuntimeOnly(libs.junit.platform.launcher)
-  androidTestImplementation(projects.core.uiTesting)
+  implementation(libs.firebase.appdistribution)
 }

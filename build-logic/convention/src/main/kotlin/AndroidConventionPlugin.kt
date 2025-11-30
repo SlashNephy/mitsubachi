@@ -4,22 +4,37 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 sealed interface AndroidProjectType {
-  val enableCompose: Boolean
+  enum class UiFramework {
+    None,
+    Compose,
+    WearCompose,
+    Glance,
+  }
 
-  data class Library(override val enableCompose: Boolean) : AndroidProjectType
-  data class Application(override val enableCompose: Boolean) : AndroidProjectType
+  val framework: UiFramework
+
+  data class Library(override val framework: UiFramework) : AndroidProjectType
+  data class Application(override val framework: UiFramework) : AndroidProjectType
 }
 
 open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectType) :
   Plugin<Project> {
   override fun apply(target: Project) {
     with(target) {
+      val composePluginEnabled = projectType.framework in setOf(
+        AndroidProjectType.UiFramework.Compose,
+        AndroidProjectType.UiFramework.WearCompose,
+        AndroidProjectType.UiFramework.Glance
+      )
+
       with(pluginManager) {
         apply(versions.plugin("kotlin-android"))
 
@@ -33,7 +48,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
         }
 
-        if (projectType.enableCompose) {
+        if (composePluginEnabled) {
           apply(versions.plugin("kotlin-compose"))
         }
       }
@@ -69,8 +84,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
 
           buildFeatures {
-            buildConfig = true
-            compose = projectType.enableCompose
+            compose = composePluginEnabled
           }
 
           compileOptions {
@@ -79,10 +93,16 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
 
           lint {
+            checkReleaseBuilds = true
             checkTestSources = true
             checkDependencies = true
+            checkAllWarnings = true
+            ignoreWarnings = false
+            showAll = true
+            explainIssues = true
             sarifReport = true
             lintConfig = rootProject.file("android-lint.xml")
+            baseline = rootProject.file("android-lint-baseline.xml")
           }
 
           testOptions {
@@ -100,18 +120,78 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           }
         }
       }
+
+      dependencies {
+        // Convention Plugin では全モジュールで共通の依存のみを定義する
+
+        "implementation"(versions.library("timber"))
+
+        // Unit Testing
+        "testImplementation"(kotlin("test"))
+        "testImplementation"(versions.library("junit-jupiter"))
+        "testRuntimeOnly"(versions.library("junit-jupiter-engine"))
+        "testRuntimeOnly"(versions.library("junit-platform-launcher"))
+        "testImplementation"(versions.library("mockk"))
+        "testImplementation"(versions.library("archunit"))
+
+        // Instrumented Testing
+        "androidTestImplementation"(kotlin("test"))
+        "androidTestImplementation"(versions.library("androidx-test-core"))
+        "androidTestImplementation"(versions.library("androidx-test-ext-junit"))
+        "androidTestImplementation"(versions.library("androidx-test-espresso-core"))
+
+        when (val framework = projectType.framework) {
+          AndroidProjectType.UiFramework.Compose, AndroidProjectType.UiFramework.WearCompose -> {
+            // BOM
+            "implementation"(platform(versions.library("androidx-compose-bom")))
+            "androidTestImplementation"(platform(versions.library("androidx-compose-bom")))
+
+            // @Preview
+            "implementation"(versions.library("androidx-compose-ui-tooling-preview"))
+            "debugImplementation"(versions.library("androidx-compose-ui-tooling"))
+            if (framework == AndroidProjectType.UiFramework.WearCompose) {
+              "implementation"(versions.library("androidx-wear-compose-ui-tooling"))
+            }
+
+            // Test
+            "androidTestImplementation"(versions.library("androidx-compose-ui-test-junit4"))
+            "debugImplementation"(versions.library("androidx-compose-ui-test-manifest"))
+          }
+
+          AndroidProjectType.UiFramework.Glance -> {
+            "implementation"(versions.library("androidx-glance-appwidget"))
+            "implementation"(versions.library("androidx-glance-material3"))
+
+            "implementation"(versions.library("androidx-glance-preview"))
+            "debugImplementation"(versions.library("androidx-glance-appwidget.preview"))
+
+            "testImplementation"(versions.library("androidx-glance-testing"))
+            "testImplementation"(versions.library("androidx-glance-appwidget.testing"))
+          }
+
+          AndroidProjectType.UiFramework.None -> {}
+        }
+      }
     }
   }
 }
 
 class AndroidLibraryConventionPlugin : AndroidBaseConventionPlugin(
-  AndroidProjectType.Library(enableCompose = false),
+  AndroidProjectType.Library(AndroidProjectType.UiFramework.None),
 )
 
 class AndroidComposeLibraryConventionPlugin : AndroidBaseConventionPlugin(
-  AndroidProjectType.Library(enableCompose = true),
+  AndroidProjectType.Library(AndroidProjectType.UiFramework.Compose),
+)
+
+class AndroidWearComposeLibraryConventionPlugin : AndroidBaseConventionPlugin(
+  AndroidProjectType.Library(AndroidProjectType.UiFramework.WearCompose),
+)
+
+class AndroidGlanceLibraryConventionPlugin : AndroidBaseConventionPlugin(
+  AndroidProjectType.Library(AndroidProjectType.UiFramework.Glance),
 )
 
 class AndroidComposeApplicationConventionPlugin : AndroidBaseConventionPlugin(
-  AndroidProjectType.Application(enableCompose = true),
+  AndroidProjectType.Application(AndroidProjectType.UiFramework.Compose),
 )

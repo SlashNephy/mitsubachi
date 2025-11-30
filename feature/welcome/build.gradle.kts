@@ -5,11 +5,12 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.ui.feature.welcome"
+  namespace = "blue.starry.mitsubachi.feature.welcome"
 }
 
 dependencies {
   implementation(projects.core.common)
   implementation(projects.core.domain)
-  implementation(projects.core.ui)
+  implementation(projects.core.ui.common)
+  implementation(projects.core.ui.compose)
 }

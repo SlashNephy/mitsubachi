@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="back_button">Back</string>
-    <string name="just_now">just now</string>
-    <string name="network_timeout_error">Request timed out. Please try again.</string>
-    <string name="unauthorized_error">Session expired. Please log in again.</string>
-    <string name="unknown_error">An error occurred.</string>
-</resources>

@@ -1,0 +1,97 @@
+package blue.starry.mitsubachi.feature.home.ui
+
+import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.usecase.FetchFeedUseCase
+import blue.starry.mitsubachi.core.domain.usecase.LikeCheckInUseCase
+import blue.starry.mitsubachi.core.ui.compose.error.SnackbarErrorPresenter
+import blue.starry.mitsubachi.core.ui.compose.error.onException
+import blue.starry.mitsubachi.core.ui.compose.formatter.RelativeDateTimeFormatter
+import blue.starry.mitsubachi.core.ui.compose.snackbar.SnackbarHostService
+import blue.starry.mitsubachi.core.ui.compose.snackbar.enqueue
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(
+  relativeDateTimeFormatter: RelativeDateTimeFormatter,
+  private val fetchFeedUseCase: FetchFeedUseCase,
+  private val likeCheckInUseCase: LikeCheckInUseCase,
+  private val snackbarHostService: SnackbarHostService,
+  private val snackbarErrorHandler: SnackbarErrorPresenter,
+) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
+  @Immutable
+  sealed interface UiState {
+    data object Loading : UiState
+    data class Success(val feed: List<CheckIn>, val isRefreshing: Boolean) : UiState
+    data class Error(val exception: Exception) : UiState
+  }
+
+  private val _state = MutableStateFlow<UiState>(UiState.Loading)
+  val state = _state.asStateFlow()
+
+  init {
+    refresh()
+  }
+
+  fun refresh(): Job {
+    return viewModelScope.launch {
+      fetch()
+    }
+  }
+
+  private suspend fun fetch() {
+    val currentState = state.value
+    if (currentState is UiState.Success) {
+      // 2回目以降の更新は isRefreshing=true
+      _state.value = currentState.copy(isRefreshing = true)
+    } else {
+      _state.value = UiState.Loading
+    }
+
+    runCatching {
+      fetchFeedUseCase()
+    }.onSuccess { data ->
+      _state.value = UiState.Success(data, isRefreshing = false)
+    }.onException { e ->
+      _state.value = UiState.Error(e)
+    }
+  }
+
+  fun likeCheckIn(checkInId: String): Job {
+    return viewModelScope.launch {
+      runCatching {
+        likeCheckInUseCase(checkInId)
+      }.onSuccess {
+        // 楽観的更新
+        val currentState = state.value
+        if (currentState is UiState.Success) {
+          val index = currentState.feed.indexOfFirst { it.id == checkInId }
+          if (index != -1) {
+            val newCheckIn = currentState.feed[index].copy(isLiked = true)
+            val newFeed = currentState.feed.toMutableList()
+            newFeed[index] = newCheckIn
+            _state.value = currentState.copy(feed = newFeed)
+          }
+        }
+      }.onException { e ->
+        snackbarErrorHandler.handle(e) {
+          "いいねに失敗しました: $it"
+        }
+      }
+    }
+  }
+
+  @Suppress("unused")
+  fun unlikeCheckIn(checkInId: String) {
+    viewModelScope.launch {
+      snackbarHostService.enqueue("この機能は未実装です (⸝⸝›_‹⸝⸝)")
+    }
+  }
+}

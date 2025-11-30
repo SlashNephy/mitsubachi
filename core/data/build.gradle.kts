@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-  namespace = "blue.starry.mitsubachi.data"
+  namespace = "blue.starry.mitsubachi.core.data"
 }
 
 dependencies {
@@ -35,7 +35,7 @@ dependencies {
   implementation(libs.ktor.client.content.negotiation)
   implementation(libs.ktor.serialization.kotlinx.json)
   implementation(libs.ktor.client.auth)
-  implementation(libs.ktor.client.logging)
+  debugImplementation(libs.ktor.client.logging)
 
   implementation(libs.cache4k)
   implementation(libs.apache.commons.lang)

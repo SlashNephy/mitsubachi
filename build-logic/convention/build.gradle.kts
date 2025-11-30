@@ -38,6 +38,14 @@ gradlePlugin {
       id = libs.plugins.convention.android.compose.library.get().pluginId
       implementationClass = "AndroidComposeLibraryConventionPlugin"
     }
+    register("android-wear-compose-library") {
+      id = libs.plugins.convention.android.wear.compose.library.get().pluginId
+      implementationClass = "AndroidWearComposeLibraryConventionPlugin"
+    }
+    register("android-glance-library") {
+      id = libs.plugins.convention.android.glance.library.get().pluginId
+      implementationClass = "AndroidGlanceLibraryConventionPlugin"
+    }
     register("detekt") {
       id = libs.plugins.convention.detekt.get().pluginId
       implementationClass = "DetektConventionPlugin"
