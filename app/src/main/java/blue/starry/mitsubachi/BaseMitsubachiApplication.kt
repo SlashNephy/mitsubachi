@@ -11,6 +11,7 @@ import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import com.google.firebase.Firebase
 import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.initialize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -59,6 +60,8 @@ abstract class BaseMitsubachiApplication :
     applicationScope.launch {
       PhotoWidget.updatePreview(applicationContext)
     }
+
+    Firebase.initialize(this)
   }
 
   override fun newImageLoader(context: PlatformContext): ImageLoader {
