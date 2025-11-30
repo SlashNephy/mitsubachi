@@ -23,7 +23,7 @@ object VenueLocationFormatter {
             withCountry,
             withPostalCode,
             withCrossStreet,
-            withAddress
+            withAddress,
           )
         }
 
@@ -35,7 +35,7 @@ object VenueLocationFormatter {
             withCountry,
             withPostalCode,
             withCrossStreet,
-            withAddress
+            withAddress,
           )
         }
 
@@ -47,7 +47,7 @@ object VenueLocationFormatter {
             withCountry,
             withPostalCode,
             withCrossStreet,
-            withAddress
+            withAddress,
           )
         }
 
@@ -59,11 +59,11 @@ object VenueLocationFormatter {
             withCountry,
             withPostalCode,
             withCrossStreet,
-            withAddress
+            withAddress,
           )
         }
       }
-    }.trim().ifEmpty { location.country }
+    }.trim().trimEnd(',').ifEmpty { location.country }
   }
 
   private fun StringBuilder.appendCjkFormat(
