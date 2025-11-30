@@ -15,27 +15,52 @@ object VenueLocationFormatter {
     return buildString {
       when (locale.country) {
         // 漢字圏
-        // 〒$postalCode $state$city$address $crossStreet ($country)
+        // (〒)$postalCode $state$city$address $crossStreet ($country)
         "JP", "CN", "TW", "HK", "MO" -> {
-          appendCjkFormat(location, withCountry, withPostalCode, withCrossStreet, withAddress)
+          appendCjkFormat(
+            location,
+            locale,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress
+          )
         }
 
         // 非漢字圏のアジア・東欧
         // $postalCode $state $city $address $crossStreet ($country)
         "KR", "HU" -> {
-          appendAsianEasternEuropeanFormat(location, withCountry, withPostalCode, withCrossStreet, withAddress)
+          appendAsianEasternEuropeanFormat(
+            location,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress
+          )
         }
 
         // ヨーロッパ大陸形式
         // $crossStreet, $address, $postalCode $city, $state, $country
         "DE", "FR", "IT", "ES", "NL", "SE", "NO", "FI", "DK", "BR" -> {
-          appendContinentalEuropeanFormat(location, withCountry, withPostalCode, withCrossStreet, withAddress)
+          appendContinentalEuropeanFormat(
+            location,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress
+          )
         }
 
         // アングロサクソン形式
         // $crossStreet, $address, $city, $state $postalCode, $country
         else -> {
-          appendAngloSaxonFormat(location, withCountry, withPostalCode, withCrossStreet, withAddress)
+          appendAngloSaxonFormat(
+            location,
+            withCountry,
+            withPostalCode,
+            withCrossStreet,
+            withAddress
+          )
         }
       }
     }.trim().ifEmpty { location.country }
@@ -43,13 +68,16 @@ object VenueLocationFormatter {
 
   private fun StringBuilder.appendCjkFormat(
     location: VenueLocation,
+    locale: Locale,
     withCountry: Boolean,
     withPostalCode: Boolean,
     withCrossStreet: Boolean,
     withAddress: Boolean,
   ) {
     if (withPostalCode && location.postalCode != null) {
-      append('〒')
+      if (locale.country == "JP") {
+        append('〒')
+      }
       append(location.postalCode)
       append(' ')
     }
