@@ -2,10 +2,12 @@ package blue.starry.mitsubachi.feature.appfunctions
 
 import androidx.appfunctions.AppFunctionContext
 import androidx.appfunctions.service.AppFunction
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.sqrt
 
-@Suppress("OutdatedDocumentation")
-class ExampleFunctions {
+@Singleton
+class ExampleFunctions @Inject constructor() {
   /**
    * Returns square root of [x].
    *
@@ -14,6 +16,7 @@ class ExampleFunctions {
    * @return Double square root of [x].
    */
   @AppFunction(isDescribedByKdoc = true)
+  @Suppress("OutdatedDocumentation")
   suspend fun squareRoot(
     @Suppress("UnusedParameter") appFunctionContext: AppFunctionContext,
     x: Double,

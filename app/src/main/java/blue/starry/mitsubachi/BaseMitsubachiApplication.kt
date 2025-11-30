@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi
 
 import android.app.Application
+import androidx.appfunctions.service.AppFunctionConfiguration
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import blue.starry.mitsubachi.core.domain.ApplicationScope
@@ -24,7 +25,8 @@ import javax.inject.Inject
 abstract class BaseMitsubachiApplication :
   Application(),
   SingletonImageLoader.Factory,
-  Configuration.Provider {
+  Configuration.Provider,
+  AppFunctionConfiguration.Provider {
   @Inject
   lateinit var imageLoader: ImageLoader
 
@@ -40,6 +42,9 @@ abstract class BaseMitsubachiApplication :
 
   @Inject
   lateinit var firebaseAppCheckProviderFactory: AppCheckProviderFactory
+
+  @Inject
+  lateinit var injectedAppFunctionConfiguration: AppFunctionConfiguration
 
   override val workManagerConfiguration: Configuration
     get() = Configuration.Builder()
@@ -73,4 +78,7 @@ abstract class BaseMitsubachiApplication :
   override fun newImageLoader(context: PlatformContext): ImageLoader {
     return imageLoader
   }
+
+  override val appFunctionConfiguration: AppFunctionConfiguration
+    get() = injectedAppFunctionConfiguration
 }
