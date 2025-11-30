@@ -1,9 +1,9 @@
-package blue.starry.mitsubachi.data.repository
+package blue.starry.mitsubachi.core.data.repository
 
 import android.content.Context
-import blue.starry.mitsubachi.data.service.LocationTrackingService
-import blue.starry.mitsubachi.domain.model.LocationTrackingState
-import blue.starry.mitsubachi.domain.usecase.LocationTrackingRepository
+import blue.starry.mitsubachi.core.data.service.LocationTrackingService
+import blue.starry.mitsubachi.core.domain.model.LocationTrackingState
+import blue.starry.mitsubachi.core.domain.usecase.LocationTrackingRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

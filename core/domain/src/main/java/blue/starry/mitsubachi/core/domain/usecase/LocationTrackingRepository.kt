@@ -1,6 +1,6 @@
-package blue.starry.mitsubachi.domain.usecase
+package blue.starry.mitsubachi.core.domain.usecase
 
-import blue.starry.mitsubachi.domain.model.LocationTrackingState
+import blue.starry.mitsubachi.core.domain.model.LocationTrackingState
 import kotlinx.coroutines.flow.StateFlow
 
 interface LocationTrackingRepository {

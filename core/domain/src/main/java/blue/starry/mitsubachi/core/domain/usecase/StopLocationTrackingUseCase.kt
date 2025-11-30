@@ -1,13 +1,13 @@
-package blue.starry.mitsubachi.domain.usecase
+package blue.starry.mitsubachi.core.domain.usecase
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StartLocationTrackingUseCase @Inject constructor(
+class StopLocationTrackingUseCase @Inject constructor(
   private val locationTrackingRepository: LocationTrackingRepository,
 ) {
   suspend operator fun invoke() {
-    locationTrackingRepository.startTracking()
+    locationTrackingRepository.stopTracking()
   }
 }

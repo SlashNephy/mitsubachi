@@ -12,7 +12,7 @@
 
     <application>
         <service
-            android:name=".service.LocationTrackingService"
+            android:name="blue.starry.mitsubachi.core.data.service.LocationTrackingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />

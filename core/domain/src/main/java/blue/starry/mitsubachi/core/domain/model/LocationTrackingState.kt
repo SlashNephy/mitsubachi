@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.domain.model
+package blue.starry.mitsubachi.core.domain.model
 
 import androidx.compose.runtime.Immutable
 

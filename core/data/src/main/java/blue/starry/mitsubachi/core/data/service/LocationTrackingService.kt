@@ -1,4 +1,4 @@
-package blue.starry.mitsubachi.data.service
+package blue.starry.mitsubachi.core.data.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -10,10 +10,10 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import blue.starry.mitsubachi.data.repository.model.toDomain
-import blue.starry.mitsubachi.domain.model.Coordinates
-import blue.starry.mitsubachi.domain.model.DeviceLocation
-import blue.starry.mitsubachi.domain.usecase.FoursquareApiClient
+import blue.starry.mitsubachi.core.data.repository.model.toDomain
+import blue.starry.mitsubachi.core.domain.model.Coordinates
+import blue.starry.mitsubachi.core.domain.model.DeviceLocation
+import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

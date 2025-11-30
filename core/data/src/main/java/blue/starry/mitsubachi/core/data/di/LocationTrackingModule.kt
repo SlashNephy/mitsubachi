@@ -1,7 +1,7 @@
-package blue.starry.mitsubachi.data.di
+package blue.starry.mitsubachi.core.data.di
 
-import blue.starry.mitsubachi.data.repository.LocationTrackingRepositoryImpl
-import blue.starry.mitsubachi.domain.usecase.LocationTrackingRepository
+import blue.starry.mitsubachi.core.data.repository.LocationTrackingRepositoryImpl
+import blue.starry.mitsubachi.core.domain.usecase.LocationTrackingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
