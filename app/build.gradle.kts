@@ -25,7 +25,7 @@ android {
 
     buildConfigField("String", "NAMESPACE", "\"${namespace}\"")
 
-    System.getenv("FIREBASE_APP_CHECK_DEBUG_TOKEN")?.also {
+    providers.environmentVariable("FIREBASE_APP_CHECK_DEBUG_TOKEN").orNull?.also {
       testInstrumentationRunnerArguments["firebaseAppCheckDebugSecret"] = it
     }
   }
