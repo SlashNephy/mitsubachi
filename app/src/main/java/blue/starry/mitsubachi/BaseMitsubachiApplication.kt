@@ -10,6 +10,8 @@ import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import com.google.firebase.Firebase
+import com.google.firebase.appcheck.AppCheckProviderFactory
+import com.google.firebase.appcheck.appCheck
 import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.initialize
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,9 @@ abstract class BaseMitsubachiApplication :
 
   @Inject
   lateinit var workerFactory: HiltWorkerFactory
+
+  @Inject
+  lateinit var firebaseAppCheckProviderFactory: AppCheckProviderFactory
 
   override val workManagerConfiguration: Configuration
     get() = Configuration.Builder()
@@ -62,6 +67,7 @@ abstract class BaseMitsubachiApplication :
     }
 
     Firebase.initialize(this)
+    Firebase.appCheck.installAppCheckProviderFactory(firebaseAppCheckProviderFactory)
   }
 
   override fun newImageLoader(context: PlatformContext): ImageLoader {
