@@ -33,6 +33,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.FoursquareUser
 import blue.starry.mitsubachi.core.domain.model.primaryCategory
+import blue.starry.mitsubachi.core.ui.compose.formatter.VenueLocationFormatter
 import blue.starry.mitsubachi.core.ui.compose.foundation.CheckInRow
 import blue.starry.mitsubachi.core.ui.compose.foundation.UserIcon
 import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
@@ -79,6 +80,7 @@ fun CheckInDetailScreen(
 }
 
 @Composable
+@Suppress("LongMethod")
 private fun VenueCard(checkIn: CheckIn) {
   Card(
     modifier = Modifier
@@ -116,6 +118,11 @@ private fun VenueCard(checkIn: CheckIn) {
           Text(
             text = checkIn.venue.primaryCategory?.name.orEmpty(),
             style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.secondary,
+          )
+          Text(
+            text = VenueLocationFormatter.formatAddress(checkIn.venue.location),
+            style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.secondary,
           )
         }
