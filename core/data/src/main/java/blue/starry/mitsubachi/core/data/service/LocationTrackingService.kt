@@ -7,7 +7,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import blue.starry.mitsubachi.core.data.repository.model.toDomain
@@ -36,21 +35,19 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LateinitUsage")
 class LocationTrackingService : Service() {
-  @Suppress("LateinitUsage")
   @Inject
   lateinit var fusedLocationClient: FusedLocationProviderClient
 
-  @Suppress("LateinitUsage")
   @Inject
   lateinit var foursquareApiClient: FoursquareApiClient
 
+  @Inject
+  lateinit var notificationManager: NotificationManager
+
   private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
   private val locationExecutor = Executors.newSingleThreadExecutor()
-
-  @Suppress("LateinitUsage")
-  private lateinit var notificationManager: NotificationManager
 
   private var currentLocation: DeviceLocation? = null
   private var stayStartTime: Long = 0
@@ -67,7 +64,6 @@ class LocationTrackingService : Service() {
 
   override fun onCreate() {
     super.onCreate()
-    notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     createNotificationChannels()
   }
 
@@ -114,15 +110,11 @@ class LocationTrackingService : Service() {
   private fun startLocationTracking() {
     val notification = createServiceNotification()
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      startForeground(
-        NOTIFICATION_ID_SERVICE,
-        notification,
-        ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION,
-      )
-    } else {
-      startForeground(NOTIFICATION_ID_SERVICE, notification)
-    }
+    startForeground(
+      NOTIFICATION_ID_SERVICE,
+      notification,
+      ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION,
+    )
 
     try {
       val locationRequest = LocationRequest.Builder(
@@ -163,7 +155,7 @@ class LocationTrackingService : Service() {
       .build()
   }
 
-  private fun handleLocationUpdate(newLocation: DeviceLocation) {
+  internal fun handleLocationUpdate(newLocation: DeviceLocation) {
     val previousLocation = currentLocation
 
     if (previousLocation == null) {
@@ -262,11 +254,7 @@ class LocationTrackingService : Service() {
       val intent = Intent(context, LocationTrackingService::class.java).apply {
         action = ACTION_START_TRACKING
       }
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        context.startForegroundService(intent)
-      } else {
-        context.startService(intent)
-      }
+      context.startForegroundService(intent)
     }
 
     fun stopTracking(context: Context) {

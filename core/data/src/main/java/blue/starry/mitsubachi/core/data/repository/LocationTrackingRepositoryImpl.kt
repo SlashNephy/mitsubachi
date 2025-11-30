@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LocationTrackingRepositoryImpl @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
 ) : LocationTrackingRepository {
   private val _trackingState = MutableStateFlow(
     LocationTrackingState(
