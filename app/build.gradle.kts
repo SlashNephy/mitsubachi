@@ -24,6 +24,10 @@ android {
     versionCode = (project.findProperty("versionCode") as? String)?.toIntOrNull() ?: 1
 
     buildConfigField("String", "NAMESPACE", "\"${namespace}\"")
+
+    providers.environmentVariable("FIREBASE_APP_CHECK_DEBUG_TOKEN").orNull?.also {
+      testInstrumentationRunnerArguments["firebaseAppCheckDebugSecret"] = it
+    }
   }
 
   firebaseAppDistributionDefault {
@@ -120,4 +124,6 @@ dependencies {
   implementation(libs.firebase.crashlytics.ndk)
   implementation(libs.firebase.analytics)
   implementation(libs.firebase.appdistribution)
+  implementation(libs.firebase.appcheck.playintegrity)
+  debugImplementation(libs.firebase.appcheck.debug)
 }
