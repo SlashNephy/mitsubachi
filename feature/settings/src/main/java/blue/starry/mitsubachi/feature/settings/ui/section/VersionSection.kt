@@ -58,7 +58,7 @@ internal fun VersionSection(
       text = stringResource(
         R.string.version_text,
         applicationConfig.versionName,
-        applicationConfig.versionCode
+        applicationConfig.versionCode,
       ),
       style = MaterialTheme.typography.labelSmall,
     )

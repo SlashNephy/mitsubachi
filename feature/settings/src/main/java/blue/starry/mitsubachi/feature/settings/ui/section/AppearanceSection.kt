@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
@@ -188,7 +189,7 @@ private fun ColorSchemeDialog(
   )
 }
 
-@Suppress("LongMethod", "CognitiveComplexMethod")
+@Suppress("LongMethod", "CognitiveComplexMethod", "CyclomaticComplexMethod")
 @Composable
 internal fun FontFamilyDialog(
   currentPreference: FontFamilyPreference,
@@ -205,6 +206,28 @@ internal fun FontFamilyDialog(
   }
   val subsets = rememberSaveable {
     mutableStateSetOf(*FontFamilyDialogViewModel.availableSubsets)
+  }
+
+  val filteredFonts by remember(state, keywordState.text, categories, subsets) {
+    derivedStateOf {
+      ((state as? FontFamilyDialogViewModel.UiState.Loaded)?.fonts ?: emptyList())
+        .asSequence()
+        .filter { font ->
+          font.family.contains(
+            keywordState.text,
+            ignoreCase = true,
+          )
+        }
+        .filter { font ->
+          categories.contains(font.category)
+        }
+        .filter { font ->
+          font.subsets.any { subset ->
+            subsets.contains(subset)
+          }
+        }
+        .toList()
+    }
   }
 
   AlertDialog(
@@ -245,7 +268,7 @@ internal fun FontFamilyDialog(
                         is GoogleWebFont.Category.Handwriting -> stringResource(R.string.font_category_handwriting)
                         is GoogleWebFont.Category.Monospace -> stringResource(R.string.font_category_monospace)
                         is GoogleWebFont.Category.Other -> category.name
-                      }
+                      },
                     )
                   },
                 )
@@ -290,22 +313,7 @@ internal fun FontFamilyDialog(
                 .selectableGroup(),
             ) {
               items(
-                items = state.fonts.asSequence()
-                  .filter { font ->
-                    font.family.contains(
-                      keywordState.text,
-                      ignoreCase = true,
-                    )
-                  }
-                  .filter { font ->
-                    categories.contains(font.category)
-                  }
-                  .filter { font ->
-                    font.subsets.any { subset ->
-                      subsets.contains(subset)
-                    }
-                  }
-                  .toList(),
+                items = filteredFonts,
                 key = { it.family },
               ) { font ->
                 Row(
