@@ -188,7 +188,7 @@ private fun ColorSchemeDialog(
   )
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CognitiveComplexMethod")
 @Composable
 internal fun FontFamilyDialog(
   currentPreference: FontFamilyPreference,
