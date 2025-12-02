@@ -54,5 +54,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${google_api_key}" />
+        <meta-data
+            android:name="com.google.webfonts.API_KEY"
+            android:value="${google_api_key}" />
     </application>
 </manifest>

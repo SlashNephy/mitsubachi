@@ -15,7 +15,7 @@ fun MitsubachiTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   // Dynamic color is available on Android 12+
   dynamicColor: Boolean = true,
-  fontFamilyPreference: FontFamilyPreference? = null,
+  fontFamilyPreference: FontFamilyPreference = FontFamilyPreference.Default,
   content: @Composable () -> Unit,
 ) {
   val colorScheme = when {

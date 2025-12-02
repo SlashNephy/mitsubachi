@@ -23,4 +23,25 @@
     <string name="color_scheme_system">System</string>
     <string name="font_family_headline">Font</string>
     <string name="font_family_supporting">Choose your preferred font from Google Fonts</string>
+    <string name="advanced_section_title">Advanced Settings</string>
+    <string name="swarm_compatibility_mode_headline">Swarm Compatibility Mode</string>
+    <string name="swarm_compatibility_mode_supporting">When enabled, replicates the behavior of the Swarm app. At least “Swarm App OAuth Token” must be set.</string>
+    <string name="swarm_oauth_token_headline">Swarm App OAuth Token</string>
+    <string name="unique_device_headline" translatable="false">uniqueDevice</string>
+    <string name="wsid_headline" translatable="false">wsid</string>
+    <string name="user_agent_headline" translatable="false">User-Agent</string>
+    <string name="not_set">(Not set)</string>
+    <string name="font_default">Default</string>
+    <string name="font_name_placeholder">Font name…</string>
+    <string name="font_subset_latin">Latin</string>
+    <string name="font_subset_japanese">Japanese</string>
+    <string name="font_subset_korean">Korean</string>
+    <string name="font_category_display">Display</string>
+    <string name="font_category_sans_serif">Sans Serif</string>
+    <string name="font_category_serif">Serif</string>
+    <string name="font_category_handwriting">Handwriting</string>
+    <string name="font_category_monospace">Monospace</string>
+    <string name="font_reset_to_default">Reset to default</string>
+    <string name="advanced_settings_already_enabled">Advanced settings are already enabled.</string>
+    <string name="version_text">Version: %1$s (%2$d)</string>
 </resources>
