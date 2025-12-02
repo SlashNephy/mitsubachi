@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import blue.starry.mitsubachi.feature.checkin.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +44,7 @@ fun NearbyVenuesScreenTopBar(
           viewModel.onSearchQueryChanged(textFieldState.text.toString())
         },
         placeholder = {
-          Text("スポットを検索する")
+          Text(stringResource(R.string.search_venues_placeholder))
         },
       )
     },

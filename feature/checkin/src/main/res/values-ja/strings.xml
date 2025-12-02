@@ -9,4 +9,12 @@
     <string name="sort_by_relevance">関連度順</string>
     <string name="sort_by_distance">距離順</string>
     <string name="check_in_detail_top_bar_title">%sさんのチェックイン</string>
+    <string name="search_venues_placeholder">スポットを検索する</string>
+    <string name="friends_here">%d人の友達がここにいます</string>
+    <string name="coins">コイン %d</string>
+    <string name="what_are_you_doing_placeholder">何をしていますか？</string>
+    <string name="cancel_button">キャンセル</string>
+    <string name="check_in_submit_button">チェックイン!</string>
+    <string name="like_failed">いいねに失敗しました: %s</string>
+    <string name="feature_not_implemented">この機能は未実装です (⸝⸝›_‹⸝⸝)</string>
 </resources>

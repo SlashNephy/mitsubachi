@@ -9,4 +9,12 @@
     <string name="sort_by_relevance">Relevance</string>
     <string name="sort_by_distance">Distance</string>
     <string name="check_in_detail_top_bar_title">%s’s Check-in</string>
+    <string name="search_venues_placeholder">Search for places</string>
+    <string name="friends_here">%d friends here</string>
+    <string name="coins">Coins %d</string>
+    <string name="what_are_you_doing_placeholder">What are you doing?</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="check_in_submit_button">Check in!</string>
+    <string name="like_failed">Failed to like: %s</string>
+    <string name="feature_not_implemented">This feature is not yet implemented (⸝⸝›_‹⸝⸝)</string>
 </resources>
