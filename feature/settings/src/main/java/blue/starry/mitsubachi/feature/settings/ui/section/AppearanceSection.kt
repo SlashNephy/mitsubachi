@@ -232,15 +232,21 @@ internal fun FontFamilyDialog(
             )
 
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-              items(
-                FontFamilyDialogViewModel.availableCategories,
-                key = { it.ordinal },
-              ) { category ->
+              items(FontFamilyDialogViewModel.availableCategories) { category ->
                 FilterChip(
                   selected = categories.contains(category),
                   onClick = { categories.toggle(category) },
                   label = {
-                    Text(category.name)
+                    Text(
+                      text = when (category) {
+                        is GoogleWebFont.Category.Display -> stringResource(R.string.font_category_display)
+                        is GoogleWebFont.Category.SansSerif -> stringResource(R.string.font_category_sans_serif)
+                        is GoogleWebFont.Category.Serif -> stringResource(R.string.font_category_serif)
+                        is GoogleWebFont.Category.Handwriting -> stringResource(R.string.font_category_handwriting)
+                        is GoogleWebFont.Category.Monospace -> stringResource(R.string.font_category_monospace)
+                        is GoogleWebFont.Category.Other -> category.name
+                      }
+                    )
                   },
                 )
               }
@@ -254,9 +260,9 @@ internal fun FontFamilyDialog(
                   label = {
                     Text(
                       text = when (subset) {
-                        GoogleWebFont.Subset.Latin -> stringResource(R.string.font_subset_latin)
-                        GoogleWebFont.Subset.Japanese -> stringResource(R.string.font_subset_japanese)
-                        GoogleWebFont.Subset.Korean -> stringResource(R.string.font_subset_korean)
+                        is GoogleWebFont.Subset.Latin -> stringResource(R.string.font_subset_latin)
+                        is GoogleWebFont.Subset.Japanese -> stringResource(R.string.font_subset_japanese)
+                        is GoogleWebFont.Subset.Korean -> stringResource(R.string.font_subset_korean)
                         is GoogleWebFont.Subset.Other -> subset.name
                       },
                     )
@@ -265,9 +271,9 @@ internal fun FontFamilyDialog(
                     Icon(
                       painter = painterResource(
                         id = when (subset) {
-                          GoogleWebFont.Subset.Latin -> MaterialSymbols.abc
-                          GoogleWebFont.Subset.Japanese -> MaterialSymbols.language_japanese_kana
-                          GoogleWebFont.Subset.Korean -> MaterialSymbols.language_korean_latin
+                          is GoogleWebFont.Subset.Latin -> MaterialSymbols.abc
+                          is GoogleWebFont.Subset.Japanese -> MaterialSymbols.language_japanese_kana
+                          is GoogleWebFont.Subset.Korean -> MaterialSymbols.language_korean_latin
                           is GoogleWebFont.Subset.Other -> MaterialSymbols.language
                         },
                       ),

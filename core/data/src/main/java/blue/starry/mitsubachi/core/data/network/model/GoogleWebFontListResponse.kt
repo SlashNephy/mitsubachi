@@ -32,7 +32,7 @@ private fun parseCategory(value: String): GoogleWebFont.Category {
     "serif" -> GoogleWebFont.Category.Serif
     "handwriting" -> GoogleWebFont.Category.Handwriting
     "monospace" -> GoogleWebFont.Category.Monospace
-    else -> error("Unknown category: $value")
+    else -> GoogleWebFont.Category.Other(value)
   }
 }
 

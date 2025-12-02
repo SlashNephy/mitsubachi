@@ -16,7 +16,13 @@ internal class FontFamilyDialogViewModel @Inject constructor(
   private val googleWebFontClient: GoogleWebFontClient,
 ) : ViewModel() {
   companion object {
-    val availableCategories = GoogleWebFont.Category.entries.toTypedArray()
+    val availableCategories = arrayOf(
+      GoogleWebFont.Category.SansSerif,
+      GoogleWebFont.Category.Serif,
+      GoogleWebFont.Category.Handwriting,
+      GoogleWebFont.Category.Monospace,
+      GoogleWebFont.Category.Display,
+    )
 
     val availableSubsets = arrayOf(
       GoogleWebFont.Subset.Latin,

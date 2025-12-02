@@ -33,6 +33,11 @@
     <string name="font_subset_latin">ラテン</string>
     <string name="font_subset_japanese">日本語</string>
     <string name="font_subset_korean">韓国語</string>
+    <string name="font_category_display">ディスプレイ</string>
+    <string name="font_category_sans_serif">Sans Serif</string>
+    <string name="font_category_serif">Serif</string>
+    <string name="font_category_handwriting">手書き</string>
+    <string name="font_category_monospace">等幅</string>
     <string name="font_reset_to_default">デフォルトに戻す</string>
     <string name="advanced_settings_already_enabled">すでに高度な設定は有効です。</string>
     <string name="version_text">バージョン: %1$s (%2$d)</string>

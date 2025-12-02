@@ -1,21 +1,19 @@
 package blue.starry.mitsubachi.core.domain.model
 
-import kotlinx.serialization.Serializable
-
 data class GoogleWebFont(
   val category: Category,
   val family: String,
   val subsets: List<Subset>,
 ) {
-  enum class Category {
-    Display,
-    SansSerif,
-    Serif,
-    Handwriting,
-    Monospace,
+  sealed interface Category {
+    data object Display : Category
+    data object SansSerif : Category
+    data object Serif : Category
+    data object Handwriting : Category
+    data object Monospace : Category
+    data class Other(val name: String) : Category
   }
 
-  @Serializable
   sealed interface Subset {
     data object Latin : Subset
     data object Japanese : Subset

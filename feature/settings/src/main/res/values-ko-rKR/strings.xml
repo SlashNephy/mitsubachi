@@ -33,6 +33,11 @@
     <string name="font_subset_latin">라틴</string>
     <string name="font_subset_japanese">일본어</string>
     <string name="font_subset_korean">한국어</string>
+    <string name="font_category_display">디스플레이</string>
+    <string name="font_category_sans_serif">산세리프</string>
+    <string name="font_category_serif">세리프</string>
+    <string name="font_category_handwriting">손글씨</string>
+    <string name="font_category_monospace">고정폭</string>
     <string name="font_reset_to_default">기본값으로 되돌리기</string>
     <string name="advanced_settings_already_enabled">고급 설정이 이미 활성화되어 있습니다.</string>
     <string name="version_text">버전: %1$s (%2$d)</string>
