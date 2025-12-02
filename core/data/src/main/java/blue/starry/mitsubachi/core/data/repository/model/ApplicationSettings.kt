@@ -56,9 +56,13 @@ internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
     .setColorSchemePreference(colorSchemePreference.ordinal)
     .setIsAdvancedSettingsAvailable(isAdvancedSettingsAvailable)
     .apply {
-      when (fontFamilyPreference) {
+      when (val font = fontFamilyPreference) {
+        is FontFamilyPreference.Default -> {
+          clearGoogleFont()
+        }
+
         is FontFamilyPreference.GoogleFont -> {
-          setGoogleFont(fontFamilyPreference.fontName)
+          setGoogleFont(font.fontName)
         }
       }
     }

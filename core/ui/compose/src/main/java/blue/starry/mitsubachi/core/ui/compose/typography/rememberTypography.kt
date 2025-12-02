@@ -10,7 +10,7 @@ import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import java.util.Locale
 
 @Composable
-fun rememberTypography(fontFamilyPreference: FontFamilyPreference? = null): Typography {
+fun rememberTypography(fontFamilyPreference: FontFamilyPreference = FontFamilyPreference.Default): Typography {
   val configuration = LocalConfiguration.current
   return remember(configuration, fontFamilyPreference) {
     val locale = ConfigurationCompat.getLocales(configuration)[0] ?: Locale.getDefault()
@@ -29,7 +29,7 @@ fun rememberTypography(fontFamilyPreference: FontFamilyPreference? = null): Typo
     }
 
     when (fontFamilyPreference) {
-      null -> {
+      is FontFamilyPreference.Default -> {
         typography
       }
 

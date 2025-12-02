@@ -19,7 +19,7 @@ data class ApplicationSettings(
       widgetUpdateInterval = 1.hours,
       isDynamicColorEnabled = false,
       colorSchemePreference = ColorSchemePreference.System,
-      fontFamilyPreference = FontFamilyPreference.GoogleFont.IBMPlexSans,
+      fontFamilyPreference = FontFamilyPreference.Default,
       isAdvancedSettingsAvailable = false,
     )
   }
