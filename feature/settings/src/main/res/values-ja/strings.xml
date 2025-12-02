@@ -23,4 +23,17 @@
     <string name="color_scheme_system">システム</string>
     <string name="font_family_headline">フォント</string>
     <string name="font_family_supporting">Google Fonts からお好みのフォントを選択</string>
+    <string name="advanced_section_title">高度な設定</string>
+    <string name="swarm_compatibility_mode_headline">Swarm 互換モード</string>
+    <string name="swarm_compatibility_mode_supporting">有効にすると Swarm アプリの挙動が再現されます。少なくとも「Swarm アプリの OAuth トークン」を設定する必要があります。</string>
+    <string name="swarm_oauth_token_headline">Swarm アプリの OAuth トークン</string>
+    <string name="not_set">(未設定)</string>
+    <string name="font_default">デフォルト</string>
+    <string name="font_name_placeholder">フォント名…</string>
+    <string name="font_subset_latin">ラテン</string>
+    <string name="font_subset_japanese">日本語</string>
+    <string name="font_subset_korean">韓国語</string>
+    <string name="font_reset_to_default">デフォルトに戻す</string>
+    <string name="advanced_settings_already_enabled">すでに高度な設定は有効です。</string>
+    <string name="version_text">バージョン: %1$s (%2$d)</string>
 </resources>

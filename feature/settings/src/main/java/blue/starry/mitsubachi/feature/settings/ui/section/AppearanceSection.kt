@@ -104,7 +104,7 @@ internal fun AppearanceSection(
       trailing = {
         Text(
           text = when (val font = applicationSettings.fontFamilyPreference) {
-            is FontFamilyPreference.Default -> "デフォルト"
+            is FontFamilyPreference.Default -> stringResource(R.string.font_default)
             is FontFamilyPreference.GoogleFont -> font.fontName
           },
         )
@@ -226,7 +226,7 @@ internal fun FontFamilyDialog(
             TextField(
               state = keywordState,
               placeholder = {
-                Text("フォント名...")
+                Text(stringResource(R.string.font_name_placeholder))
               },
               modifier = Modifier.fillMaxWidth(),
             )
@@ -257,9 +257,9 @@ internal fun FontFamilyDialog(
                   label = {
                     Text(
                       text = when (subset) {
-                        GoogleWebFont.Subset.Latin -> "ラテン"
-                        GoogleWebFont.Subset.Japanese -> "日本語"
-                        GoogleWebFont.Subset.Korean -> "韓国語"
+                        GoogleWebFont.Subset.Latin -> stringResource(R.string.font_subset_latin)
+                        GoogleWebFont.Subset.Japanese -> stringResource(R.string.font_subset_japanese)
+                        GoogleWebFont.Subset.Korean -> stringResource(R.string.font_subset_korean)
                         is GoogleWebFont.Subset.Other -> subset.name
                       },
                     )
@@ -346,7 +346,7 @@ internal fun FontFamilyDialog(
             onConfirm(FontFamilyPreference.Default)
           },
         ) {
-          Text(text = "デフォルトに戻す")
+          Text(text = stringResource(R.string.font_reset_to_default))
         }
 
         TextButton(

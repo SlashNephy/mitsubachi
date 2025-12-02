@@ -1,5 +1,6 @@
 package blue.starry.mitsubachi.feature.settings.ui.section
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -28,14 +29,14 @@ internal fun AdvancedSection(
 ) {
   var activeTextFieldDialog by remember { mutableStateOf<TextFieldType?>(null) }
 
-  SettingSection(title = "高度な設定") {
+  SettingSection(title = stringResource(R.string.advanced_section_title)) {
     item(
       leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.api),
       headline = {
-        Text("Swarm 互換モード")
+        Text(stringResource(R.string.swarm_compatibility_mode_headline))
       },
       supporting = {
-        Text("有効にすると Swarm アプリの挙動が再現されます。少なくとも「Swarm アプリの OAuth トークン」を設定する必要があります。")
+        Text(stringResource(R.string.swarm_compatibility_mode_supporting))
       },
       trailing = {
         Switch(
@@ -54,7 +55,7 @@ internal fun AdvancedSection(
     item(
       leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.key),
       headline = {
-        Text("Swarm アプリの OAuth トークン")
+        Text(stringResource(R.string.swarm_oauth_token_headline))
       },
       supporting = {
         SecretStringValue(userSettings.swarmOAuthToken)
@@ -67,7 +68,7 @@ internal fun AdvancedSection(
     item(
       leadingIcon = SettingItem.LeadingIcon.Blank,
       headline = {
-        Text("uniqueDevice")
+        Text(stringResource(R.string.unique_device_headline))
       },
       supporting = {
         StringValue(userSettings.uniqueDevice)
@@ -80,7 +81,7 @@ internal fun AdvancedSection(
     item(
       leadingIcon = SettingItem.LeadingIcon.Blank,
       headline = {
-        Text("wsid")
+        Text(stringResource(R.string.wsid_headline))
       },
       supporting = {
         StringValue(userSettings.wsid)
@@ -93,7 +94,7 @@ internal fun AdvancedSection(
     item(
       leadingIcon = SettingItem.LeadingIcon.Blank,
       headline = {
-        Text("User-Agent")
+        Text(stringResource(R.string.user_agent_headline))
       },
       supporting = {
         StringValue(userSettings.userAgent)
@@ -105,16 +106,16 @@ internal fun AdvancedSection(
   }
 
   activeTextFieldDialog?.also { type ->
-    val (initialValue, title) = when (type) {
-      TextFieldType.SwarmOAuthToken -> userSettings.swarmOAuthToken to "Swarm アプリの OAuth トークン"
-      TextFieldType.UniqueDevice -> userSettings.uniqueDevice to "uniqueDevice"
-      TextFieldType.Wsid -> userSettings.wsid to "wsid"
-      TextFieldType.UserAgent -> userSettings.userAgent to "User-Agent"
+    val (initialValue, @StringRes titleResId) = when (type) {
+      TextFieldType.SwarmOAuthToken -> userSettings.swarmOAuthToken to R.string.swarm_oauth_token_headline
+      TextFieldType.UniqueDevice -> userSettings.uniqueDevice to R.string.unique_device_headline
+      TextFieldType.Wsid -> userSettings.wsid to R.string.wsid_headline
+      TextFieldType.UserAgent -> userSettings.userAgent to R.string.user_agent_headline
     }
 
     TextFieldDialog(
       initialValue = initialValue.orEmpty(),
-      title = title,
+      titleResId = titleResId,
       onDismiss = {
         activeTextFieldDialog = null
       },
@@ -148,7 +149,7 @@ internal fun AdvancedSection(
 @Composable
 private fun StringValue(value: String?) {
   if (value.isNullOrBlank()) {
-    Text("(未設定)")
+    Text(stringResource(R.string.not_set))
   } else {
     Text(value)
   }
@@ -157,7 +158,7 @@ private fun StringValue(value: String?) {
 @Composable
 private fun SecretStringValue(value: String?) {
   if (value.isNullOrBlank()) {
-    Text("(未設定)")
+    Text(stringResource(R.string.not_set))
   } else {
     Text("***")
   }
@@ -173,7 +174,7 @@ private enum class TextFieldType {
 @Composable
 private fun TextFieldDialog(
   initialValue: String,
-  title: String,
+  @StringRes titleResId: Int,
   onConfirm: (String) -> Unit,
   onDismiss: () -> Unit,
 ) {
@@ -183,7 +184,7 @@ private fun TextFieldDialog(
     onDismissRequest = onDismiss,
     title = {
       Text(
-        text = title,
+        text = stringResource(titleResId),
         style = MaterialTheme.typography.titleMedium,
       )
     },
