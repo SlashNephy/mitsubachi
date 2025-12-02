@@ -53,7 +53,7 @@ internal class FontFamilyDialogViewModel @Inject constructor(
 
         fonts.filter {
           it.subsets.any { subset ->
-            availableSubsets.contains(subset)
+            subset in availableSubsets
           }
         }
       }.onSuccess { fonts ->
