@@ -255,7 +255,10 @@ internal fun FontFamilyDialog(
             )
 
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-              items(FontFamilyDialogViewModel.availableCategories) { category ->
+              items(
+                items = FontFamilyDialogViewModel.availableCategories,
+                key = { it.toString() },
+              ) { category ->
                 FilterChip(
                   selected = categories.contains(category),
                   onClick = { categories.toggle(category) },
@@ -276,7 +279,10 @@ internal fun FontFamilyDialog(
             }
 
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-              items(FontFamilyDialogViewModel.availableSubsets) { subset ->
+              items(
+                items = FontFamilyDialogViewModel.availableSubsets,
+                key = { it.toString() },
+              ) { subset ->
                 FilterChip(
                   selected = subsets.contains(subset),
                   onClick = { subsets.toggle(subset) },
