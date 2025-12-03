@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -157,7 +158,7 @@ private fun FriendsHereSection(friends: List<FoursquareUser>) {
       .padding(horizontal = 16.dp),
   ) {
     Text(
-      text = stringResource(R.string.friends_here, friends.size),
+      text = pluralStringResource(R.plurals.friends_here, friends.size, friends.size),
       style = MaterialTheme.typography.bodyMedium,
     )
 

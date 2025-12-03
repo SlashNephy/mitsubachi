@@ -10,7 +10,9 @@
     <string name="sort_by_distance">距離順</string>
     <string name="check_in_detail_top_bar_title">%sさんのチェックイン</string>
     <string name="search_venues_placeholder">スポットを検索する</string>
-    <string name="friends_here">%d人の友達がここにいます</string>
+    <plurals name="friends_here">
+        <item quantity="other">%d人の友達がここにいます</item>
+    </plurals>
     <string name="coins">コイン %d</string>
     <string name="what_are_you_doing_placeholder">何をしていますか？</string>
     <string name="cancel_button">キャンセル</string>

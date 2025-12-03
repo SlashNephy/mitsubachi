@@ -10,7 +10,10 @@
     <string name="sort_by_distance">Distance</string>
     <string name="check_in_detail_top_bar_title">%s’s Check-in</string>
     <string name="search_venues_placeholder">Search for places</string>
-    <string name="friends_here">%d friends here</string>
+    <plurals name="friends_here">
+        <item quantity="one">%d friend here</item>
+        <item quantity="other">%d friends here</item>
+    </plurals>
     <string name="coins">Coins %d</string>
     <string name="what_are_you_doing_placeholder">What are you doing?</string>
     <string name="cancel_button">Cancel</string>
