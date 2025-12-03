@@ -107,6 +107,7 @@ dependencies {
   implementation(projects.core.domain)
   implementation(projects.core.ui.common)
   implementation(projects.core.ui.compose)
+  implementation(projects.feature.appfunctions)
   implementation(projects.feature.checkin)
   implementation(projects.feature.home)
   implementation(projects.feature.map)
@@ -115,7 +116,7 @@ dependencies {
   implementation(projects.feature.widget.photo)
 
   implementation(libs.androidx.core.splashscreen)
-
+  implementation(libs.androidx.appfunctions.service)
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.androidx.hilt.work)
 
