@@ -33,8 +33,8 @@ fun NearbyVenuesScreenTopBar(
 
       // SearchBarDefaults.InputField が onChange を提供していないため、LaunchedEffect で監視する
       LaunchedEffect(textFieldState.text) {
-        // onChange では debounce を入れる
-        viewModel.onSearchQueryChangedDebounced(textFieldState.text.toString())
+        // テキスト変更時に ViewModel に通知（debounce は ViewModel 内で処理）
+        viewModel.onSearchQueryChanged(textFieldState.text.toString())
       }
 
       SearchBarDefaults.InputField(
