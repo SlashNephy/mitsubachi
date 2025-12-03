@@ -1,6 +1,6 @@
 package blue.starry.mitsubachi.feature.home.ui
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +14,7 @@ import blue.starry.mitsubachi.core.ui.compose.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.core.ui.compose.snackbar.enqueue
 import blue.starry.mitsubachi.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
   relativeDateTimeFormatter: RelativeDateTimeFormatter,
-  private val application: Application,
+  @param:ApplicationContext private val context: Context,
   private val fetchFeedUseCase: FetchFeedUseCase,
   private val likeCheckInUseCase: LikeCheckInUseCase,
   private val snackbarHostService: SnackbarHostService,
@@ -85,7 +86,7 @@ class HomeScreenViewModel @Inject constructor(
         }
       }.onException { e ->
         snackbarErrorHandler.handle(e) {
-          application.getString(R.string.like_failed, it)
+          context.getString(R.string.like_failed, it)
         }
       }
     }
@@ -94,7 +95,7 @@ class HomeScreenViewModel @Inject constructor(
   @Suppress("unused")
   fun unlikeCheckIn(checkInId: String) {
     viewModelScope.launch {
-      snackbarHostService.enqueue(application.getString(R.string.feature_not_implemented))
+      snackbarHostService.enqueue(context.getString(R.string.feature_not_implemented))
     }
   }
 }
