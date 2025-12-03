@@ -9,4 +9,14 @@
     <string name="sort_by_relevance">관련성순</string>
     <string name="sort_by_distance">거리순</string>
     <string name="check_in_detail_top_bar_title">%s님의 체크인</string>
+    <string name="search_venues_placeholder">장소 검색</string>
+    <plurals name="friends_here">
+        <item quantity="other">친구 %d명이 여기에 있습니다</item>
+    </plurals>
+    <string name="coins">코인 %d</string>
+    <string name="what_are_you_doing_placeholder">무엇을 하고 계신가요?</string>
+    <string name="cancel_button">취소</string>
+    <string name="check_in_submit_button">체크인!</string>
+    <string name="like_failed">좋아요 실패: %s</string>
+    <string name="feature_not_implemented">이 기능은 아직 구현되지 않았습니다 (⸝⸝›_‹⸝⸝)</string>
 </resources>

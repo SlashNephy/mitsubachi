@@ -9,4 +9,8 @@
     <string name="search_map_category_arts">예술</string>
     <string name="search_map_header_area_info">이 지역 정보</string>
     <string name="search_map_back">← 뒤로</string>
+    <string name="move_to_current_location">현재 위치로 이동</string>
+    <string name="zoom_in">확대</string>
+    <string name="zoom_out">축소</string>
+    <string name="like_failed">좋아요 실패: %s</string>
 </resources>

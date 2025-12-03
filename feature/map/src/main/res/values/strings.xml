@@ -9,4 +9,8 @@
     <string name="search_map_category_arts">Arts</string>
     <string name="search_map_header_area_info">Places in this area</string>
     <string name="search_map_back">← Back</string>
+    <string name="move_to_current_location">Move to current location</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+    <string name="like_failed">Failed to like: %s</string>
 </resources>

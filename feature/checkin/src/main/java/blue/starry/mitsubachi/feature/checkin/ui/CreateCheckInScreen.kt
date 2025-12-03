@@ -31,11 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.domain.model.Venue
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
+import blue.starry.mitsubachi.feature.checkin.R
 
 @Composable
 @Suppress("LongMethod") // TODO: 後でなんとかする
@@ -158,7 +160,7 @@ private fun CheckInEditor(
     isError = isError,
     onValueChange = onShoutChange,
     placeholder = {
-      Text("何をしていますか？")
+      Text(stringResource(R.string.what_are_you_doing_placeholder))
     },
     colors = TextFieldDefaults.colors(
       focusedContainerColor = Color.Transparent,
@@ -195,7 +197,7 @@ private fun CancelButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     onClick = onClick,
     modifier = modifier,
   ) {
-    Text("キャンセル")
+    Text(stringResource(R.string.cancel_button))
   }
 }
 
@@ -206,6 +208,6 @@ private fun SubmitButton(onClick: () -> Unit, isEnabled: Boolean, modifier: Modi
     enabled = isEnabled,
     modifier = modifier,
   ) {
-    Text("チェックイン!")
+    Text(stringResource(R.string.check_in_submit_button))
   }
 }
