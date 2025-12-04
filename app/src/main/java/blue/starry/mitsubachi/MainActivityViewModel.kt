@@ -8,6 +8,8 @@ import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
 import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLink
 import blue.starry.mitsubachi.core.ui.common.deeplink.DeepLinkSerializer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -34,19 +36,19 @@ class MainActivityViewModel @Inject constructor(
     }
   }
 
-  fun buildInitialRouteKeys(intent: Intent): List<RouteKey> {
+  fun buildInitialRouteKeys(intent: Intent): ImmutableList<RouteKey> {
     val link = intent.data?.let { deepLinkSerializer.deserialize(it) }
 
     return when (link) {
       is DeepLink.CheckIn -> {
-        listOf(
+        persistentListOf(
           RouteKey.Home, // ホームに戻れるようにする
           RouteKey.CheckInDetail.ById(id = link.id),
         )
       }
 
       null -> {
-        listOf(RouteKey.Welcome)
+        persistentListOf(RouteKey.Welcome)
       }
     }
   }

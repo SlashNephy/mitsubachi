@@ -12,11 +12,12 @@ import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.clustering.rememberClusterManager
 import com.google.maps.android.compose.clustering.rememberClusterRenderer
+import kotlinx.collections.immutable.ImmutableList
 
 @Suppress("ModifierMissing")
 @Composable
 @OptIn(MapsComposeExperimentalApi::class)
-fun VenueHistoriesMapView(histories: List<VenueHistory>) {
+fun VenueHistoriesMapView(histories: ImmutableList<VenueHistory>) {
   val clusterManager = rememberClusterManager<VenueHistoryClusterItem>() ?: return
   val renderer = rememberClusterRenderer(
     clusterManager = clusterManager,

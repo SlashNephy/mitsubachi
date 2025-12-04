@@ -2,6 +2,8 @@ package blue.starry.mitsubachi.core.domain.model
 
 import androidx.compose.runtime.Immutable
 import blue.starry.mitsubachi.core.common.ZonedDateTimeSerializer
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
 
@@ -22,7 +24,7 @@ data class CheckIn(
   val source: Source?,
   val isMeyer: Boolean,
   val with: List<FoursquareUser> = emptyList(),
-  val friendsHere: List<FoursquareUser> = emptyList(),
+  val friendsHere: ImmutableList<FoursquareUser> = persistentListOf(),
 )
 
 @Immutable

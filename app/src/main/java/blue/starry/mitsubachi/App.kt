@@ -37,12 +37,14 @@ import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreenTopBar
 import blue.starry.mitsubachi.feature.welcome.ui.WelcomeScreen
+import kotlinx.collections.immutable.ImmutableList
 import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun App(
-  initialRouteKeys: List<RouteKey>,
+  initialRouteKeys: ImmutableList<RouteKey>,
+  modifier: Modifier = Modifier,
   viewModel: AppViewModel = hiltViewModel(),
 ) {
   val backStack = rememberNavBackStack(initialRouteKeys)

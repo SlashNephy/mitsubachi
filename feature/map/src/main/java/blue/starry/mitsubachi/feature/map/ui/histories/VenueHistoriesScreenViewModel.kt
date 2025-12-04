@@ -9,6 +9,8 @@ import blue.starry.mitsubachi.core.ui.compose.error.onException
 import blue.starry.mitsubachi.feature.map.ui.toLatLng
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +26,7 @@ class VenueHistoriesScreenViewModel @Inject constructor(
   sealed interface UiState {
     data object Loading : UiState
     data class Success(
-      val data: List<VenueHistory>,
+      val data: ImmutableList<VenueHistory>,
       val initialPosition: LatLng,
       val isRefreshing: Boolean,
     ) : UiState
@@ -59,7 +61,7 @@ class VenueHistoriesScreenViewModel @Inject constructor(
     }.onSuccess { data ->
       _state.value =
         UiState.Success(
-          data = data,
+          data = data.toImmutableList(),
           initialPosition = data.weightedAveragePosition,
           isRefreshing = false,
         )

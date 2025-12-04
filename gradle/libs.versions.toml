@@ -30,14 +30,15 @@ coil = "3.3.0"
 detekt = "2.0.0-alpha.1"
 detekt-rules-compose = "0.5.0"
 firebase = "34.6.0"
-firebase-appdistribution = "16.0.0-beta17"
 firebase-app-distribution-gradle-plugin = "5.2.0"
+firebase-appdistribution = "16.0.0-beta17"
 firebase-crashlytics-gradle-plugin = "3.0.6"
 google-services = "4.4.4"
 hilt = "2.57.2"
 indriya = "2.2.3"
 junit-jupiter = "6.0.1"
 kotlin = "2.2.21"
+kotlinx-collections-immutable = "0.4.0"
 kotlinx-coroutines-play-services = "1.10.2"
 kotlinx-serialization = "1.9.0"
 kover = "0.9.3"
@@ -100,6 +101,8 @@ androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core",
 # Google Play Services
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines-play-services" }
+
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 
 # Ktor
 ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }
