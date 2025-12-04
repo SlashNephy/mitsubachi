@@ -40,6 +40,7 @@ class SwarmApiClientImpl @Inject constructor(
     uniqueDevice: String?,
     wsid: String?,
     userAgent: String?,
+    afterTimestamp: Long?,
     policy: FetchPolicy,
   ): List<CheckIn> {
     val data = ktorfit.getRecentActivities(
@@ -48,6 +49,7 @@ class SwarmApiClientImpl @Inject constructor(
       wsid = wsid?.ifBlank { null } ?: Uuid.random().toHexDashString(),
       userAgent = userAgent?.ifBlank { null }
         ?: "com.foursquare.robin:2025081819:20220328:16:Pixel 10:release",
+      afterTimestamp = afterTimestamp,
       policy = policy,
     )
     return data.response.activities.items.map { it.checkin.toDomain() }
