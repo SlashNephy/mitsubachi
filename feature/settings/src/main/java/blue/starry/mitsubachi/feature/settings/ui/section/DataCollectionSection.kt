@@ -9,11 +9,12 @@ import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.settings.R
+import kotlinx.coroutines.Job
 
 @Composable
 internal fun DataCollectionSection(
   applicationSettings: ApplicationSettings,
-  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Job,
 ) {
   SettingSection(title = stringResource(R.string.data_collection_section_title)) {
     item(

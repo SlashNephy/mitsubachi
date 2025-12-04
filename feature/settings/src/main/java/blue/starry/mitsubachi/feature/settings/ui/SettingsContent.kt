@@ -22,6 +22,8 @@ import blue.starry.mitsubachi.feature.settings.ui.section.AppearanceSection
 import blue.starry.mitsubachi.feature.settings.ui.section.DataCollectionSection
 import blue.starry.mitsubachi.feature.settings.ui.section.VersionSection
 import blue.starry.mitsubachi.feature.settings.ui.section.WidgetSection
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Job
 import kotlin.time.Duration
 
 @Suppress("LongMethod")
@@ -31,7 +33,7 @@ fun SettingsContent(
   applicationSettings: ApplicationSettings,
   userSettings: UserSettings,
   applicationConfig: ApplicationConfig,
-  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Job,
   onChangeUserSettings: ((UserSettings) -> UserSettings) -> Unit,
   onSignOut: () -> Unit,
   onUpdateWidgetSchedule: () -> Unit,
@@ -102,7 +104,7 @@ private fun SettingsContentPreview() {
       applicationSettings = ApplicationSettings.Default.copy(isAdvancedSettingsAvailable = true),
       userSettings = UserSettings.Default,
       applicationConfig = MockData.ApplicationConfig,
-      onChangeApplicationSettings = { ApplicationSettings.Default },
+      onChangeApplicationSettings = { CompletableDeferred(ApplicationSettings.Default) },
       onChangeUserSettings = { UserSettings.Default },
       onSignOut = {},
       onUpdateWidgetSchedule = {},

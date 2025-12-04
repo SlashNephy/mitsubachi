@@ -45,12 +45,13 @@ import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.settings.R
+import kotlinx.coroutines.Job
 
 @Suppress("LongMethod")
 @Composable
 internal fun AppearanceSection(
   applicationSettings: ApplicationSettings,
-  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Job,
 ) {
   var showColorSchemeDialog by remember { mutableStateOf(false) }
   var showFontFamilyDialog by remember { mutableStateOf(false) }

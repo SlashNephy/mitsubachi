@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
 import blue.starry.mitsubachi.feature.settings.R
+import kotlinx.coroutines.Job
 
 private const val REQUIRED_CLICK_COUNT = 5
 
@@ -26,7 +27,7 @@ private const val REQUIRED_CLICK_COUNT = 5
 internal fun VersionSection(
   applicationSettings: ApplicationSettings,
   applicationConfig: ApplicationConfig,
-  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Job,
 ) {
   val context = LocalContext.current
   val resources = LocalResources.current
