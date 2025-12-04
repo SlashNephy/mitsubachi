@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.usecase.FetchFeedUseCase
 import blue.starry.mitsubachi.core.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.core.ui.compose.error.SnackbarErrorPresenter
@@ -52,7 +53,8 @@ class HomeScreenViewModel @Inject constructor(
 
   private suspend fun fetch() {
     val currentState = state.value
-    if (currentState is UiState.Success) {
+    val isRefreshing = currentState is UiState.Success
+    if (isRefreshing) {
       // 2回目以降の更新は isRefreshing=true
       _state.value = currentState.copy(isRefreshing = true)
     } else {
@@ -60,7 +62,9 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     runCatching {
-      fetchFeedUseCase()
+      // 初回読み込みはキャッシュを使い、リフレッシュ時はネットワークから取得
+      val policy = if (isRefreshing) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork
+      fetchFeedUseCase(policy)
     }.onSuccess { data ->
       _state.value = UiState.Success(data, isRefreshing = false)
     }.onException { e ->

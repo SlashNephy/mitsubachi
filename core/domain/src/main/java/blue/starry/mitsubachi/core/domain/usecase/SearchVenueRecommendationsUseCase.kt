@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.core.domain.usecase
 
 import blue.starry.mitsubachi.core.domain.model.Coordinates
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.model.VenueRecommendation
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,11 +14,13 @@ class SearchVenueRecommendationsUseCase @Inject constructor(
     coordinates: Coordinates,
     query: String? = null,
     section: VenueRecommendationSection? = null,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<VenueRecommendation> {
     return client.searchVenueRecommendations(
       coordinates = coordinates,
       query = query,
       section = section,
+      policy = policy,
     )
   }
 }
