@@ -34,8 +34,8 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 internal fun WidgetSection(
   applicationSettings: ApplicationSettings,
-  @Suppress("ParameterNaming") onChangeIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled: (Boolean) -> Unit,
-  onChangeWidgetUpdateInterval: (Duration) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeWidgetSettings: () -> Unit,
   formatDuration: (Duration) -> String,
 ) {
   var showIntervalDialog by remember { mutableStateOf(false) }
@@ -52,7 +52,14 @@ internal fun WidgetSection(
       trailing = {
         Switch(
           checked = applicationSettings.isWidgetUpdateOnUnmeteredNetworkOnlyEnabled,
-          onCheckedChange = onChangeIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled,
+          onCheckedChange = {
+            onChangeApplicationSettings { settings ->
+              settings.copy(
+                isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = it,
+              )
+            }
+            onChangeWidgetSettings()
+          },
         )
       },
     )
@@ -77,7 +84,12 @@ internal fun WidgetSection(
       interval = applicationSettings.widgetUpdateInterval,
       onConfirm = {
         showIntervalDialog = false
-        onChangeWidgetUpdateInterval(it)
+        onChangeApplicationSettings { settings ->
+          settings.copy(
+            widgetUpdateInterval = it,
+          )
+        }
+        onChangeWidgetSettings()
       },
       onDismiss = {
         showIntervalDialog = false

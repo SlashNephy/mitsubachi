@@ -60,22 +60,8 @@ fun SettingsContent(
       item {
         WidgetSection(
           applicationSettings = applicationSettings,
-          onChangeIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = it,
-              )
-            }
-            onUpdateWidgetSchedule()
-          },
-          onChangeWidgetUpdateInterval = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                widgetUpdateInterval = it,
-              )
-            }
-            onUpdateWidgetSchedule()
-          },
+          onChangeApplicationSettings = onChangeApplicationSettings,
+          onChangeWidgetSettings = onUpdateWidgetSchedule,
           formatDuration = formatDuration,
         )
       }
