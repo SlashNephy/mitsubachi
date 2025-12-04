@@ -12,7 +12,7 @@ import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 @Composable
 fun CheckInDetailLoadingScreen(
   id: String,
-  onCheckInLoaded: (CheckIn) -> Unit,
+  onLoadCheckIn: (CheckIn) -> Unit,
   viewModel: CheckInDetailLoadingScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -27,8 +27,8 @@ fun CheckInDetailLoadingScreen(
     }
 
     is CheckInDetailLoadingScreenViewModel.UiState.Loaded -> {
-      LaunchedEffect(state) {
-        onCheckInLoaded(state.checkIn)
+      LaunchedEffect(onLoadCheckIn, state) {
+        onLoadCheckIn(state.checkIn)
       }
     }
 

@@ -70,7 +70,7 @@ fun WelcomeScreen(
     }
 
     is WelcomeScreenViewModel.UiState.HasAccount -> {
-      LaunchedEffect(state) {
+      LaunchedEffect(onLogin, state) {
         onLogin()
       }
     }
@@ -248,7 +248,7 @@ private fun PermissionsStep(
   onPermissionResult: (Boolean) -> Unit,
 ) {
   val permissionState = rememberPermissionState(AndroidPermission.Location)
-  LaunchedEffect(permissionState.status) {
+  LaunchedEffect(onPermissionResult, permissionState.status) {
     onPermissionResult(permissionState.status == PermissionStatus.Granted)
   }
 

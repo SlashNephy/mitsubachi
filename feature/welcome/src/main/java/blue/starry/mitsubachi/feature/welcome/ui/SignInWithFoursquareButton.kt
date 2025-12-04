@@ -35,7 +35,7 @@ fun SignInWithFoursquareButton(
     }
 
     is SignInWithFoursquareButtonViewModel.UiState.Authorized -> {
-      LaunchedEffect(state) {
+      LaunchedEffect(onSuccess, state) {
         onSuccess()
       }
     }
