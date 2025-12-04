@@ -81,7 +81,7 @@ private fun HomeScreenFeedList(
   val listState = rememberLazyListState()
   val currentOnLoadMore by rememberUpdatedState(onLoadMore)
 
-  LaunchedEffect(listState, state.feed.size) {
+  LaunchedEffect(listState) {
     snapshotFlow {
       val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
       lastVisibleItem?.index == state.feed.lastIndex

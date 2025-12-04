@@ -78,7 +78,7 @@ class HomeScreenViewModel @Inject constructor(
         _state.value = currentState.copy(
           feed = newFeed,
           isLoadingMore = false,
-          hasMore = data.isNotEmpty(),
+          hasMore = data.size >= PAGE_SIZE,
         )
       }.onException { e ->
         _state.value = currentState.copy(isLoadingMore = false)
@@ -100,7 +100,7 @@ class HomeScreenViewModel @Inject constructor(
         _state.value = UiState.Success(
           feed = data,
           isRefreshing = false,
-          hasMore = data.isNotEmpty(),
+          hasMore = data.size >= PAGE_SIZE,
         )
       }.onException { e ->
         _state.value = UiState.Error(e)
