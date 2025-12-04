@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 internal fun WidgetSection(
   applicationSettings: ApplicationSettings,
-  onChangeIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled: (Boolean) -> Unit,
+  @Suppress("ParameterNaming") onChangeIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled: (Boolean) -> Unit,
   onChangeWidgetUpdateInterval: (Duration) -> Unit,
   formatDuration: (Duration) -> String,
 ) {

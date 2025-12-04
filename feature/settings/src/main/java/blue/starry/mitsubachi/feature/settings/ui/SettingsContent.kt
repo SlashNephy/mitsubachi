@@ -53,27 +53,7 @@ fun SettingsContent(
       item {
         AppearanceSection(
           applicationSettings = applicationSettings,
-          onChangeIsDynamicColorEnabled = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                isDynamicColorEnabled = it,
-              )
-            }
-          },
-          onChangeColorSchemePreference = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                colorSchemePreference = it,
-              )
-            }
-          },
-          onChangeFontFamilyPreference = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                fontFamilyPreference = it,
-              )
-            }
-          },
+          onChangeApplicationSettings = onChangeApplicationSettings,
         )
       }
 
@@ -103,13 +83,7 @@ fun SettingsContent(
       item {
         DataCollectionSection(
           applicationSettings = applicationSettings,
-          onChangeIsFirebaseCrashlyticsEnabled = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                isFirebaseCrashlyticsEnabled = it,
-              )
-            }
-          },
+          onChangeApplicationSettings = onChangeApplicationSettings,
         )
       }
 

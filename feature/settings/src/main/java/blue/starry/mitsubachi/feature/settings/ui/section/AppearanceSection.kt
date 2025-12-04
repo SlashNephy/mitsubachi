@@ -50,9 +50,7 @@ import blue.starry.mitsubachi.feature.settings.R
 @Composable
 internal fun AppearanceSection(
   applicationSettings: ApplicationSettings,
-  onChangeIsDynamicColorEnabled: (Boolean) -> Unit,
-  onChangeColorSchemePreference: (ColorSchemePreference) -> Unit,
-  onChangeFontFamilyPreference: (FontFamilyPreference) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
 ) {
   var showColorSchemeDialog by remember { mutableStateOf(false) }
   var showFontFamilyDialog by remember { mutableStateOf(false) }
@@ -69,7 +67,13 @@ internal fun AppearanceSection(
       trailing = {
         Switch(
           checked = applicationSettings.isDynamicColorEnabled,
-          onCheckedChange = onChangeIsDynamicColorEnabled,
+          onCheckedChange = {
+            onChangeApplicationSettings { settings ->
+              settings.copy(
+                isDynamicColorEnabled = it,
+              )
+            }
+          },
         )
       },
     )
@@ -119,7 +123,11 @@ internal fun AppearanceSection(
       currentPreference = applicationSettings.colorSchemePreference,
       onConfirm = {
         showColorSchemeDialog = false
-        onChangeColorSchemePreference(it)
+        onChangeApplicationSettings { settings ->
+          settings.copy(
+            colorSchemePreference = it,
+          )
+        }
       },
       onDismiss = {
         showColorSchemeDialog = false
@@ -132,7 +140,11 @@ internal fun AppearanceSection(
       currentPreference = applicationSettings.fontFamilyPreference,
       onConfirm = {
         showFontFamilyDialog = false
-        onChangeFontFamilyPreference(it)
+        onChangeApplicationSettings { settings ->
+          settings.copy(
+            fontFamilyPreference = it,
+          )
+        }
       },
       onDismiss = {
         showFontFamilyDialog = false

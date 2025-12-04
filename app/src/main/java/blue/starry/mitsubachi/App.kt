@@ -251,7 +251,7 @@ private fun AppEntryProvider(backStack: NavBackStack<RouteKey>): (RouteKey) -> N
 
       is RouteKey.CheckInDetail.ById -> {
         NavEntry(key) {
-          CheckInDetailLoadingScreen(key.id, onCheckInLoaded = { checkIn ->
+          CheckInDetailLoadingScreen(key.id, onLoadCheckIn = { checkIn ->
             backStack.remove(key)
             backStack.add(RouteKey.CheckInDetail(checkIn))
           })

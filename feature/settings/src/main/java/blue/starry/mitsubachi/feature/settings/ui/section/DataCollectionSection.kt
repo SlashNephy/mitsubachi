@@ -13,7 +13,7 @@ import blue.starry.mitsubachi.feature.settings.R
 @Composable
 internal fun DataCollectionSection(
   applicationSettings: ApplicationSettings,
-  onChangeIsFirebaseCrashlyticsEnabled: (Boolean) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
 ) {
   SettingSection(title = stringResource(R.string.data_collection_section_title)) {
     item(
@@ -27,7 +27,13 @@ internal fun DataCollectionSection(
       trailing = {
         Switch(
           checked = applicationSettings.isFirebaseCrashlyticsEnabled,
-          onCheckedChange = onChangeIsFirebaseCrashlyticsEnabled,
+          onCheckedChange = {
+            onChangeApplicationSettings { settings ->
+              settings.copy(
+                isFirebaseCrashlyticsEnabled = it,
+              )
+            }
+          },
         )
       },
     )
