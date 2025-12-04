@@ -1,5 +1,11 @@
 package blue.starry.mitsubachi
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +48,7 @@ import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
+@Suppress("LongMethod", "UnnecessaryParentheses")
 fun App(
   initialRouteKeys: ImmutableList<RouteKey>,
   modifier: Modifier = Modifier,
@@ -79,6 +86,48 @@ fun App(
         rememberViewModelStoreNavEntryDecorator(),
       ),
       entryProvider = AppEntryProvider(backStack = backStack),
+      transitionSpec = {
+        (
+          slideInHorizontally(
+            initialOffsetX = { it },
+            animationSpec = tween(300),
+          ) + fadeIn(animationSpec = tween(300))
+          ) togetherWith
+          (
+            slideOutHorizontally(
+              targetOffsetX = { -it / 3 },
+              animationSpec = tween(300),
+            ) + fadeOut(animationSpec = tween(300))
+            )
+      },
+      popTransitionSpec = {
+        (
+          slideInHorizontally(
+            initialOffsetX = { -it / 3 },
+            animationSpec = tween(300),
+          ) + fadeIn(animationSpec = tween(300))
+          ) togetherWith
+          (
+            slideOutHorizontally(
+              targetOffsetX = { it },
+              animationSpec = tween(300),
+            ) + fadeOut(animationSpec = tween(300))
+            )
+      },
+      predictivePopTransitionSpec = {
+        (
+          slideInHorizontally(
+            initialOffsetX = { -it / 3 },
+            animationSpec = tween(300),
+          ) + fadeIn(animationSpec = tween(300))
+          ) togetherWith
+          (
+            slideOutHorizontally(
+              targetOffsetX = { it },
+              animationSpec = tween(300),
+            ) + fadeOut(animationSpec = tween(300))
+            )
+      },
     )
   }
 }
