@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings
+import blue.starry.mitsubachi.core.ui.compose.error.onSuccess
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingItem
 import blue.starry.mitsubachi.core.ui.compose.setting.SettingSection
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
@@ -58,7 +59,7 @@ internal fun WidgetSection(
               settings.copy(
                 isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = it,
               )
-            }.invokeOnCompletion {
+            }.onSuccess {
               onChangeWidgetSettings()
             }
           },
@@ -90,7 +91,7 @@ internal fun WidgetSection(
           settings.copy(
             widgetUpdateInterval = it,
           )
-        }.invokeOnCompletion {
+        }.onSuccess {
           onChangeWidgetSettings()
         }
       },

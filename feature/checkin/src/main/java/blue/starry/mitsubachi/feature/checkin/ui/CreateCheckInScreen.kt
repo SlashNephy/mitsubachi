@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.ui.compose.error.onSuccess
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.checkin.R
 
@@ -138,7 +139,7 @@ fun CreateCheckInScreen(
               isPublic = true, // TODO: 非公開対応
               imageUris = imageUris,
             )
-            .invokeOnCompletion {
+            .onSuccess {
               onCompleteCheckIn()
             }
         },

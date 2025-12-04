@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import blue.starry.mitsubachi.core.ui.compose.error.onSuccess
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 import kotlin.time.Duration.Companion.minutes
 
@@ -36,7 +37,7 @@ fun SettingsScreen(
           }
         },
         onSignOut = {
-          viewModel.signOut().invokeOnCompletion { onSignOut() }
+          viewModel.signOut().onSuccess { onSignOut() }
         },
         onUpdateWidgetSchedule = viewModel::onUpdatePhotoWidgetSchedule,
         formatDuration = { duration ->
