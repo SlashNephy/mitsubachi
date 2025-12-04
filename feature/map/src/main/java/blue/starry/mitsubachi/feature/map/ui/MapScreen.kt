@@ -11,7 +11,12 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 @Composable
-fun MapScreen(latitude: Double, longitude: Double, title: String?) { // TODO: Coordinates で表現する
+fun MapScreen(
+  latitude: Double,
+  longitude: Double,
+  title: String?,
+  modifier: Modifier = Modifier,
+) { // TODO: Coordinates で表現する
   val location = LatLng(latitude, longitude)
   val markerState = rememberUpdatedMarkerState(position = location)
   val cameraPositionState = rememberCameraPositionState {
@@ -19,7 +24,7 @@ fun MapScreen(latitude: Double, longitude: Double, title: String?) { // TODO: Co
   }
 
   Map(
-    modifier = Modifier.fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState,
   ) {
     if (title != null) {

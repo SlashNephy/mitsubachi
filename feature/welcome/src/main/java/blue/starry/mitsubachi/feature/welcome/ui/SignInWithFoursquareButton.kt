@@ -20,6 +20,7 @@ import blue.starry.mitsubachi.feature.welcome.R
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun SignInWithFoursquareButton(
   onSuccess: () -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: SignInWithFoursquareButtonViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -30,11 +31,11 @@ fun SignInWithFoursquareButton(
 
   when (state) {
     is SignInWithFoursquareButtonViewModel.UiState.Authorizing -> {
-      LoadingIndicator()
+      LoadingIndicator(modifier = modifier)
     }
 
     is SignInWithFoursquareButtonViewModel.UiState.Authorized -> {
-      LaunchedEffect(state) {
+      LaunchedEffect(onSuccess, state) {
         onSuccess()
       }
     }
@@ -45,7 +46,7 @@ fun SignInWithFoursquareButton(
           val intent = viewModel.createAuthorizationIntent()
           launcher.launch(intent)
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
       ) {
         Text(stringResource(R.string.sign_in_button))
       }

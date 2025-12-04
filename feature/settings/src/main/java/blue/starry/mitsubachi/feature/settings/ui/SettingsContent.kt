@@ -22,6 +22,8 @@ import blue.starry.mitsubachi.feature.settings.ui.section.AppearanceSection
 import blue.starry.mitsubachi.feature.settings.ui.section.DataCollectionSection
 import blue.starry.mitsubachi.feature.settings.ui.section.VersionSection
 import blue.starry.mitsubachi.feature.settings.ui.section.WidgetSection
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Job
 import kotlin.time.Duration
 
 @Suppress("LongMethod")
@@ -31,13 +33,14 @@ fun SettingsContent(
   applicationSettings: ApplicationSettings,
   userSettings: UserSettings,
   applicationConfig: ApplicationConfig,
-  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Unit,
+  onChangeApplicationSettings: ((ApplicationSettings) -> ApplicationSettings) -> Job,
   onChangeUserSettings: ((UserSettings) -> UserSettings) -> Unit,
   onSignOut: () -> Unit,
   onUpdateWidgetSchedule: () -> Unit,
   formatDuration: (Duration) -> String,
+  modifier: Modifier = Modifier,
 ) {
-  Surface {
+  Surface(modifier = modifier) {
     LazyColumn(
       modifier = Modifier.padding(24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -52,49 +55,15 @@ fun SettingsContent(
       item {
         AppearanceSection(
           applicationSettings = applicationSettings,
-          onChangeIsDynamicColorEnabled = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                isDynamicColorEnabled = it,
-              )
-            }
-          },
-          onChangeColorSchemePreference = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                colorSchemePreference = it,
-              )
-            }
-          },
-          onChangeFontFamilyPreference = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                fontFamilyPreference = it,
-              )
-            }
-          },
+          onChangeApplicationSettings = onChangeApplicationSettings,
         )
       }
 
       item {
         WidgetSection(
           applicationSettings = applicationSettings,
-          onChangeIsWidgetUpdateOnUnmeteredNetworkOnlyEnabled = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                isWidgetUpdateOnUnmeteredNetworkOnlyEnabled = it,
-              )
-            }
-            onUpdateWidgetSchedule()
-          },
-          onChangeWidgetUpdateInterval = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                widgetUpdateInterval = it,
-              )
-            }
-            onUpdateWidgetSchedule()
-          },
+          onChangeApplicationSettings = onChangeApplicationSettings,
+          onChangeWidgetSettings = onUpdateWidgetSchedule,
           formatDuration = formatDuration,
         )
       }
@@ -102,13 +71,7 @@ fun SettingsContent(
       item {
         DataCollectionSection(
           applicationSettings = applicationSettings,
-          onChangeIsFirebaseCrashlyticsEnabled = {
-            onChangeApplicationSettings { settings ->
-              settings.copy(
-                isFirebaseCrashlyticsEnabled = it,
-              )
-            }
-          },
+          onChangeApplicationSettings = onChangeApplicationSettings,
         )
       }
 
@@ -141,7 +104,7 @@ private fun SettingsContentPreview() {
       applicationSettings = ApplicationSettings.Default.copy(isAdvancedSettingsAvailable = true),
       userSettings = UserSettings.Default,
       applicationConfig = MockData.ApplicationConfig,
-      onChangeApplicationSettings = { ApplicationSettings.Default },
+      onChangeApplicationSettings = { CompletableDeferred(ApplicationSettings.Default) },
       onChangeUserSettings = { UserSettings.Default },
       onSignOut = {},
       onUpdateWidgetSchedule = {},

@@ -44,6 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ErrorScreen(
   exception: Exception,
+  modifier: Modifier = Modifier,
   onClickRetry: (() -> Unit)? = null,
   viewModel: ErrorScreenViewModel = hiltViewModel(),
 ) {
@@ -52,7 +53,7 @@ fun ErrorScreen(
   }
 
   Box(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .padding(48.dp),
     contentAlignment = Alignment.Center,

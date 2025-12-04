@@ -41,14 +41,16 @@ import blue.starry.mitsubachi.core.ui.compose.foundation.UserIcon
 import blue.starry.mitsubachi.core.ui.compose.foundation.VenueCategoryIcon
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import blue.starry.mitsubachi.feature.checkin.R
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CheckInDetailScreen(
   checkIn: CheckIn,
+  modifier: Modifier = Modifier,
   viewModel: CheckInDetailScreenViewModel = hiltViewModel(),
 ) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
       .background(MaterialTheme.colorScheme.background),
@@ -151,7 +153,7 @@ private fun VenueCard(checkIn: CheckIn) {
 }
 
 @Composable
-private fun FriendsHereSection(friends: List<FoursquareUser>) {
+private fun FriendsHereSection(friends: ImmutableList<FoursquareUser>) {
   Column(
     modifier = Modifier
       .fillMaxWidth()

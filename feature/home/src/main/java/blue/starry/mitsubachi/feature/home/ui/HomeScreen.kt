@@ -22,11 +22,13 @@ import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun HomeScreen(
   onClickCheckIn: (CheckIn) -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
 
   PullToRefreshBox(
+    modifier = modifier,
     isRefreshing = (state as? HomeScreenViewModel.UiState.Success)?.isRefreshing == true,
     onRefresh = {
       viewModel.refresh()
@@ -59,7 +61,7 @@ fun HomeScreen(
       }
 
       is HomeScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception, viewModel::refresh)
+        ErrorScreen(state.exception, onClickRetry = viewModel::refresh)
       }
     }
   }

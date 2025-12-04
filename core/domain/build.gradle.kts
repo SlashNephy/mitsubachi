@@ -12,6 +12,8 @@ android {
 dependencies {
   implementation(projects.core.common)
 
+  api(libs.kotlinx.collections.immutable)
+
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.compose.runtime.annotation)
 }

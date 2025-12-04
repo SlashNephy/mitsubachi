@@ -37,12 +37,14 @@ import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreenTopBar
 import blue.starry.mitsubachi.feature.welcome.ui.WelcomeScreen
+import kotlinx.collections.immutable.ImmutableList
 import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun App(
-  initialRouteKeys: List<RouteKey>,
+  initialRouteKeys: ImmutableList<RouteKey>,
+  modifier: Modifier = Modifier,
   viewModel: AppViewModel = hiltViewModel(),
 ) {
   val backStack = rememberNavBackStack(initialRouteKeys)
@@ -63,6 +65,7 @@ fun App(
   }
 
   Scaffold(
+    modifier = modifier,
     topBar = { AppTopBar(backStack = backStack) },
     bottomBar = { AppBottomBar(backStack = backStack) },
     floatingActionButton = { AppFloatingActionButton(backStack = backStack) },
@@ -250,7 +253,7 @@ private fun AppEntryProvider(backStack: NavBackStack<RouteKey>): (RouteKey) -> N
 
       is RouteKey.CheckInDetail.ById -> {
         NavEntry(key) {
-          CheckInDetailLoadingScreen(key.id, onCheckInLoaded = { checkIn ->
+          CheckInDetailLoadingScreen(key.id, onLoadCheckIn = { checkIn ->
             backStack.remove(key)
             backStack.add(RouteKey.CheckInDetail(checkIn))
           })

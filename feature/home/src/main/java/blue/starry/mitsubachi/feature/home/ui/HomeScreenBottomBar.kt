@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
@@ -32,10 +33,13 @@ fun HomeScreenBottomBar(
   onClickSearch: () -> Unit,
   onClickMap: () -> Unit,
   onClickUserCheckIns: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   var selectedItem by remember { mutableStateOf(NavigationItem.Home) }
 
-  NavigationBar {
+  NavigationBar(
+    modifier = modifier,
+  ) {
     for (item in NavigationItem.entries) {
       NavigationBarItem(
         icon = {

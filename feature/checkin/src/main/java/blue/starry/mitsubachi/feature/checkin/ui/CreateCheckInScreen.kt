@@ -45,6 +45,7 @@ fun CreateCheckInScreen(
   venue: Venue,
   onCompleteCheckIn: () -> Unit,
   onCancelCheckIn: () -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: CreateCheckInScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
@@ -59,7 +60,7 @@ fun CreateCheckInScreen(
   }
 
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .imePadding(),
   ) {

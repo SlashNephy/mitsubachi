@@ -7,10 +7,11 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.serialization.NavBackStackSerializer
 import androidx.navigation3.runtime.serialization.NavKeySerializer
+import kotlinx.collections.immutable.ImmutableList
 
 // NOTE: androidx.navigation3.runtime.rememberNavBackStack はジェネリクスを型引数に取らず不便なので自前で実装している
 @Composable
-fun <K : NavKey> rememberNavBackStack(elements: List<K>): NavBackStack<K> {
+fun <K : NavKey> rememberNavBackStack(elements: ImmutableList<K>): NavBackStack<K> {
   return rememberSerializable(
     serializer = NavBackStackSerializer(elementSerializer = NavKeySerializer()),
   ) {

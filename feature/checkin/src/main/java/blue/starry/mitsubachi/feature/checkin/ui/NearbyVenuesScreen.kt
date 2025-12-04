@@ -39,6 +39,7 @@ import blue.starry.mitsubachi.feature.checkin.R
 @Composable
 fun NearbyVenuesScreen(
   onClickVenue: (Venue) -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: NearbyVenuesScreenViewModel = hiltViewModel(),
   topBarViewModel: NearbyVenuesScreenTopBarViewModel = hiltViewModel(),
 ) {
@@ -57,7 +58,7 @@ fun NearbyVenuesScreen(
     onRefresh = {
       viewModel.refresh()
     },
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .imePadding(),
   ) {

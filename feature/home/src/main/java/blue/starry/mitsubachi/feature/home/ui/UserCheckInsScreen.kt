@@ -19,11 +19,13 @@ import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 @Composable
 fun UserCheckInsScreen(
   onClickCheckIn: (checkIn: CheckIn) -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: UserCheckInsScreenViewModel = hiltViewModel(),
 ) {
   val state by viewModel.state.collectAsStateWithLifecycle()
 
   PullToRefreshBox(
+    modifier = modifier,
     isRefreshing = (state as? UserCheckInsScreenViewModel.UiState.Success)?.isRefreshing == true,
     onRefresh = {
       viewModel.refresh()
@@ -53,7 +55,7 @@ fun UserCheckInsScreen(
       }
 
       is UserCheckInsScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception, viewModel::refresh)
+        ErrorScreen(state.exception, onClickRetry = viewModel::refresh)
       }
     }
   }

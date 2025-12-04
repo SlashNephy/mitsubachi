@@ -43,7 +43,10 @@ internal const val DEFAULT_CLUSTERING_THRESHOLD_ZOOM_LEVEL = 0f // デフォル�
 @Composable
 @OptIn(MapsComposeExperimentalApi::class)
 @Suppress("LongMethod") // TODO: リファクタリング
-fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewModel()) {
+fun VenueHistoriesScreen(
+  modifier: Modifier = Modifier,
+  viewModel: VenueHistoriesScreenViewModel = hiltViewModel(),
+) {
   val state by viewModel.state.collectAsStateWithLifecycle()
 
   val permissionState = rememberPermissionState(AndroidPermission.Location)
@@ -55,6 +58,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
 
   // FIXME: Pull to Refresh のジェスチャが Map に吸われてしまって発動していない
   PullToRefreshBox(
+    modifier = modifier,
     isRefreshing = (state as? VenueHistoriesScreenViewModel.UiState.Success)?.isRefreshing == true,
     onRefresh = {
       viewModel.refresh()
@@ -154,7 +158,7 @@ fun VenueHistoriesScreen(viewModel: VenueHistoriesScreenViewModel = hiltViewMode
       }
 
       is VenueHistoriesScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception, viewModel::refresh)
+        ErrorScreen(state.exception, onClickRetry = viewModel::refresh)
       }
     }
   }

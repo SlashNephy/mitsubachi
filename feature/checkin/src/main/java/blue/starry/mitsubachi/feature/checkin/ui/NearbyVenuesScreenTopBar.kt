@@ -11,6 +11,7 @@ import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -21,12 +22,14 @@ import blue.starry.mitsubachi.feature.checkin.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun NearbyVenuesScreenTopBar(
   onBack: () -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: NearbyVenuesScreenTopBarViewModel = hiltViewModel(),
 ) {
   rememberCoroutineScope()
   val searchBarState = rememberSearchBarState()
 
   AppBarWithSearch(
+    modifier = modifier,
     state = searchBarState,
     inputField = {
       val textFieldState = rememberTextFieldState()

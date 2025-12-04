@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.core.data.network.model
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.Photo
 import blue.starry.mitsubachi.core.domain.model.Source
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.ZoneId
@@ -136,7 +137,7 @@ fun FoursquareCheckIn.toDomain(): CheckIn {
     source = source?.toDomain(),
     isMeyer = isMayor,
     with = with?.map { it.toDomain() } ?: emptyList(),
-    friendsHere = emptyList(), // TODO: Foursquare APIでfriendsHereデータを取得する方法を調査
+    friendsHere = persistentListOf(), // TODO: Foursquare APIでfriendsHereデータを取得する方法を調査
   )
 }
 

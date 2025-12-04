@@ -30,10 +30,11 @@ import kotlin.time.Duration.Companion.seconds
 fun UserCheckInRow(
   checkIn: CheckIn,
   onClickCheckIn: (checkIn: CheckIn) -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: UserCheckInsScreenViewModel = hiltViewModel(),
 ) {
   Column(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = modifier.fillMaxWidth(),
   ) {
     Row(
       horizontalArrangement = Arrangement.spacedBy(8.dp),

@@ -34,9 +34,12 @@ import blue.starry.mitsubachi.core.ui.compose.permission.AndroidPermission
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 
 @Composable
-fun PermissionDeniedScreen(deniedPermission: AndroidPermission) {
+fun PermissionDeniedScreen(
+  deniedPermission: AndroidPermission,
+  modifier: Modifier = Modifier,
+) {
   Box(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .padding(48.dp),
     contentAlignment = Alignment.Center,

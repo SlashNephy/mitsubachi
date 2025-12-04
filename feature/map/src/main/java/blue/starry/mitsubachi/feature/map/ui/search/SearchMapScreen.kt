@@ -52,7 +52,10 @@ private const val DEFAULT_ZOOM_LEVEL = 15f
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-fun SearchMapScreen(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
+fun SearchMapScreen(
+  modifier: Modifier = Modifier,
+  viewModel: SearchMapScreenViewModel = hiltViewModel(),
+) {
   val sheetState = rememberBottomSheetState(
     initialValue = SheetValue.PartiallyExpanded,
     defineValues = {
@@ -64,6 +67,7 @@ fun SearchMapScreen(viewModel: SearchMapScreenViewModel = hiltViewModel()) {
   val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
 
   AdvancedBottomSheetScaffold(
+    modifier = modifier,
     scaffoldState = scaffoldState,
     sheetContent = {
       BottomSheetContent(
@@ -229,7 +233,7 @@ private fun BottomSheetContent(
         }
 
         is SearchMapScreenViewModel.UiState.Error -> {
-          ErrorScreen(state.exception, {
+          ErrorScreen(state.exception, onClickRetry = {
             viewModel.updateCurrentLocation(state.lastLocation)
           })
         }
