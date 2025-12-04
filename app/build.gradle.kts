@@ -126,4 +126,6 @@ dependencies {
   implementation(libs.firebase.appdistribution)
   implementation(libs.firebase.appcheck.playintegrity)
   debugImplementation(libs.firebase.appcheck.debug)
+
+  debugImplementation(libs.leakcanary.android)
 }

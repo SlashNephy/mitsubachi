@@ -45,6 +45,7 @@ kover = "0.9.3"
 ksp = "2.3.3"
 ktor = "3.3.3"
 ktorfit = "2.6.5"
+leakcanary-android = "2.14"
 mockk = "1.14.6"
 play-services-location = "21.3.0"
 play-services-maps = "19.2.0"
@@ -150,6 +151,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-jupiter" }
 archunit = { module = "com.tngtech.archunit:archunit", version.ref = "archunit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary-android" }
 
 # kotlinx-serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
