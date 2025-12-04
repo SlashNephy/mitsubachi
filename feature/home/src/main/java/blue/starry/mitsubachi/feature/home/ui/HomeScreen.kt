@@ -13,9 +13,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +27,7 @@ import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import java.time.ZonedDateTime
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -51,69 +51,84 @@ fun HomeScreen(
       }
 
       is HomeScreenViewModel.UiState.Success -> {
-        val listState = rememberLazyListState()
-        
-        // 最下部に到達したかを検出
-        val shouldLoadMore by remember {
-          derivedStateOf {
-            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem?.index == state.feed.lastIndex && state.hasMore && !state.isLoadingMore
-          }
-        }
-        
-        // 最下部に到達したらロード
-        LaunchedEffect(listState) {
-          snapshotFlow { 
-            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem?.index == state.feed.lastIndex
-          }
-            .distinctUntilChanged()
-            .filter { it }
-            .collect {
-              if (state.hasMore && !state.isLoadingMore) {
-                viewModel.loadMore()
-              }
-            }
-        }
-
-        LazyColumn(
-          state = listState,
-          modifier = Modifier
-            .fillMaxSize(),
-        ) {
-          itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
-            CheckInRow(
-              checkIn,
-              formatDateTime = { viewModel.formatAsRelativeTimeSpan(it) },
-              onClickCheckIn = { onClickCheckIn(checkIn) },
-              onClickLike = { viewModel.likeCheckIn(checkIn.id) },
-              onClickUnlike = { viewModel.unlikeCheckIn(checkIn.id) },
-            )
-
-            if (index < state.feed.lastIndex) {
-              HorizontalDivider(modifier = Modifier.padding(12.dp))
-            }
-          }
-
-          // ローディングインジケーター
-          if (state.isLoadingMore) {
-            item {
-              Box(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(16.dp),
-                contentAlignment = Alignment.Center,
-              ) {
-                CircularProgressIndicator()
-              }
-            }
-          }
-        }
+        HomeScreenFeedList(
+          state = state,
+          onClickCheckIn = onClickCheckIn,
+          onClickLike = { viewModel.likeCheckIn(it) },
+          onClickUnlike = { viewModel.unlikeCheckIn(it) },
+          onLoadMore = { viewModel.loadMore() },
+          formatDateTime = { viewModel.formatAsRelativeTimeSpan(it) },
+        )
       }
 
       is HomeScreenViewModel.UiState.Error -> {
         ErrorScreen(state.exception, onClickRetry = viewModel::refresh)
       }
     }
+  }
+}
+
+@Composable
+private fun HomeScreenFeedList(
+  state: HomeScreenViewModel.UiState.Success,
+  onClickCheckIn: (CheckIn) -> Unit,
+  onClickLike: (String) -> Unit,
+  onClickUnlike: (String) -> Unit,
+  onLoadMore: () -> Unit,
+  formatDateTime: (ZonedDateTime) -> String,
+  modifier: Modifier = Modifier,
+) {
+  val listState = rememberLazyListState()
+  val currentOnLoadMore by rememberUpdatedState(onLoadMore)
+
+  LaunchedEffect(listState) {
+    snapshotFlow {
+      val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+      lastVisibleItem?.index == state.feed.lastIndex
+    }
+      .distinctUntilChanged()
+      .filter { it }
+      .collect {
+        if (state.hasMore && !state.isLoadingMore) {
+          currentOnLoadMore()
+        }
+      }
+  }
+
+  LazyColumn(
+    state = listState,
+    modifier = modifier.fillMaxSize(),
+  ) {
+    itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
+      CheckInRow(
+        checkIn,
+        formatDateTime = formatDateTime,
+        onClickCheckIn = { onClickCheckIn(checkIn) },
+        onClickLike = { onClickLike(checkIn.id) },
+        onClickUnlike = { onClickUnlike(checkIn.id) },
+      )
+
+      if (index < state.feed.lastIndex) {
+        HorizontalDivider(modifier = Modifier.padding(12.dp))
+      }
+    }
+
+    if (state.isLoadingMore) {
+      item {
+        LoadingMoreIndicator()
+      }
+    }
+  }
+}
+
+@Composable
+private fun LoadingMoreIndicator(modifier: Modifier = Modifier) {
+  Box(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(16.dp),
+    contentAlignment = Alignment.Center,
+  ) {
+    CircularProgressIndicator()
   }
 }
