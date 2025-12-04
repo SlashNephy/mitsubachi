@@ -33,7 +33,12 @@ class HomeScreenViewModel @Inject constructor(
   @Immutable
   sealed interface UiState {
     data object Loading : UiState
-    data class Success(val feed: List<CheckIn>, val isRefreshing: Boolean) : UiState
+    data class Success(
+      val feed: List<CheckIn>,
+      val isRefreshing: Boolean,
+      val isLoadingMore: Boolean = false,
+      val hasMore: Boolean = true,
+    ) : UiState
     data class Error(val exception: Exception) : UiState
   }
 
@@ -46,25 +51,60 @@ class HomeScreenViewModel @Inject constructor(
 
   fun refresh(): Job {
     return viewModelScope.launch {
-      fetch()
+      fetch(isLoadingMore = false)
     }
   }
 
-  private suspend fun fetch() {
-    val currentState = state.value
-    if (currentState is UiState.Success) {
-      // 2回目以降の更新は isRefreshing=true
-      _state.value = currentState.copy(isRefreshing = true)
-    } else {
-      _state.value = UiState.Loading
+  fun loadMore(): Job {
+    return viewModelScope.launch {
+      val currentState = state.value
+      if (currentState is UiState.Success && !currentState.isLoadingMore && currentState.hasMore) {
+        fetch(isLoadingMore = true)
+      }
     }
+  }
 
-    runCatching {
-      fetchFeedUseCase()
-    }.onSuccess { data ->
-      _state.value = UiState.Success(data, isRefreshing = false)
-    }.onException { e ->
-      _state.value = UiState.Error(e)
+  private suspend fun fetch(isLoadingMore: Boolean) {
+    val currentState = state.value
+    if (isLoadingMore && currentState is UiState.Success) {
+      // 継ぎ足し読み込み
+      _state.value = currentState.copy(isLoadingMore = true)
+
+      runCatching {
+        val lastTimestamp = currentState.feed.lastOrNull()?.timestamp
+        fetchFeedUseCase(limit = 20, after = lastTimestamp)
+      }.onSuccess { data ->
+        val newFeed = currentState.feed + data
+        _state.value = currentState.copy(
+          feed = newFeed,
+          isLoadingMore = false,
+          hasMore = data.isNotEmpty(),
+        )
+      }.onException { e ->
+        _state.value = currentState.copy(isLoadingMore = false)
+        snackbarErrorHandler.handle(e) {
+          context.getString(R.string.failed_to_load_feed, it)
+        }
+      }
+    } else {
+      // 初回読み込みまたはリフレッシュ
+      if (currentState is UiState.Success) {
+        _state.value = currentState.copy(isRefreshing = true)
+      } else {
+        _state.value = UiState.Loading
+      }
+
+      runCatching {
+        fetchFeedUseCase(limit = 20)
+      }.onSuccess { data ->
+        _state.value = UiState.Success(
+          feed = data,
+          isRefreshing = false,
+          hasMore = data.isNotEmpty(),
+        )
+      }.onException { e ->
+        _state.value = UiState.Error(e)
+      }
     }
   }
 

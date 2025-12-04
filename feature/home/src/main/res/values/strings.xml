@@ -8,4 +8,5 @@
     <string name="check_in_button">Check-in</string>
     <string name="like_failed">Failed to like: %s</string>
     <string name="feature_not_implemented">This feature is not yet implemented (⸝⸝›_‹⸝⸝)</string>
+    <string name="failed_to_load_feed">Failed to load feed: %s</string>
 </resources>
