@@ -72,7 +72,7 @@ class HomeScreenViewModel @Inject constructor(
 
       runCatching {
         val lastTimestamp = currentState.feed.lastOrNull()?.timestamp
-        fetchFeedUseCase(limit = 20, after = lastTimestamp)
+        fetchFeedUseCase(limit = PAGE_SIZE, after = lastTimestamp)
       }.onSuccess { data ->
         val newFeed = currentState.feed + data
         _state.value = currentState.copy(
@@ -95,7 +95,7 @@ class HomeScreenViewModel @Inject constructor(
       }
 
       runCatching {
-        fetchFeedUseCase(limit = 20)
+        fetchFeedUseCase(limit = PAGE_SIZE)
       }.onSuccess { data ->
         _state.value = UiState.Success(
           feed = data,
@@ -137,5 +137,9 @@ class HomeScreenViewModel @Inject constructor(
     viewModelScope.launch {
       snackbarHostService.enqueue(context.getString(R.string.feature_not_implemented))
     }
+  }
+
+  private companion object {
+    const val PAGE_SIZE = 20
   }
 }
