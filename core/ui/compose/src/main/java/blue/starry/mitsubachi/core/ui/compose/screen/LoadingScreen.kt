@@ -14,9 +14,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-fun LoadingScreen(indicatorScale: Float = 1.5f) {
+fun LoadingScreen(
+  modifier: Modifier = Modifier,
+  indicatorScale: Float = 1.5f,
+) {
   Box(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .padding(64.dp),
     contentAlignment = Alignment.Center,

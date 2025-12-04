@@ -6,6 +6,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import blue.starry.mitsubachi.core.domain.model.CheckIn
@@ -17,8 +18,10 @@ import blue.starry.mitsubachi.feature.checkin.R
 fun CheckInDetailScreenTopBar(
   checkIn: CheckIn,
   onBack: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   TopAppBar(
+    modifier = modifier,
     title = {
       checkIn.user?.also {
         Text(stringResource(R.string.check_in_detail_top_bar_title).format(it.displayName))

@@ -11,6 +11,7 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
@@ -18,8 +19,12 @@ import blue.starry.mitsubachi.feature.home.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeScreenTopBar(onClickSettingsButton: () -> Unit) {
+fun HomeScreenTopBar(
+  onClickSettingsButton: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
   TopAppBar(
+    modifier = modifier,
     title = {},
     navigationIcon = {
       // TODO: アバターメニュー

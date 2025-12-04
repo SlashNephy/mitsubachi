@@ -32,6 +32,7 @@ import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 fun CreateCheckInScreenTopBar(
   venue: Venue,
   onBack: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   TopAppBar(
     title = {
@@ -52,7 +53,7 @@ fun CreateCheckInScreenTopBar(
     subtitle = {
       Text(VenueLocationFormatter.formatAddress(venue.location))
     },
-    modifier = Modifier.clickable(onClick = onBack),
+    modifier = modifier.clickable(onClick = onBack),
     navigationIcon = {
       IconButton(onClick = onBack) {
         Icon(

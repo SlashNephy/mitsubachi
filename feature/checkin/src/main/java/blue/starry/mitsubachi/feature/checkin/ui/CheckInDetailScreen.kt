@@ -45,10 +45,11 @@ import blue.starry.mitsubachi.feature.checkin.R
 @Composable
 fun CheckInDetailScreen(
   checkIn: CheckIn,
+  modifier: Modifier = Modifier,
   viewModel: CheckInDetailScreenViewModel = hiltViewModel(),
 ) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
       .background(MaterialTheme.colorScheme.background),

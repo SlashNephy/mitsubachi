@@ -63,6 +63,7 @@ fun App(
   }
 
   Scaffold(
+    modifier = modifier,
     topBar = { AppTopBar(backStack = backStack) },
     bottomBar = { AppBottomBar(backStack = backStack) },
     floatingActionButton = { AppFloatingActionButton(backStack = backStack) },

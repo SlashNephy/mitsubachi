@@ -36,8 +36,9 @@ fun SettingsContent(
   onSignOut: () -> Unit,
   onUpdateWidgetSchedule: () -> Unit,
   formatDuration: (Duration) -> String,
+  modifier: Modifier = Modifier,
 ) {
-  Surface {
+  Surface(modifier = modifier) {
     LazyColumn(
       modifier = Modifier.padding(24.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp),

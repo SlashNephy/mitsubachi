@@ -13,6 +13,7 @@ import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.clustering.rememberClusterManager
 import com.google.maps.android.compose.clustering.rememberClusterRenderer
 
+@Suppress("ModifierMissing")
 @Composable
 @OptIn(MapsComposeExperimentalApi::class)
 fun VenueHistoriesMapView(histories: List<VenueHistory>) {
