@@ -17,12 +17,12 @@ interface FoursquareApiClient {
     limit: Int? = null,
     after: ZonedDateTime? = null,
     coordinates: Coordinates? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<CheckIn>
 
   suspend fun getCheckIn(
     checkInId: String,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): CheckIn
 
   suspend fun searchNearVenues(
@@ -33,7 +33,7 @@ interface FoursquareApiClient {
     categoryId: String? = null,
     limit: Int? = null,
     url: String? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<Venue>
 
   suspend fun searchVenueRecommendations(
@@ -57,7 +57,7 @@ interface FoursquareApiClient {
     sortByPopularity: Boolean? = null,
     limit: Int? = null,
     offset: Int? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<VenueRecommendation>
 
   suspend fun addCheckIn(
@@ -71,12 +71,12 @@ interface FoursquareApiClient {
   suspend fun deleteCheckIn(checkInId: String)
   suspend fun getUser(
     userId: String? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): FoursquareUser
 
   suspend fun getUserVenueHistories(
     userId: String? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<VenueHistory>
 
   suspend fun addPhotoToCheckIn(
@@ -90,13 +90,13 @@ interface FoursquareApiClient {
     userId: String? = null,
     limit: Int? = null,
     offset: Int? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<CheckIn>
 
   suspend fun getUserPhotos(
     userId: String? = null,
     limit: Int? = null,
     offset: Int? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<Photo>
 }

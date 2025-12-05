@@ -2,6 +2,7 @@ package blue.starry.mitsubachi.feature.map.ui.histories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
 import blue.starry.mitsubachi.core.domain.usecase.DeviceLocationRepository
 import blue.starry.mitsubachi.core.domain.usecase.FetchUserVenueHistoriesUseCase
@@ -49,7 +50,8 @@ class VenueHistoriesScreenViewModel @Inject constructor(
 
   private suspend fun fetch() {
     val currentState = state.value
-    if (currentState is UiState.Success) {
+    val isRefreshing = currentState is UiState.Success
+    if (isRefreshing) {
       // 2回目以降の更新は isRefreshing=true
       _state.value = currentState.copy(isRefreshing = true)
     } else {
@@ -57,7 +59,9 @@ class VenueHistoriesScreenViewModel @Inject constructor(
     }
 
     runCatching {
-      fetchUserVenueHistoriesUseCase()
+      // 初回読み込みはキャッシュを使い、リフレッシュ時はネットワークから取得
+      val policy = if (isRefreshing) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork
+      fetchUserVenueHistoriesUseCase(policy)
     }.onSuccess { data ->
       _state.value =
         UiState.Success(

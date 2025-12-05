@@ -7,6 +7,7 @@ import androidx.compose.runtime.Immutable
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.model.Venue
 import blue.starry.mitsubachi.core.domain.usecase.SearchNearVenuesUseCase
 import blue.starry.mitsubachi.core.ui.compose.error.onException
@@ -74,7 +75,8 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     }
 
     val currentState = _state.value
-    if (currentState is UiState.Success) {
+    val isRefreshing = currentState is UiState.Success
+    if (isRefreshing) {
       // 2回目以降の更新は isRefreshing=true
       _state.value = currentState.copy(isRefreshing = true)
     } else {
@@ -82,7 +84,9 @@ class NearbyVenuesScreenViewModel @Inject constructor(
     }
 
     runCatching {
-      searchNearVenuesUseCase(query = query)
+      // 初回読み込みはキャッシュを使い、リフレッシュ時はネットワークから取得
+      val policy = if (isRefreshing) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork
+      searchNearVenuesUseCase(query = query, policy = policy)
     }.onSuccess { data ->
       _state.value = UiState.Success(
         venues = data,

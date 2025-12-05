@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.core.domain.usecase
 
 import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,7 +11,8 @@ class FetchUserCheckInsUseCase @Inject constructor(val client: FoursquareApiClie
     userId: String? = null,
     limit: Int? = null,
     offset: Int? = null,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<CheckIn> {
-    return client.getUserCheckIns(userId, limit, offset)
+    return client.getUserCheckIns(userId, limit, offset, policy)
   }
 }
