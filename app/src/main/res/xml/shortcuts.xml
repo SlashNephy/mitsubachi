@@ -9,6 +9,5 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:data="${applicationId}://create_check_in" />
-        <categories android:name="android.shortcut.conversation" />
     </shortcut>
 </shortcuts>
