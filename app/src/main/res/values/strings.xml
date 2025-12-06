@@ -6,4 +6,6 @@
     <string name="settings_button">Settings</string>
     <string name="check_in_button">Check-in</string>
     <string name="like_button">Like</string>
+    <string name="shortcut_create_check_in_short_label">New Check-in</string>
+    <string name="shortcut_create_check_in_long_label">Create New Check-in</string>
 </resources>

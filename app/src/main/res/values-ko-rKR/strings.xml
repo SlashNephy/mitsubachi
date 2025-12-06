@@ -6,4 +6,6 @@
     <string name="check_in_button">체크인</string>
     <string name="home_bar">홈</string>
     <string name="like_button">좋아요</string>
+    <string name="shortcut_create_check_in_short_label">새 체크인</string>
+    <string name="shortcut_create_check_in_long_label">새 체크인 만들기</string>
 </resources>
