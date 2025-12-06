@@ -12,6 +12,7 @@ internal class DeepLinkSerializerImpl @Inject constructor(
 ) : DeepLinkSerializer {
   private companion object {
     const val CHECK_IN_AUTHORITY = "check_in"
+    const val CREATE_CHECK_IN_AUTHORITY = "create_check_in"
   }
 
   override fun serialize(link: DeepLink): Uri {
@@ -22,6 +23,10 @@ internal class DeepLinkSerializerImpl @Inject constructor(
           is DeepLink.CheckIn -> {
             authority(CHECK_IN_AUTHORITY)
             appendPath(link.id)
+          }
+
+          is DeepLink.CreateCheckIn -> {
+            authority(CREATE_CHECK_IN_AUTHORITY)
           }
         }
       }
@@ -39,6 +44,10 @@ internal class DeepLinkSerializerImpl @Inject constructor(
       CHECK_IN_AUTHORITY -> {
         val id = uri.pathSegments.firstOrNull() ?: return null
         DeepLink.CheckIn(id)
+      }
+
+      CREATE_CHECK_IN_AUTHORITY -> {
+        DeepLink.CreateCheckIn
       }
 
       else -> {

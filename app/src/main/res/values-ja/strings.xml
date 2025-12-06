@@ -6,4 +6,6 @@
     <string name="settings_button">設定</string>
     <string name="check_in_button">チェックイン</string>
     <string name="like_button">いいね</string>
+    <string name="shortcut_create_check_in_short_label">新規チェックイン</string>
+    <string name="shortcut_create_check_in_long_label">新しいチェックインを作成</string>
 </resources>

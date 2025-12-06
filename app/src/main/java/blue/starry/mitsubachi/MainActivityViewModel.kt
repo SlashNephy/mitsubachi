@@ -47,6 +47,13 @@ class MainActivityViewModel @Inject constructor(
         )
       }
 
+      is DeepLink.CreateCheckIn -> {
+        persistentListOf(
+          RouteKey.Home, // ホームに戻れるようにする
+          RouteKey.NearbyVenues,
+        )
+      }
+
       null -> {
         persistentListOf(RouteKey.Welcome)
       }
