@@ -5,29 +5,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.ui.compose.foundation.CheckInRow
 import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import java.time.ZonedDateTime
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -36,86 +31,95 @@ fun HomeScreen(
   modifier: Modifier = Modifier,
   viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
-  val state by viewModel.state.collectAsStateWithLifecycle()
+  val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
 
   PullToRefreshBox(
     modifier = modifier,
-    isRefreshing = (state as? HomeScreenViewModel.UiState.Success)?.isRefreshing == true,
+    isRefreshing = lazyPagingItems.loadState.refresh is LoadState.Loading,
     onRefresh = {
-      viewModel.refresh()
+      lazyPagingItems.refresh()
     },
   ) {
-    when (val state = state) {
-      is HomeScreenViewModel.UiState.Loading -> {
-        LoadingScreen()
+    when (val refreshState = lazyPagingItems.loadState.refresh) {
+      is LoadState.Loading -> {
+        if (lazyPagingItems.itemCount == 0) {
+          LoadingScreen()
+        }
       }
 
-      is HomeScreenViewModel.UiState.Success -> {
-        HomeScreenFeedList(
-          state = state,
-          onClickCheckIn = onClickCheckIn,
-          onClickLike = { viewModel.likeCheckIn(it) },
-          onClickUnlike = { viewModel.unlikeCheckIn(it) },
-          onLoadMore = { viewModel.loadMore() },
-          formatDateTime = { viewModel.formatAsRelativeTimeSpan(it) },
-        )
+      is LoadState.Error -> {
+        if (lazyPagingItems.itemCount == 0) {
+          ErrorScreen(
+            refreshState.error as? Exception ?: Exception(refreshState.error),
+            onClickRetry = { lazyPagingItems.retry() },
+          )
+        }
       }
 
-      is HomeScreenViewModel.UiState.Error -> {
-        ErrorScreen(state.exception, onClickRetry = viewModel::refresh)
+      is LoadState.NotLoading -> {
+        // Show content
       }
+    }
+
+    if (lazyPagingItems.itemCount > 0 || lazyPagingItems.loadState.refresh is LoadState.Loading) {
+      HomeScreenFeedList(
+        lazyPagingItems = lazyPagingItems,
+        onClickCheckIn = onClickCheckIn,
+        onClickLike = { viewModel.likeCheckIn(it) },
+        onClickUnlike = { viewModel.unlikeCheckIn(it) },
+        formatDateTime = { viewModel.formatAsRelativeTimeSpan(it) },
+      )
     }
   }
 }
 
 @Composable
 private fun HomeScreenFeedList(
-  state: HomeScreenViewModel.UiState.Success,
+  lazyPagingItems: LazyPagingItems<CheckIn>,
   onClickCheckIn: (CheckIn) -> Unit,
   onClickLike: (String) -> Unit,
   onClickUnlike: (String) -> Unit,
-  onLoadMore: () -> Unit,
-  formatDateTime: (ZonedDateTime) -> String,
+  formatDateTime: (java.time.ZonedDateTime) -> String,
   modifier: Modifier = Modifier,
 ) {
-  val listState = rememberLazyListState()
-  val currentOnLoadMore by rememberUpdatedState(onLoadMore)
-
-  LaunchedEffect(listState) {
-    snapshotFlow {
-      val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
-      lastVisibleItem?.index == state.feed.lastIndex
-    }
-      .distinctUntilChanged()
-      .filter { it }
-      .collect {
-        if (state.hasMore && !state.isLoadingMore) {
-          currentOnLoadMore()
-        }
-      }
-  }
-
   LazyColumn(
-    state = listState,
     modifier = modifier.fillMaxSize(),
   ) {
-    itemsIndexed(state.feed, key = { _, checkIn -> checkIn.id }) { index, checkIn ->
-      CheckInRow(
-        checkIn,
-        formatDateTime = formatDateTime,
-        onClickCheckIn = { onClickCheckIn(checkIn) },
-        onClickLike = { onClickLike(checkIn.id) },
-        onClickUnlike = { onClickUnlike(checkIn.id) },
-      )
+    items(
+      count = lazyPagingItems.itemCount,
+      key = lazyPagingItems.itemKey { it.id },
+      contentType = lazyPagingItems.itemContentType { "CheckIn" },
+    ) { index ->
+      val checkIn = lazyPagingItems[index]
+      if (checkIn != null) {
+        CheckInRow(
+          checkIn,
+          formatDateTime = formatDateTime,
+          onClickCheckIn = { onClickCheckIn(checkIn) },
+          onClickLike = { onClickLike(checkIn.id) },
+          onClickUnlike = { onClickUnlike(checkIn.id) },
+        )
 
-      if (index < state.feed.lastIndex) {
-        HorizontalDivider(modifier = Modifier.padding(12.dp))
+        if (index < lazyPagingItems.itemCount - 1) {
+          HorizontalDivider(modifier = Modifier.padding(12.dp))
+        }
       }
     }
 
-    if (state.isLoadingMore) {
-      item {
-        LoadingMoreIndicator()
+    // Show loading indicator at the bottom
+    when (lazyPagingItems.loadState.append) {
+      is LoadState.Loading -> {
+        item {
+          LoadingMoreIndicator()
+        }
+      }
+
+      is LoadState.Error -> {
+        // Could show error message here
+      }
+
+      is LoadState.NotLoading -> {
+        // Nothing to show
       }
     }
   }

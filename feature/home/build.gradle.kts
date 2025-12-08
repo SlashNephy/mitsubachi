@@ -13,4 +13,7 @@ dependencies {
   implementation(projects.core.domain)
   implementation(projects.core.ui.common)
   implementation(projects.core.ui.compose)
+
+  implementation(libs.androidx.paging.runtime)
+  implementation(libs.androidx.paging.compose)
 }
