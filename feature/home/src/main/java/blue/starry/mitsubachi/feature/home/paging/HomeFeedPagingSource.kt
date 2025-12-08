@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.feature.home.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.usecase.FetchFeedUseCase
 import java.time.ZonedDateTime
 import javax.inject.Inject
@@ -19,9 +20,17 @@ class HomeFeedPagingSource @Inject constructor(
   override suspend fun load(params: LoadParams<ZonedDateTime>): LoadResult<ZonedDateTime, CheckIn> {
     return try {
       val after = params.key
+      // Use NetworkOnly for refresh (when key is null), CacheOrNetwork for pagination
+      val policy = if (params is LoadParams.Refresh && after == null) {
+        FetchPolicy.NetworkOnly
+      } else {
+        FetchPolicy.CacheOrNetwork
+      }
+
       val checkIns = fetchFeedUseCase(
         limit = params.loadSize,
         after = after,
+        policy = policy,
       )
 
       LoadResult.Page(

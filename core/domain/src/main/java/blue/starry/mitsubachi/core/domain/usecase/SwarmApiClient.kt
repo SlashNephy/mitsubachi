@@ -10,6 +10,6 @@ interface SwarmApiClient {
     wsid: String? = null,
     userAgent: String? = null,
     afterTimestamp: Long? = null,
-    policy: FetchPolicy = FetchPolicy.NetworkOnly,
+    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<CheckIn>
 }
