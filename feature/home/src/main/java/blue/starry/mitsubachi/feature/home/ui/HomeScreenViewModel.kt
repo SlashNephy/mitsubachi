@@ -1,11 +1,14 @@
 package blue.starry.mitsubachi.feature.home.ui
 
 import android.content.Context
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import blue.starry.mitsubachi.core.domain.model.CheckIn
-import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.usecase.FetchFeedUseCase
 import blue.starry.mitsubachi.core.domain.usecase.LikeCheckInUseCase
 import blue.starry.mitsubachi.core.ui.compose.error.SnackbarErrorPresenter
@@ -14,11 +17,13 @@ import blue.starry.mitsubachi.core.ui.compose.formatter.RelativeDateTimeFormatte
 import blue.starry.mitsubachi.core.ui.compose.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.core.ui.compose.snackbar.enqueue
 import blue.starry.mitsubachi.feature.home.R
+import blue.starry.mitsubachi.feature.home.paging.HomeFeedPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,64 +36,40 @@ class HomeScreenViewModel @Inject constructor(
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
-  @Immutable
-  sealed interface UiState {
-    data object Loading : UiState
-    data class Success(val feed: List<CheckIn>, val isRefreshing: Boolean) : UiState
-    data class Error(val exception: Exception) : UiState
-  }
+    private val likedCheckInIds = MutableStateFlow<Set<String>>(emptySet())
 
-  private val _state = MutableStateFlow<UiState>(UiState.Loading)
-  val state = _state.asStateFlow()
-
-  init {
-    refresh()
-  }
-
-  fun refresh(): Job {
-    return viewModelScope.launch {
-      fetch()
+  val pagingDataFlow: Flow<PagingData<CheckIn>> = Pager(
+    config = PagingConfig(
+      pageSize = PAGE_SIZE,
+      enablePlaceholders = false,
+      initialLoadSize = PAGE_SIZE,
+    ),
+    pagingSourceFactory = {
+      HomeFeedPagingSource(fetchFeedUseCase)
+    },
+  ).flow
+    .map { pagingData ->
+      // Apply optimistic like updates
+      pagingData.map { checkIn ->
+        if (likedCheckInIds.value.contains(checkIn.id)) {
+          checkIn.copy(isLiked = true)
+        } else {
+          checkIn
+        }
+      }
     }
-  }
-
-  private suspend fun fetch() {
-    val currentState = state.value
-    val isRefreshing = currentState is UiState.Success
-    if (isRefreshing) {
-      // 2回目以降の更新は isRefreshing=true
-      _state.value = currentState.copy(isRefreshing = true)
-    } else {
-      _state.value = UiState.Loading
-    }
-
-    runCatching {
-      // 初回読み込みはキャッシュを使い、リフレッシュ時はネットワークから取得
-      val policy = if (isRefreshing) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork
-      fetchFeedUseCase(policy)
-    }.onSuccess { data ->
-      _state.value = UiState.Success(data, isRefreshing = false)
-    }.onException { e ->
-      _state.value = UiState.Error(e)
-    }
-  }
+    .cachedIn(viewModelScope)
 
   fun likeCheckIn(checkInId: String): Job {
     return viewModelScope.launch {
+      // Optimistic update
+      likedCheckInIds.value = likedCheckInIds.value + checkInId
+
       runCatching {
         likeCheckInUseCase(checkInId)
-      }.onSuccess {
-        // 楽観的更新
-        val currentState = state.value
-        if (currentState is UiState.Success) {
-          val index = currentState.feed.indexOfFirst { it.id == checkInId }
-          if (index != -1) {
-            val newCheckIn = currentState.feed[index].copy(isLiked = true)
-            val newFeed = currentState.feed.toMutableList()
-            newFeed[index] = newCheckIn
-            _state.value = currentState.copy(feed = newFeed)
-          }
-        }
       }.onException { e ->
+        // Revert on error
+        likedCheckInIds.value = likedCheckInIds.value - checkInId
         snackbarErrorHandler.handle(e) {
           context.getString(R.string.like_failed, it)
         }
@@ -101,5 +82,9 @@ class HomeScreenViewModel @Inject constructor(
     viewModelScope.launch {
       snackbarHostService.enqueue(context.getString(R.string.feature_not_implemented))
     }
+  }
+
+  private companion object {
+    const val PAGE_SIZE = 20
   }
 }
