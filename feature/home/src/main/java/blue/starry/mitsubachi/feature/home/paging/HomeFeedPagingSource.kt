@@ -27,9 +27,11 @@ class HomeFeedPagingSource @Inject constructor(
       LoadResult.Page(
         data = checkIns,
         prevKey = null, // Only support forward pagination
-        nextKey = checkIns.lastOrNull()?.timestamp,
+        // Use the last item's timestamp as the next key
+        // The API should handle "after" as exclusive, so duplicates should not occur
+        nextKey = if (checkIns.isEmpty()) null else checkIns.lastOrNull()?.timestamp,
       )
-    } catch (e: RuntimeException) {
+    } catch (e: Exception) {
       LoadResult.Error(e)
     }
   }
