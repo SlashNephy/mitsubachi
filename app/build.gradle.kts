@@ -114,6 +114,7 @@ dependencies {
   implementation(projects.feature.welcome)
   implementation(projects.feature.widget.photo)
 
+  implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core.splashscreen)
 
   implementation(libs.androidx.work.runtime.ktx)
