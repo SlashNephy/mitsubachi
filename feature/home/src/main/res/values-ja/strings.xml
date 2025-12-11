@@ -8,5 +8,4 @@
     <string name="check_in_button">チェックイン</string>
     <string name="like_failed">いいねに失敗しました: %s</string>
     <string name="feature_not_implemented">この機能は未実装です (⸝⸝›_‹⸝⸝)</string>
-    <string name="failed_to_load_feed">フィードの読み込みに失敗しました: %s</string>
 </resources>

@@ -8,5 +8,4 @@
     <string name="check_in_button">체크인</string>
     <string name="like_failed">좋아요 실패: %s</string>
     <string name="feature_not_implemented">이 기능은 아직 구현되지 않았습니다 (⸝⸝›_‹⸝⸝)</string>
-    <string name="failed_to_load_feed">피드를 불러오는 데 실패했습니다: %s</string>
 </resources>
