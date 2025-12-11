@@ -36,7 +36,7 @@ class HomeScreenViewModel @Inject constructor(
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
-    private val likedCheckInIds = MutableStateFlow<Set<String>>(emptySet())
+  private val likedCheckInIds = MutableStateFlow<Set<String>>(emptySet())
 
   val pagingDataFlow: Flow<PagingData<CheckIn>> = Pager(
     config = PagingConfig(
