@@ -44,7 +44,7 @@ class SwarmApiClientImpl @Inject constructor(
     policy: FetchPolicy,
   ): List<CheckIn> {
     val data = ktorfit.getRecentActivities(
-      uniqueDevice = uniqueDevice?.ifBlank { null } ?: RandomStringUtils.secure().nextHex(24),
+      uniqueDevice = uniqueDevice?.ifBlank { null } ?: RandomStringUtils.secureStrong().nextHex(24),
       oauthToken = oauthToken,
       wsid = wsid?.ifBlank { null } ?: Uuid.random().toHexDashString(),
       userAgent = userAgent?.ifBlank { null }
