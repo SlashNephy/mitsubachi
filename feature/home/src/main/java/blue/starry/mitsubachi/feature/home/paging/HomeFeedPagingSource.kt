@@ -46,14 +46,7 @@ class HomeFeedPagingSource @Inject constructor(
       // This is necessary because the API might return some items with the same timestamp
       // as the pagination key when multiple check-ins occur at the same second
       val filteredCheckIns = if (key != null) {
-        checkIns.filter { checkIn ->
-          // Keep items with timestamp after the key timestamp, or
-          // items with the same timestamp but ID lexicographically after the last seen ID
-          // (Foursquare check-in IDs are hex strings that can be compared lexicographically)
-          val isAfterKeyTimestamp = checkIn.timestamp > key.timestamp
-          val isSameTimestampButAfterKeyId = checkIn.timestamp == key.timestamp && checkIn.id > key.lastCheckInId
-          isAfterKeyTimestamp || isSameTimestampButAfterKeyId
-        }
+        checkIns.filter { checkIn -> isCheckInAfterKey(checkIn, key) }
       } else {
         checkIns
       }
@@ -72,5 +65,14 @@ class HomeFeedPagingSource @Inject constructor(
     } catch (e: Exception) {
       LoadResult.Error(e)
     }
+  }
+
+  private fun isCheckInAfterKey(checkIn: CheckIn, key: PaginationKey): Boolean {
+    // Keep items with timestamp after the key timestamp, or
+    // items with the same timestamp but ID lexicographically after the last seen ID
+    // Note: Foursquare check-in IDs are hex strings that can be compared lexicographically
+    val isAfterKeyTimestamp = checkIn.timestamp > key.timestamp
+    val isSameTimestampButAfterKeyId = checkIn.timestamp == key.timestamp && checkIn.id > key.lastCheckInId
+    return isAfterKeyTimestamp || isSameTimestampButAfterKeyId
   }
 }
