@@ -62,15 +62,11 @@ class HomeFeedPagingSource @Inject constructor(
         data = filteredCheckIns,
         prevKey = null, // Only support forward pagination
         // Use composite key with timestamp and ID to avoid duplicates
-        nextKey = if (filteredCheckIns.isEmpty()) {
-          null
-        } else {
-          filteredCheckIns.lastOrNull()?.let { lastCheckIn ->
-            PaginationKey(
-              timestamp = lastCheckIn.timestamp,
-              lastCheckInId = lastCheckIn.id,
-            )
-          }
+        nextKey = filteredCheckIns.lastOrNull()?.let { lastCheckIn ->
+          PaginationKey(
+            timestamp = lastCheckIn.timestamp,
+            lastCheckInId = lastCheckIn.id,
+          )
         },
       )
     } catch (e: Exception) {
