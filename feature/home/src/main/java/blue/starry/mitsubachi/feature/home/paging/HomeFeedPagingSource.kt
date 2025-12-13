@@ -71,8 +71,10 @@ class HomeFeedPagingSource @Inject constructor(
     // Keep items with timestamp after the key timestamp, or
     // items with the same timestamp but ID lexicographically after the last seen ID
     // Note: Foursquare check-in IDs are hex strings that can be compared lexicographically
-    val isAfterKeyTimestamp = checkIn.timestamp > key.timestamp
-    val isSameTimestampButAfterKeyId = checkIn.timestamp == key.timestamp && checkIn.id > key.lastCheckInId
-    return isAfterKeyTimestamp || isSameTimestampButAfterKeyId
+    return when {
+      checkIn.timestamp > key.timestamp -> true
+      checkIn.timestamp == key.timestamp -> checkIn.id > key.lastCheckInId
+      else -> false
+    }
   }
 }
