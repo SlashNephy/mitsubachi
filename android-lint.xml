@@ -14,6 +14,8 @@
             regexp="in Android: `java.lang.instrument`. Referenced from `io.mockk.proxy.jvm.JvmMockKAgentFactory`." />
     </issue>
 
+    <issue id="GradleDependency" severity="informational" />
+
     <issue id="Typos" severity="informational">
         <ignore path="core/ui/compose/src/main/res/values/font_certs.xml" />
     </issue>
