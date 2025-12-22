@@ -15,8 +15,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.network.sockets.SocketTimeoutException
-import io.ktor.client.plugins.HttpCallValidator
 import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -78,15 +78,15 @@ internal object KtorClientModule {
         }
       }
 
-      install(HttpCallValidator) {
-        handleResponseExceptionWithRequest { throwable, _ ->
-          when (throwable) {
+      HttpResponseValidator {
+        handleResponseException { throwable, _ ->
+          throw when (throwable) {
             is HttpRequestTimeoutException, is ConnectTimeoutException, is SocketTimeoutException -> {
-              throw NetworkTimeoutError(throwable)
+              NetworkTimeoutError(throwable)
             }
 
             else -> {
-              throw throwable
+              throwable
             }
           }
         }
@@ -109,8 +109,9 @@ internal object KtorClientModule {
     val network = activeNetwork ?: return false
     val capabilities = getNetworkCapabilities(network) ?: return false
 
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) && capabilities.hasCapability(
+    return listOf(
+      NetworkCapabilities.NET_CAPABILITY_INTERNET,
       NetworkCapabilities.NET_CAPABILITY_VALIDATED,
-    )
+    ).all { capabilities.hasCapability(it) }
   }
 }
