@@ -79,14 +79,14 @@ internal object KtorClientModule {
       }
 
       HttpResponseValidator {
-        handleResponseException { throwable, _ ->
-          throw when (throwable) {
+        handleResponseExceptionWithRequest { cause, _ ->
+          throw when (cause) {
             is HttpRequestTimeoutException, is ConnectTimeoutException, is SocketTimeoutException -> {
-              NetworkTimeoutError(throwable)
+              NetworkTimeoutError(cause)
             }
 
             else -> {
-              throwable
+              cause
             }
           }
         }

@@ -1,6 +1,8 @@
 package blue.starry.mitsubachi.core.domain.error
 
-data class NetworkTimeoutError(override val cause: Exception) : RetryableAppError() {
+import java.io.IOException
+
+data class NetworkTimeoutError(override val cause: IOException) : RetryableAppError() {
   companion object {
     @JvmField
     @Suppress("MayBeConstant")

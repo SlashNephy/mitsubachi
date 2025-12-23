@@ -40,6 +40,7 @@ import blue.starry.mitsubachi.core.ui.compose.error.ErrorFormatterImpl
 import blue.starry.mitsubachi.core.ui.compose.error.NoOpErrorReporter
 import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 import kotlinx.coroutines.launch
+import kotlinx.io.IOException
 
 @Composable
 fun ErrorScreen(
@@ -174,7 +175,7 @@ private fun GenericErrorScreenPreview() {
 @Composable
 private fun NetworkTimeoutErrorScreenPreview() {
   ErrorScreen(
-    exception = NetworkTimeoutError(Exception("network timeout")),
+    exception = NetworkTimeoutError(IOException("network timeout")),
     onClickRetry = {},
     viewModel = rememberPreviewViewModel(),
   )
