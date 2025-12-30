@@ -35,19 +35,18 @@ fun VenueRow(
       .fillMaxWidth()
       .clickable {
         onClickVenue(venue)
-      },
+      }
+      .padding(horizontal = 8.dp, vertical = 4.dp),
   ) {
     VenueCategoryIcon(
       category = venue.primaryCategory,
       modifier = Modifier
-        .size(72.dp)
-        .padding(horizontal = 8.dp, vertical = 4.dp),
+        .size(72.dp),
     )
 
     Column(
       modifier = Modifier
-        .fillMaxSize()
-        .padding(vertical = 8.dp),
+        .fillMaxSize(),
     ) {
       Text(venue.name, fontWeight = FontWeight.Bold)
       Text(

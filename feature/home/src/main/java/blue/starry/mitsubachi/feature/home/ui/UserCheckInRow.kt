@@ -42,13 +42,13 @@ fun UserCheckInRow(
         .fillMaxWidth()
         .clickable {
           onClickCheckIn(checkIn)
-        },
+        }
+        .padding(start = 8.dp, top = 4.dp, bottom = 4.dp, end = 16.dp),
     ) {
       VenueCategoryIcon(
         category = checkIn.venue.primaryCategory,
         modifier = Modifier
-          .size(72.dp)
-          .padding(horizontal = 8.dp, vertical = 4.dp),
+          .size(72.dp),
       )
 
       Column(
@@ -84,8 +84,7 @@ fun UserCheckInRow(
         onClickLike = { viewModel.likeCheckIn(checkIn.id) },
         onClickUnlike = { viewModel.unlikeCheckIn(checkIn.id) },
         modifier = Modifier
-          .size(48.dp)
-          .padding(end = 16.dp),
+          .size(48.dp),
       )
     }
 
