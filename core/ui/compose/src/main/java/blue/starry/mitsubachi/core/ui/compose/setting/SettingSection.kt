@@ -103,7 +103,8 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .clickable(onClick = onClick),
+      .clickable(onClick = onClick)
+      .padding(start = 8.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
   ) {
@@ -111,7 +112,6 @@ private fun SettingSectionTitle(text: String, isExpanded: Boolean, onClick: () -
       text = text,
       style = MaterialTheme.typography.labelSmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
-      modifier = Modifier.padding(start = 8.dp),
     )
 
     Icon(

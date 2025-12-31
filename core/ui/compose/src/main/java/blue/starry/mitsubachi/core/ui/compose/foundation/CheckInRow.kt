@@ -41,13 +41,15 @@ fun CheckInRow(
   val checkInUser = checkIn.user ?: return
 
   Column(modifier = modifier.fillMaxWidth()) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 4.dp, end = 16.dp),
+    ) {
       UserIcon(
         url = checkInUser.iconUrl,
         contentDescription = checkInUser.handle,
         modifier = Modifier
-          .size(72.dp)
-          .padding(horizontal = 8.dp, vertical = 4.dp),
+          .size(72.dp),
       )
 
       Column(
@@ -91,8 +93,7 @@ fun CheckInRow(
         onClickLike = onClickLike,
         onClickUnlike = onClickUnlike,
         modifier = Modifier
-          .size(48.dp)
-          .padding(end = 16.dp),
+          .size(48.dp),
       )
     }
 

@@ -191,8 +191,8 @@ private fun BottomSheetContent(
         text = stringResource(R.string.search_map_back),
         fontWeight = FontWeight.Bold,
         modifier = Modifier
-          .padding(bottom = 8.dp)
-          .clickable(role = Role.Button) { viewModel.selectVenue(null) },
+          .clickable(role = Role.Button) { viewModel.selectVenue(null) }
+          .padding(bottom = 8.dp),
       )
 
       // 選択されたベニューの詳細を表示
