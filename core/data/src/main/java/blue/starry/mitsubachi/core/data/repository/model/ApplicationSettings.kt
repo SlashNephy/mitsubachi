@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import kotlin.time.Duration.Companion.milliseconds
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings as DomainApplicationSettings
 
+@Suppress("CognitiveComplexMethod")
 internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
   return DomainApplicationSettings(
     isFirebaseCrashlyticsEnabled = if (hasIsFirebaseCrashlyticsEnabled()) {
