@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_location_tracking_title">Nearby Venue</string>
+    <string name="notification_location_tracking_text">%1$s</string>
+    <string name="notification_location_tracking_loading">Searching for nearby venues…</string>
+    <string name="notification_action_check_in">Check-in</string>
+</resources>

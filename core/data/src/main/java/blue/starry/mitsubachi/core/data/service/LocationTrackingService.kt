@@ -3,15 +3,20 @@ package blue.starry.mitsubachi.core.data.service
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.Uri
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import blue.starry.mitsubachi.core.data.R
 import blue.starry.mitsubachi.core.data.repository.model.toDomain
+import blue.starry.mitsubachi.core.domain.model.ApplicationConfig
 import blue.starry.mitsubachi.core.domain.model.Coordinates
 import blue.starry.mitsubachi.core.domain.model.DeviceLocation
+import blue.starry.mitsubachi.core.domain.model.Venue
 import blue.starry.mitsubachi.core.domain.usecase.FoursquareApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -46,10 +51,14 @@ class LocationTrackingService : Service() {
   @Inject
   lateinit var notificationManager: NotificationManager
 
+  @Inject
+  lateinit var applicationConfig: ApplicationConfig
+
   private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
   private val locationExecutor = Executors.newSingleThreadExecutor()
 
   private var currentLocation: DeviceLocation? = null
+  private var nearestVenue: Venue? = null
   private var stayStartTime: Long = 0
   private var lastNotificationTime: Long = 0
 
@@ -58,6 +67,7 @@ class LocationTrackingService : Service() {
       result.lastLocation?.let { location ->
         val newLocation = location.toDomain()
         handleLocationUpdate(newLocation)
+        updateNearestVenue(newLocation)
       }
     }
   }
@@ -90,7 +100,7 @@ class LocationTrackingService : Service() {
       "Location Tracking Service",
       NotificationManager.IMPORTANCE_LOW,
     ).apply {
-      description = "Ongoing location tracking notification"
+      description = "Shows the nearest venue around your current location"
       setShowBadge(false)
     }
 
@@ -146,13 +156,57 @@ class LocationTrackingService : Service() {
   }
 
   private fun createServiceNotification(): Notification {
-    return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_SERVICE)
-      .setContentTitle("Location Tracking Active")
-      .setContentText("Monitoring your location for venue check-ins")
+    val venueName = nearestVenue?.name
+    val title = getString(R.string.notification_location_tracking_title)
+    val text = if (venueName != null) {
+      getString(R.string.notification_location_tracking_text, venueName)
+    } else {
+      getString(R.string.notification_location_tracking_loading)
+    }
+
+    val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_SERVICE)
+      .setContentTitle(title)
+      .setContentText(text)
       .setSmallIcon(android.R.drawable.ic_menu_mylocation)
       .setPriority(NotificationCompat.PRIORITY_LOW)
       .setOngoing(true)
+
+    // Add check-in action if we have a venue
+    if (nearestVenue != null) {
+      val checkInIntent = createCheckInIntent()
+      val checkInPendingIntent = PendingIntent.getActivity(
+        this,
+        REQUEST_CODE_CHECK_IN,
+        checkInIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+      )
+
+      builder.addAction(
+        android.R.drawable.ic_input_add,
+        getString(R.string.notification_action_check_in),
+        checkInPendingIntent,
+      )
+    }
+
+    return builder.build()
+  }
+
+  private fun createCheckInIntent(): Intent {
+    // Construct deeplink URI: {applicationId}://create_check_in
+    // This matches DeepLink.CreateCheckIn serialization
+    val deepLinkUri = Uri.Builder()
+      .scheme(applicationConfig.applicationId)
+      .authority("create_check_in")
       .build()
+
+    return Intent(Intent.ACTION_VIEW, deepLinkUri).apply {
+      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+    }
+  }
+
+  private fun updateServiceNotification() {
+    val notification = createServiceNotification()
+    notificationManager.notify(NOTIFICATION_ID_SERVICE, notification)
   }
 
   internal fun handleLocationUpdate(newLocation: DeviceLocation) {
@@ -188,6 +242,34 @@ class LocationTrackingService : Service() {
       // User has moved to a new location
       currentLocation = newLocation
       stayStartTime = System.currentTimeMillis()
+    }
+  }
+
+  private fun updateNearestVenue(location: DeviceLocation) {
+    serviceScope.launch {
+      @Suppress("TooGenericExceptionCaught")
+      try {
+        val coordinates = Coordinates(location.latitude, location.longitude)
+        val venues = foursquareApiClient.searchNearVenues(coordinates, query = null)
+
+        if (venues.isNotEmpty()) {
+          val newNearestVenue = venues.first()
+          // Only update notification if the venue changed
+          if (nearestVenue?.id != newNearestVenue.id) {
+            nearestVenue = newNearestVenue
+            updateServiceNotification()
+            Timber.d("Updated nearest venue: ${newNearestVenue.name}")
+          }
+        } else {
+          // No venues found, clear current venue if any
+          if (nearestVenue != null) {
+            nearestVenue = null
+            updateServiceNotification()
+          }
+        }
+      } catch (e: Exception) {
+        Timber.e(e, "Failed to fetch nearest venue")
+      }
     }
   }
 
@@ -243,6 +325,8 @@ class LocationTrackingService : Service() {
     private const val NOTIFICATION_CHANNEL_CHECKIN = "check_in_reminder"
     private const val NOTIFICATION_ID_SERVICE = 1001
     private const val NOTIFICATION_ID_CHECKIN = 1002
+
+    private const val REQUEST_CODE_CHECK_IN = 2001
 
     private const val LOCATION_UPDATE_INTERVAL_MS = 30_000L // 30 seconds
     private const val LOCATION_UPDATE_FASTEST_INTERVAL_MS = 15_000L // 15 seconds
