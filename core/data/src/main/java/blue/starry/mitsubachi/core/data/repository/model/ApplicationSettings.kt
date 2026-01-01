@@ -44,6 +44,11 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
     } else {
       DomainApplicationSettings.Default.isAdvancedSettingsAvailable
     },
+    isBackgroundLocationTrackingEnabled = if (hasIsBackgroundLocationTrackingEnabled()) {
+      isBackgroundLocationTrackingEnabled
+    } else {
+      DomainApplicationSettings.Default.isBackgroundLocationTrackingEnabled
+    },
   )
 }
 
@@ -55,6 +60,7 @@ internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
     .setIsDynamicColorEnabled(isDynamicColorEnabled)
     .setColorSchemePreference(colorSchemePreference.ordinal)
     .setIsAdvancedSettingsAvailable(isAdvancedSettingsAvailable)
+    .setIsBackgroundLocationTrackingEnabled(isBackgroundLocationTrackingEnabled)
     .apply {
       when (val font = fontFamilyPreference) {
         is FontFamilyPreference.Default -> {

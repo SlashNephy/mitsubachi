@@ -7,6 +7,8 @@
     <string name="data_collection_section_title">Data Collection</string>
     <string name="optin_firebase_crashlytics_headline">Automatically send bug reports</string>
     <string name="optin_firebase_crashlytics_supporting">The app reports errors to Firebase Crashlytics when it crashes. The data sent is anonymous.</string>
+    <string name="background_location_tracking_headline">Background location tracking</string>
+    <string name="background_location_tracking_supporting">Track your location in the background and show nearby venue in notification</string>
     <string name="widget_section_title">Widget</string>
     <string name="widget_update_on_wifi_only_headline">Update only on unmetered network</string>
     <string name="widget_update_on_wifi_only_supporting">Update widget only when connected to Wi-Fi or other unmetered networks</string>
