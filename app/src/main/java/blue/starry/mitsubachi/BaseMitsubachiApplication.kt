@@ -68,11 +68,6 @@ abstract class BaseMitsubachiApplication :
 
     applicationScope.launch {
       // バックグラウンド位置情報追跡の設定を監視
-      val initialEnabled = applicationSettingsRepository.select { it.isBackgroundLocationTrackingEnabled }
-      if (initialEnabled) {
-        locationTrackingRepository.startTracking()
-      }
-
       applicationSettingsRepository.flow
         .map { it.isBackgroundLocationTrackingEnabled }
         .distinctUntilChanged()

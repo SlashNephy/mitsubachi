@@ -26,6 +26,7 @@ import com.google.android.gms.location.Priority
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -58,9 +59,12 @@ class LocationTrackingService : Service() {
   private val locationExecutor = Executors.newSingleThreadExecutor()
 
   private var currentLocation: DeviceLocation? = null
+
+  @Volatile
   private var nearestVenue: Venue? = null
   private var stayStartTime: Long = 0
   private var lastNotificationTime: Long = 0
+  private var venueUpdateJob: Job? = null
 
   private val locationCallback = object : LocationCallback() {
     override fun onLocationResult(result: LocationResult) {
@@ -246,7 +250,10 @@ class LocationTrackingService : Service() {
   }
 
   private fun updateNearestVenue(location: DeviceLocation) {
-    serviceScope.launch {
+    // Cancel any pending venue update job to avoid piling up requests
+    venueUpdateJob?.cancel()
+
+    venueUpdateJob = serviceScope.launch {
       @Suppress("TooGenericExceptionCaught")
       try {
         val coordinates = Coordinates(location.latitude, location.longitude)
