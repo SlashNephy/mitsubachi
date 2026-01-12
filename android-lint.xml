@@ -15,6 +15,7 @@
     </issue>
 
     <issue id="GradleDependency" severity="informational" />
+    <issue id="NewerVersionAvailable" severity="informational" />
 
     <issue id="Typos" severity="informational">
         <ignore path="core/ui/compose/src/main/res/values/font_certs.xml" />
