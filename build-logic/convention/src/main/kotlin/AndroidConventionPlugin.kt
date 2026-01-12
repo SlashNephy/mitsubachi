@@ -9,7 +9,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 sealed interface AndroidProjectType {
   enum class UiFramework {
@@ -59,7 +59,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
           languageVersion.set(JavaLanguageVersion.of(jvmVersion))
         }
       }
-      extensions.findByType<KotlinJvmProjectExtension>()?.apply {
+      extensions.findByType<KotlinAndroidProjectExtension>()?.apply {
         jvmToolchain(jvmVersion)
       }
 
