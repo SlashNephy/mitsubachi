@@ -14,8 +14,11 @@
             regexp="in Android: `java.lang.instrument`. Referenced from `io.mockk.proxy.jvm.JvmMockKAgentFactory`." />
     </issue>
 
-    <issue id="GradleDependency" severity="informational" />
-    <issue id="NewerVersionAvailable" severity="informational" />
+    <!-- 依存関係のバージョニングは Renovate に一任する -->
+    <issue id="GradlePluginVersion" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
 
     <issue id="Typos" severity="informational">
         <ignore path="core/ui/compose/src/main/res/values/font_certs.xml" />
