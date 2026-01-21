@@ -36,8 +36,6 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
       )
 
       with(pluginManager) {
-        apply(versions.plugin("kotlin-android"))
-
         when (projectType) {
           is AndroidProjectType.Library -> {
             apply(versions.plugin("android-library"))

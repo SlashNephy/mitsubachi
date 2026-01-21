@@ -199,7 +199,6 @@ detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt", version.ref 
 
 # for convention plugins
 android-application-gradle-plugin = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "android-gradle-plugin" }
-kotlin-android-gradle-plugin = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version.ref = "kotlin" }
 kotlin-compose-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kotlin" }
 kotlin-serialization-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
@@ -215,7 +214,6 @@ android-application = { id = "com.android.application", version.ref = "android-g
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle-plugin" }
 firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-app-distribution-gradle-plugin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
