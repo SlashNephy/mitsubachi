@@ -36,8 +36,6 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
       )
 
       with(pluginManager) {
-        apply(versions.plugin("kotlin-android"))
-
         when (projectType) {
           is AndroidProjectType.Library -> {
             apply(versions.plugin("android-library"))
@@ -70,28 +68,22 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
         extension.apply {
           compileSdk = 36
 
-          defaultConfig {
+          defaultConfig.apply {
             minSdk = 36
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
           }
           if (this is ApplicationExtension) {
-            defaultConfig {
-              targetSdk = 36
-            }
+            defaultConfig.targetSdk = 36
           }
 
-          packaging {
-            resources {
-              merges += "META-INF/LICENSE.md"
-              merges += "META-INF/LICENSE-notice.md"
-            }
+          packaging.resources {
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
           }
 
-          buildFeatures {
-            compose = composePluginEnabled
-          }
+          buildFeatures.compose = composePluginEnabled
 
-          lint {
+          lint.apply {
             checkReleaseBuilds = true
             checkTestSources = true
             checkDependencies = true
@@ -104,13 +96,11 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
             baseline = rootProject.file("android-lint-baseline.xml")
           }
 
-          testOptions {
-            unitTests {
-              isIncludeAndroidResources = true
-              isReturnDefaultValues = true
-              all {
-                it.useJUnitPlatform()
-              }
+          testOptions.unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+            all {
+              it.useJUnitPlatform()
             }
           }
 

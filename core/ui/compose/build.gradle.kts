@@ -39,7 +39,7 @@ dependencies {
 
   // Firebase
   implementation(platform(libs.firebase.bom))
-  api(libs.firebase.crashlytics)
+  implementation(libs.firebase.crashlytics)
 
   api(libs.androidx.browser)
   api(libs.accompanist.permissions)

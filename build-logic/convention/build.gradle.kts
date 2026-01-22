@@ -6,7 +6,6 @@ group = "blue.starry.mitsubachi.buildlogic.convention"
 
 dependencies {
   compileOnly(libs.android.application.gradle.plugin)
-  compileOnly(libs.kotlin.android.gradle.plugin)
   compileOnly(libs.kotlin.compose.gradle.plugin)
   compileOnly(libs.kotlin.serialization.gradle.plugin)
   compileOnly(libs.ksp.gradle.plugin)
