@@ -43,3 +43,7 @@ release_notes.txt
 *.hprof
 
 .kotlin/
+
+# Gradle JVM Toolchain
+# https://docs.gradle.org/current/userguide/toolchains.html#sec:provisioning
+/gradle/gradle-daemon-jvm.properties
