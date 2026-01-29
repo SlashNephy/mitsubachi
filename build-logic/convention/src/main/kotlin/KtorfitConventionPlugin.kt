@@ -14,6 +14,9 @@ class KtorfitConventionPlugin : Plugin<Project> {
 
       extensions.configure<KtorfitPluginExtension> {
         errorCheckingMode.set(ErrorCheckingMode.ERROR)
+        // Set compiler plugin version to match Kotlin 2.3.0 compatibility
+        // See: https://github.com/Foso/Ktorfit/issues/1010
+        compilerPluginVersion.set("2.3.3")
       }
 
       dependencies {
