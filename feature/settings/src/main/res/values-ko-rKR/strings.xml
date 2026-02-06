@@ -7,6 +7,8 @@
     <string name="data_collection_section_title">데이터 수집</string>
     <string name="optin_firebase_crashlytics_headline">버그 보고서를 자동으로 전송한다</string>
     <string name="optin_firebase_crashlytics_supporting">앱이 충돌할 경우 오류를 Firebase Crashlytics에 보고합니다. 전송되는 데이터는 익명입니다.</string>
+    <string name="background_location_tracking_headline">백그라운드 위치 추적</string>
+    <string name="background_location_tracking_supporting">백그라운드에서 위치를 추적하고 알림에 근처 장소를 표시합니다</string>
     <string name="widget_section_title">위젯</string>
     <string name="widget_update_on_wifi_only_headline">정액제 네트워크에서만 업데이트</string>
     <string name="widget_update_on_wifi_only_supporting">Wi-Fi 또는 정액제 네트워크에 연결되어 있을 때만 위젯을 업데이트합니다</string>
