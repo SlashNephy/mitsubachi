@@ -11,6 +11,7 @@ data class ApplicationSettings(
   val colorSchemePreference: ColorSchemePreference,
   val fontFamilyPreference: FontFamilyPreference,
   val isAdvancedSettingsAvailable: Boolean,
+  val isBackgroundLocationTrackingEnabled: Boolean,
 ) {
   companion object {
     val Default = ApplicationSettings(
@@ -21,6 +22,7 @@ data class ApplicationSettings(
       colorSchemePreference = ColorSchemePreference.System,
       fontFamilyPreference = FontFamilyPreference.Default,
       isAdvancedSettingsAvailable = false,
+      isBackgroundLocationTrackingEnabled = false,
     )
   }
 }

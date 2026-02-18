@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_location_tracking_title">주변 장소</string>
+    <string name="notification_location_tracking_text">%1$s</string>
+    <string name="notification_location_tracking_loading">근처 장소 검색 중…</string>
+    <string name="notification_action_check_in">체크인</string>
+</resources>
