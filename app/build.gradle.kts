@@ -1,3 +1,4 @@
+import com.android.build.api.variant.ResValue
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.util.Properties
@@ -83,6 +84,17 @@ android {
     create("local") {
       dimension = "environment"
       applicationIdSuffix = ".local"
+    }
+  }
+
+  androidComponents {
+    onVariants { variant ->
+      val applicationId = variant.applicationId.get()
+
+      variant.resValues.put(
+        variant.makeResValueKey("string", "create_check_in_uri"),
+        ResValue("$applicationId://create_check_in"),
+      )
     }
   }
 
