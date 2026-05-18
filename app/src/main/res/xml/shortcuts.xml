@@ -8,6 +8,6 @@
         android:shortcutLongLabel="@string/shortcut_create_check_in_long_label">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="${applicationId}://create_check_in" />
+            android:data="@string/create_check_in_uri" />
     </shortcut>
 </shortcuts>
