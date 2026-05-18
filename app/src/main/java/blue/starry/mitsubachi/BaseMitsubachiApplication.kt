@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import blue.starry.mitsubachi.core.domain.ApplicationScope
 import blue.starry.mitsubachi.core.domain.usecase.ApplicationSettingsRepository
+import blue.starry.mitsubachi.core.domain.usecase.LocationTrackingRepository
 import blue.starry.mitsubachi.feature.widget.photo.PhotoWidget
 import coil3.ImageLoader
 import coil3.PlatformContext
@@ -36,6 +37,9 @@ abstract class BaseMitsubachiApplication :
   lateinit var applicationSettingsRepository: ApplicationSettingsRepository
 
   @Inject
+  lateinit var locationTrackingRepository: LocationTrackingRepository
+
+  @Inject
   lateinit var workerFactory: HiltWorkerFactory
 
   @Inject
@@ -59,6 +63,20 @@ abstract class BaseMitsubachiApplication :
         .distinctUntilChanged()
         .collect {
           Firebase.crashlytics.isCrashlyticsCollectionEnabled = it
+        }
+    }
+
+    applicationScope.launch {
+      // バックグラウンド位置情報追跡の設定を監視
+      applicationSettingsRepository.flow
+        .map { it.isBackgroundLocationTrackingEnabled }
+        .distinctUntilChanged()
+        .collect { isEnabled ->
+          if (isEnabled) {
+            locationTrackingRepository.startTracking()
+          } else {
+            locationTrackingRepository.stopTracking()
+          }
         }
     }
 

@@ -13,4 +13,5 @@ message ApplicationSettings {
     string google_font = 6;
   }
   optional bool is_advanced_settings_available = 7;
+  optional bool is_background_location_tracking_enabled = 8;
 }

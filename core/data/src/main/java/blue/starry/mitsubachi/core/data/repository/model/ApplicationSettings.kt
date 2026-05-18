@@ -6,6 +6,7 @@ import blue.starry.mitsubachi.core.domain.model.FontFamilyPreference
 import kotlin.time.Duration.Companion.milliseconds
 import blue.starry.mitsubachi.core.domain.model.ApplicationSettings as DomainApplicationSettings
 
+@Suppress("CognitiveComplexMethod")
 internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
   return DomainApplicationSettings(
     isFirebaseCrashlyticsEnabled = if (hasIsFirebaseCrashlyticsEnabled()) {
@@ -44,6 +45,11 @@ internal fun ApplicationSettings.toDomain(): DomainApplicationSettings {
     } else {
       DomainApplicationSettings.Default.isAdvancedSettingsAvailable
     },
+    isBackgroundLocationTrackingEnabled = if (hasIsBackgroundLocationTrackingEnabled()) {
+      isBackgroundLocationTrackingEnabled
+    } else {
+      DomainApplicationSettings.Default.isBackgroundLocationTrackingEnabled
+    },
   )
 }
 
@@ -55,6 +61,7 @@ internal fun DomainApplicationSettings.toEntity(): ApplicationSettings {
     .setIsDynamicColorEnabled(isDynamicColorEnabled)
     .setColorSchemePreference(colorSchemePreference.ordinal)
     .setIsAdvancedSettingsAvailable(isAdvancedSettingsAvailable)
+    .setIsBackgroundLocationTrackingEnabled(isBackgroundLocationTrackingEnabled)
     .apply {
       when (val font = fontFamilyPreference) {
         is FontFamilyPreference.Default -> {

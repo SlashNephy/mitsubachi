@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_location_tracking_title">付近のスポット</string>
+    <string name="notification_location_tracking_text">%1$s</string>
+    <string name="notification_location_tracking_loading">近くのスポットを検索中…</string>
+    <string name="notification_action_check_in">チェックイン</string>
+</resources>

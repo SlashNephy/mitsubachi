@@ -38,5 +38,27 @@ internal fun DataCollectionSection(
         )
       },
     )
+
+    item(
+      leadingIcon = SettingItem.LeadingIcon.Flat(MaterialSymbols.my_location),
+      headline = {
+        Text(stringResource(R.string.background_location_tracking_headline))
+      },
+      supporting = {
+        Text(stringResource(R.string.background_location_tracking_supporting))
+      },
+      trailing = {
+        Switch(
+          checked = applicationSettings.isBackgroundLocationTrackingEnabled,
+          onCheckedChange = {
+            onChangeApplicationSettings { settings ->
+              settings.copy(
+                isBackgroundLocationTrackingEnabled = it,
+              )
+            }
+          },
+        )
+      },
+    )
   }
 }
