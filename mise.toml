@@ -1,2 +1,5 @@
 [tools]
 java = "temurin-21.0.10+7.0.LTS"
+python = "3.14.7"
+imagemagick = "7.1.2_27"
+"conda:librsvg" = "2.62.3"

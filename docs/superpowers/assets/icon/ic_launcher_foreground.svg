@@ -1,3 +1,8 @@
+<!--
+  このファイルは docs/superpowers/assets/icon/icon_shapes.py から自動生成されている。
+  手で編集しないこと。再生成するには次のコマンドを実行する。
+  cd docs/superpowers/assets/icon && python3 icon_shapes.py . ../../../../app/src/main/res/drawable
+-->
 <svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
   <defs>
     <linearGradient id="body" gradientUnits="userSpaceOnUse" x1="54.0" y1="35.0" x2="54.0" y2="81.0">

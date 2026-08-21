@@ -87,14 +87,24 @@ Play Store 用の 512px アイコンはリポジトリに存在しないため�
 
 ## 制作フロー
 
-VectorDrawable の path を直接手書きせず、SVG を原本として扱う。
+VectorDrawable の path を直接手書きせず、SVG も手書きしない。両方とも
+`docs/superpowers/assets/icon/icon_shapes.py` の図形定義（`Shape` / `Group` /
+`Layer`）を唯一の原本とし、そこから同時に生成する。検証した見た目と出荷物が
+乖離しないようにするための構成であり、SVG→VectorDrawable の手動変換は行わない。
 
-1. SVG（108×108 viewBox）で背景・前景・monochrome の 3 ファイルを作成する。
-2. `rsvg-convert` で PNG にレンダリングし、円 / スクワークルのマスクを適用して実表示を確認する。
-3. 確定後、SVG を VectorDrawable XML へ変換する。グラデーションは `<aapt:attr name="android:fillColor">` + `<gradient>` で表現する。
-4. レガシー mipmap は合成済み PNG（background + foreground をマスク適用）から各密度へ縮小し、`magick` で webp 化する。
+1. `icon_shapes.py` に背景・前景・monochrome の 3 レイヤーを図形定義として記述する。
+2. `python3 icon_shapes.py . ../../../../app/src/main/res/drawable` を実行し、
+   プレビュー用 SVG（108×108 viewBox）と出荷用 VectorDrawable XML を同時に生成する。
+   グラデーションは VectorDrawable 側で `<aapt:attr name="android:fillColor">` +
+   `<gradient>` として出力される。
+3. `render_preview.sh` が `rsvg-convert` で SVG を PNG にレンダリングし、円 /
+   スクワークルのマスクを適用して実表示を確認する。
+4. レガシー mipmap は `generate_mipmaps.sh` が合成済み PNG（background +
+   foreground をマスク適用）から各密度へ縮小し、`magick` で webp 化する。
 
-SVG 原本は `docs/superpowers/assets/icon/` に保管し、将来の再生成を可能にする。
+生成物である `app/src/main/res/drawable/ic_launcher_{background,foreground,monochrome}.xml`
+は手で編集しない。図形定義は `docs/superpowers/assets/icon/icon_shapes.py` に
+保管し、将来の再生成を可能にする。詳細は同ディレクトリの `README.md` を参照。
 
 ## 検証
 

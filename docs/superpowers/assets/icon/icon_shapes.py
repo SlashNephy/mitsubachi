@@ -104,6 +104,20 @@ class Layer:
     children: list = field(default_factory=list)
 
 
+# ---------------------------------------------------------------- 生成物ヘッダー
+
+_REGEN_COMMAND = (
+    "cd docs/superpowers/assets/icon && "
+    "python3 icon_shapes.py . ../../../../app/src/main/res/drawable"
+)
+
+_GENERATED_NOTICE = (
+    "このファイルは docs/superpowers/assets/icon/icon_shapes.py から自動生成されている。\n"
+    "手で編集しないこと。再生成するには次のコマンドを実行する。\n"
+    f"{_REGEN_COMMAND}"
+)
+
+
 # ---------------------------------------------------------------- SVG 出力
 
 def _svg_paint(value: str | None) -> str:
@@ -177,7 +191,9 @@ def to_svg(layer: Layer) -> str:
                 f"    </radialGradient>\n"
             )
     body = "".join(_svg_node(c, 1) for c in layer.children)
+    comment_lines = "\n".join(f"  {line}" for line in _GENERATED_NOTICE.splitlines())
     return (
+        f"<!--\n{comment_lines}\n-->\n"
         '<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" '
         'viewBox="0 0 108 108">\n'
         f"  <defs>\n{defs}  </defs>\n"
@@ -269,8 +285,10 @@ def _vd_node(node, layer: Layer, indent: int) -> str:
 
 def to_vector_drawable(layer: Layer) -> str:
     body = "".join(_vd_node(c, layer, 1) for c in layer.children)
+    comment_lines = "\n".join(f"    {line}" for line in _GENERATED_NOTICE.splitlines())
     return (
         '<?xml version="1.0" encoding="utf-8"?>\n'
+        f"<!--\n{comment_lines}\n-->\n"
         '<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
         '    xmlns:aapt="http://schemas.android.com/aapt"\n'
         '    android:width="108dp"\n'

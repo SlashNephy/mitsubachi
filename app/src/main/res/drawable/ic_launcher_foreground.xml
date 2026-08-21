@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    このファイルは docs/superpowers/assets/icon/icon_shapes.py から自動生成されている。
+    手で編集しないこと。再生成するには次のコマンドを実行する。
+    cd docs/superpowers/assets/icon && python3 icon_shapes.py . ../../../../app/src/main/res/drawable
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
