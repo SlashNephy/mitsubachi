@@ -30,3 +30,16 @@ magick \( "$out/full.png" "$out/mask_circle.png" +append \) \
        \( "$out/mask_squircle.png" "$out/size48_zoom.png" +append \) \
        -background '#FAFAFA' -append -bordercolor '#FAFAFA' -border 16 "$out/sheet.png"
 echo "wrote $out/sheet.png"
+
+# monochrome: 実機と同様にアルファのみを使って単色で塗り潰した状態を再現する
+rsvg-convert -w 432 -h 432 "$dir/ic_launcher_monochrome.svg" -o "$out/mono_raw.png"
+magick "$out/mono_raw.png" -alpha extract -background '#1B1B1B' -alpha shape \
+  -fill '#E8C48A' -colorize 100 "$out/mono_shape.png"
+magick -size 432x432 xc:'#1B1B1B' "$out/mono_shape.png" -compose over -composite \
+  -resize 648x648 -gravity center -crop 432x432+0+0 +repage \
+  \( -size 432x432 xc:none -fill white -draw "circle 216,216 216,4" \) \
+  -alpha set -compose DstIn -composite "$out/mono_circle.png"
+magick "$out/mono_circle.png" -resize 48x48 -resize 432x432 "$out/mono_48.png"
+magick "$out/mono_circle.png" "$out/mono_48.png" +append \
+  -bordercolor '#FAFAFA' -border 16 "$out/sheet_mono.png"
+echo "wrote $out/sheet_mono.png"

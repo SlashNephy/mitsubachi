@@ -7,6 +7,7 @@ SVG（プレビュー用）と VectorDrawable（出荷用）を同一の定義�
 from __future__ import annotations
 
 import math
+import zlib
 from dataclasses import dataclass, field
 
 # ---------------------------------------------------------------- パス生成
@@ -129,7 +130,8 @@ def _svg_node(node, indent: int) -> str:
         clip_open = ""
         clip_close = ""
         if node.clip is not None:
-            clip_id = f"clip{abs(hash(node.clip)) % 100000}"
+            # Python の hash() は実行ごとに乱数化されるため、id には使わない
+            clip_id = f"clip{zlib.crc32(node.clip.encode()) % 100000}"
             clip_open = (
                 f'{pad}<clipPath id="{clip_id}"><path d="{node.clip}"/></clipPath>\n'
                 f'{pad}<g clip-path="url(#{clip_id})">\n'
@@ -367,7 +369,48 @@ FOREGROUND = Layer(
     children=[Group(pivot=(54, 54), scale=0.87, children=_BEE)],
 )
 
-LAYERS = [BACKGROUND, FOREGROUND]
+_MONO = "#FFFFFF"
+
+# 口は線ではなく塗りの帯として表現する（単色化すると細線が消えるため太らせる）
+_MOUTH_HOLE = (
+    "M45.8,58.0 Q54,66.4 62.2,58.0 L59.4,55.6 Q54,62 48.6,55.6 Z"
+)
+
+_MONOCHROME_BEE = [
+    # 触角（線）と先端の玉 — 穴を持たないので独立したパス
+    Shape(d="M46,39 C43,32 41,29 39,27.5", fill=None, stroke=_MONO,
+          stroke_width=3.6, cap="round"),
+    Shape(d="M62,39 C65,32 67,29 69,27.5", fill=None, stroke=_MONO,
+          stroke_width=3.6, cap="round"),
+    Shape(d=circle_path(38, 26.5, 3.4), fill=_MONO),
+    Shape(d=circle_path(70, 26.5, 3.4), fill=_MONO),
+    # 羽根 — 胴体の下に敷く。穴を持たない
+    Group(pivot=(33, 43), rotation=-28, children=[
+        Shape(d=ellipse_path(33, 43, 12, 8.5), fill=_MONO),
+    ]),
+    Group(pivot=(75, 43), rotation=28, children=[
+        Shape(d=ellipse_path(75, 43, 12, 8.5), fill=_MONO),
+    ]),
+    # 胴体 + 抜き穴（逆回り）
+    Shape(
+        d=" ".join([
+            ellipse_path(BODY_CX, BODY_CY, BODY_RX, BODY_RY),
+            circle_path(45.5, 50, 5.0, cw=False),
+            circle_path(62.5, 50, 5.0, cw=False),
+            _MOUTH_HOLE,
+            rrect_path(30, 63.5, 48, 6.5, 3.25, cw=False),
+            rrect_path(33, 74.5, 42, 6.0, 3.0, cw=False),
+        ]),
+        fill=_MONO,
+    ),
+]
+
+MONOCHROME = Layer(
+    name="ic_launcher_monochrome",
+    children=[Group(pivot=(54, 54), scale=0.87, children=_MONOCHROME_BEE)],
+)
+
+LAYERS = [BACKGROUND, FOREGROUND, MONOCHROME]
 
 
 if __name__ == "__main__":
