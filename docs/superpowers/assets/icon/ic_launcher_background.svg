@@ -1,0 +1,29 @@
+<!--
+  このファイルは docs/superpowers/assets/icon/icon_shapes.py から自動生成されている。
+  手で編集しないこと。再生成するには次のコマンドを実行する。
+  cd docs/superpowers/assets/icon && python3 icon_shapes.py . ../../../../app/src/main/res/drawable
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+  <defs>
+    <radialGradient id="bg" gradientUnits="userSpaceOnUse" cx="54.0" cy="37.8" r="91.8">
+      <stop offset="0.0" stop-color="#FFD98A"/>
+      <stop offset="1.0" stop-color="#FFA633"/>
+    </radialGradient>
+  </defs>
+  <path d="M0.001,0 L107.999,0 a0.001,0.001 0 0,1 0.001,0.001 L108,107.999 a0.001,0.001 0 0,1 -0.001,0.001 L0.001,108 a0.001,0.001 0 0,1 -0.001,-0.001 L0,0.001 a0.001,0.001 0 0,1 0.001,-0.001 Z" fill="url(#bg)"/>
+  <g >
+    <path d="M14.00,-6.00 L0.14,2.00 L0.14,18.00 L14.00,26.00 L27.86,18.00 L27.86,2.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M14.00,26.00 L0.14,34.00 L0.14,50.00 L14.00,58.00 L27.86,50.00 L27.86,34.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M14.00,58.00 L0.14,66.00 L0.14,82.00 L14.00,90.00 L27.86,82.00 L27.86,66.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M41.60,-22.00 L27.74,-14.00 L27.74,2.00 L41.60,10.00 L55.46,2.00 L55.46,-14.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M41.60,10.00 L27.74,18.00 L27.74,34.00 L41.60,42.00 L55.46,34.00 L55.46,18.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M41.60,42.00 L27.74,50.00 L27.74,66.00 L41.60,74.00 L55.46,66.00 L55.46,50.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M41.60,74.00 L27.74,82.00 L27.74,98.00 L41.60,106.00 L55.46,98.00 L55.46,82.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M69.20,-6.00 L55.34,2.00 L55.34,18.00 L69.20,26.00 L83.06,18.00 L83.06,2.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M69.20,26.00 L55.34,34.00 L55.34,50.00 L69.20,58.00 L83.06,50.00 L83.06,34.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M69.20,58.00 L55.34,66.00 L55.34,82.00 L69.20,90.00 L83.06,82.00 L83.06,66.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M96.80,10.00 L82.94,18.00 L82.94,34.00 L96.80,42.00 L110.66,34.00 L110.66,18.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+    <path d="M96.80,42.00 L82.94,50.00 L82.94,66.00 L96.80,74.00 L110.66,66.00 L110.66,50.00 Z" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-opacity="0.3"/>
+  </g>
+  <path d="M16,55 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0 Z" fill="#FFF6E0" fill-opacity="0.55"/>
+</svg>

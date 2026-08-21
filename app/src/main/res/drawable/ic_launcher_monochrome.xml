@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    このファイルは docs/superpowers/assets/icon/icon_shapes.py から自動生成されている。
+    手で編集しないこと。再生成するには次のコマンドを実行する。
+    cd docs/superpowers/assets/icon && python3 icon_shapes.py . ../../../../app/src/main/res/drawable
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+  <group android:pivotX="54"
+      android:pivotY="54"
+      android:scaleX="0.87"
+      android:scaleY="0.87">
+    <path android:pathData="M46,39 C43,32 41,29 39,27.5"
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"/>
+    <path android:pathData="M62,39 C65,32 67,29 69,27.5"
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"/>
+    <path android:pathData="M34.6,26.5 a3.4,3.4 0 1,1 6.8,0 a3.4,3.4 0 1,1 -6.8,0 Z"
+        android:fillColor="#FFFFFF"/>
+    <path android:pathData="M66.6,26.5 a3.4,3.4 0 1,1 6.8,0 a3.4,3.4 0 1,1 -6.8,0 Z"
+        android:fillColor="#FFFFFF"/>
+    <group>
+      <clip-path android:pathData="M0.001,0 L107.999,0 a0.001,0.001 0 0,1 0.001,0.001 L108,107.999 a0.001,0.001 0 0,1 -0.001,0.001 L0.001,108 a0.001,0.001 0 0,1 -0.001,-0.001 L0,0.001 a0.001,0.001 0 0,1 0.001,-0.001 Z M27.0,58.0 a27.0,25.0 0 1,0 54.0,0 a27.0,25.0 0 1,0 -54.0,0 Z"/>
+      <group android:pivotX="33"
+          android:pivotY="43"
+          android:rotation="-28">
+        <path android:pathData="M21,43 a12,8.5 0 1,1 24,0 a12,8.5 0 1,1 -24,0 Z"
+            android:fillColor="#FFFFFF"/>
+      </group>
+    </group>
+    <group>
+      <clip-path android:pathData="M0.001,0 L107.999,0 a0.001,0.001 0 0,1 0.001,0.001 L108,107.999 a0.001,0.001 0 0,1 -0.001,0.001 L0.001,108 a0.001,0.001 0 0,1 -0.001,-0.001 L0,0.001 a0.001,0.001 0 0,1 0.001,-0.001 Z M27.0,58.0 a27.0,25.0 0 1,0 54.0,0 a27.0,25.0 0 1,0 -54.0,0 Z"/>
+      <group android:pivotX="75"
+          android:pivotY="43"
+          android:rotation="28">
+        <path android:pathData="M63,43 a12,8.5 0 1,1 24,0 a12,8.5 0 1,1 -24,0 Z"
+            android:fillColor="#FFFFFF"/>
+      </group>
+    </group>
+    <path android:pathData="M29.0,58.0 a25.0,23.0 0 1,1 50.0,0 a25.0,23.0 0 1,1 -50.0,0 Z M40.5,50 a5.0,5.0 0 1,0 10.0,0 a5.0,5.0 0 1,0 -10.0,0 Z M57.5,50 a5.0,5.0 0 1,0 10.0,0 a5.0,5.0 0 1,0 -10.0,0 Z M45.8,58.0 Q54,66.4 62.2,58.0 L59.4,55.6 Q54,62 48.6,55.6 Z"
+        android:fillColor="#FFFFFF"/>
+  </group>
+</vector>
