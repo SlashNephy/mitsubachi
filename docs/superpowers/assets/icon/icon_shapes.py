@@ -183,6 +183,103 @@ def to_svg(layer: Layer) -> str:
     )
 
 
+# ---------------------------------------------------------------- VD 出力
+
+_VD_CAP = {"butt": "butt", "round": "round"}
+_VD_JOIN = {"miter": "miter", "round": "round"}
+
+
+def _vd_gradient(g: Gradient, indent: int) -> str:
+    pad = "  " * indent
+    if g.kind == "linear":
+        head = (
+            f'{pad}<gradient android:type="linear" '
+            f'android:startX="{g.x1}" android:startY="{g.y1}" '
+            f'android:endX="{g.x2}" android:endY="{g.y2}">'
+        )
+    else:
+        head = (
+            f'{pad}<gradient android:type="radial" '
+            f'android:centerX="{g.cx}" android:centerY="{g.cy}" '
+            f'android:gradientRadius="{g.radius}">'
+        )
+    items = "".join(
+        f'{pad}  <item android:color="{c}" android:offset="{o}"/>\n' for o, c in g.stops
+    )
+    return f"{head}\n{items}{pad}</gradient>\n"
+
+
+def _vd_node(node, layer: Layer, indent: int) -> str:
+    pad = "  " * indent
+    if isinstance(node, Group):
+        attrs = []
+        if node.pivot is not None and (node.scale != 1.0 or node.rotation):
+            attrs.append(f'android:pivotX="{node.pivot[0]}"')
+            attrs.append(f'android:pivotY="{node.pivot[1]}"')
+        if node.scale != 1.0:
+            attrs.append(f'android:scaleX="{node.scale}"')
+            attrs.append(f'android:scaleY="{node.scale}"')
+        if node.rotation:
+            attrs.append(f'android:rotation="{node.rotation}"')
+        clip = ""
+        if node.clip is not None:
+            clip = f'{pad}  <clip-path android:pathData="{node.clip}"/>\n'
+        inner = "".join(_vd_node(c, layer, indent + 1) for c in node.children)
+        joined = ("\n" + pad + "    ").join(attrs) if attrs else ""
+        open_tag = f"{pad}<group {joined}>" if attrs else f"{pad}<group>"
+        return f"{open_tag}\n{clip}{inner}{pad}</group>\n"
+
+    attrs = [f'android:pathData="{node.d}"']
+    gradient_child = None
+    if node.fill is not None:
+        if node.fill.startswith("grad:"):
+            gradient_child = layer.gradients[node.fill[5:]]
+        else:
+            attrs.append(f'android:fillColor="{node.fill}"')
+    else:
+        attrs.append('android:fillColor="#00000000"')
+    if node.fill_type == "evenOdd":
+        attrs.append('android:fillType="evenOdd"')
+    if node.fill_alpha != 1.0:
+        attrs.append(f'android:fillAlpha="{node.fill_alpha}"')
+    if node.stroke is not None:
+        attrs.append(f'android:strokeColor="{node.stroke}"')
+        attrs.append(f'android:strokeWidth="{node.stroke_width}"')
+        if node.stroke_alpha != 1.0:
+            attrs.append(f'android:strokeAlpha="{node.stroke_alpha}"')
+        if node.cap != "butt":
+            attrs.append(f'android:strokeLineCap="{_VD_CAP[node.cap]}"')
+        if node.join != "miter":
+            attrs.append(f'android:strokeLineJoin="{_VD_JOIN[node.join]}"')
+
+    joined = ("\n" + pad + "    ").join(attrs)
+    if gradient_child is None:
+        return f"{pad}<path {joined}/>\n"
+    grad = _vd_gradient(gradient_child, indent + 2)
+    return (
+        f"{pad}<path {joined}>\n"
+        f'{pad}  <aapt:attr name="android:fillColor">\n'
+        f"{grad}"
+        f"{pad}  </aapt:attr>\n"
+        f"{pad}</path>\n"
+    )
+
+
+def to_vector_drawable(layer: Layer) -> str:
+    body = "".join(_vd_node(c, layer, 1) for c in layer.children)
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
+        '    xmlns:aapt="http://schemas.android.com/aapt"\n'
+        '    android:width="108dp"\n'
+        '    android:height="108dp"\n'
+        '    android:viewportWidth="108"\n'
+        '    android:viewportHeight="108">\n'
+        f"{body}"
+        "</vector>\n"
+    )
+
+
 # ---------------------------------------------------------------- レイヤー定義
 
 OUTLINE = "#4A2A00"
@@ -278,6 +375,12 @@ if __name__ == "__main__":
     import sys
 
     out_dir = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ".")
+    res_dir = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else None
     for layer in LAYERS:
         (out_dir / f"{layer.name}.svg").write_text(to_svg(layer), encoding="utf-8")
         print(f"wrote {layer.name}.svg")
+        if res_dir is not None:
+            (res_dir / f"{layer.name}.xml").write_text(
+                to_vector_drawable(layer), encoding="utf-8"
+            )
+            print(f"wrote {layer.name}.xml")
