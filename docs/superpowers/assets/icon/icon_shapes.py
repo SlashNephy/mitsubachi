@@ -39,10 +39,10 @@ def rrect_path(x: float, y: float, w: float, h: float, r: float, cw: bool = True
             f"L{x},{y + r} a{r},{r} 0 0,1 {r},{-r} Z"
         )
     return (
-        f"M{x + r},{y} L{x},{y + r} a{r},{r} 0 0,0 {r},{-r} "
-        f"L{x + r},{y + h} a{r},{r} 0 0,0 {-r},{-r} "
-        f"L{x + w},{y + h - r} a{r},{r} 0 0,0 {-r},{r} "
-        f"L{x + w - r},{y} a{r},{r} 0 0,0 {r},{r} Z"
+        f"M{x + r},{y} a{r},{r} 0 0,0 {-r},{r} "
+        f"L{x},{y + h - r} a{r},{r} 0 0,0 {r},{r} "
+        f"L{x + w - r},{y + h} a{r},{r} 0 0,0 {r},{-r} "
+        f"L{x + w},{y + r} a{r},{r} 0 0,0 {-r},{-r} Z"
     )
 
 
