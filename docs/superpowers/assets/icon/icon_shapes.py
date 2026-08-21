@@ -376,6 +376,15 @@ _MOUTH_HOLE = (
     "M45.8,58.0 Q54,66.4 62.2,58.0 L59.4,55.6 Q54,62 48.6,55.6 Z"
 )
 
+# 羽根と胴体の隙間（variant B）: キャンバス全体の矩形から、胴体楕円を
+# 2 単位膨らませた楕円（逆回り）を抜いた領域。羽根の回転 Group の外側に
+# clip として適用することで、clip 自体は無回転（ワールド座標）のまま
+# 胴体境界の外側 2 単位の帯だけを隠し、羽根と胴体の間に隙間を作る。
+_WING_GAP_CLIP = " ".join([
+    rrect_path(0, 0, 108, 108, 0.001),
+    ellipse_path(BODY_CX, BODY_CY, BODY_RX + 2, BODY_RY + 2, cw=False),
+])
+
 _MONOCHROME_BEE = [
     # 触角（線）と先端の玉 — 穴を持たないので独立したパス
     Shape(d="M46,39 C43,32 41,29 39,27.5", fill=None, stroke=_MONO,
@@ -384,22 +393,27 @@ _MONOCHROME_BEE = [
           stroke_width=3.6, cap="round"),
     Shape(d=circle_path(38, 26.5, 3.4), fill=_MONO),
     Shape(d=circle_path(70, 26.5, 3.4), fill=_MONO),
-    # 羽根 — 胴体の下に敷く。穴を持たない
-    Group(pivot=(33, 43), rotation=-28, children=[
-        Shape(d=ellipse_path(33, 43, 12, 8.5), fill=_MONO),
+    # 羽根 — 胴体との間に 2 単位の透明な隙間を空け、マッシュルーム状の
+    # 一体化した輪郭に見えないようにする。clip は回転 Group の外側の
+    # Group に付け、ワールド座標のまま（羽根と一緒に回転させない）。
+    Group(clip=_WING_GAP_CLIP, children=[
+        Group(pivot=(33, 43), rotation=-28, children=[
+            Shape(d=ellipse_path(33, 43, 12, 8.5), fill=_MONO),
+        ]),
     ]),
-    Group(pivot=(75, 43), rotation=28, children=[
-        Shape(d=ellipse_path(75, 43, 12, 8.5), fill=_MONO),
+    Group(clip=_WING_GAP_CLIP, children=[
+        Group(pivot=(75, 43), rotation=28, children=[
+            Shape(d=ellipse_path(75, 43, 12, 8.5), fill=_MONO),
+        ]),
     ]),
-    # 胴体 + 抜き穴（逆回り）
+    # 胴体 + 抜き穴（逆回り）: 目2つと口のみ。縞は単色化するとひげに
+    # 見えるため穴として持たない。
     Shape(
         d=" ".join([
             ellipse_path(BODY_CX, BODY_CY, BODY_RX, BODY_RY),
             circle_path(45.5, 50, 5.0, cw=False),
             circle_path(62.5, 50, 5.0, cw=False),
             _MOUTH_HOLE,
-            rrect_path(34, 62, 40, 6.5, 3.25, cw=False),
-            rrect_path(43, 71.5, 22, 6.0, 3.0, cw=False),
         ]),
         fill=_MONO,
     ),
