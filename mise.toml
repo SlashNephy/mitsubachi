@@ -1,5 +1,5 @@
 [tools]
-java = "temurin-21.0.12+101.0.LTS"
+java = "temurin-25.0.4+101.0.LTS"
 
 # アイコン生成用のツールチェーン (docs/superpowers/assets/icon/ を参照)
 python = "3.14.7"
