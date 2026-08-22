@@ -80,8 +80,8 @@ Android 13 以降のテーマアイコンは drawable のアルファのみを�
 | `app/src/main/res/drawable/ic_launcher_monochrome.xml` | 新規作成 |
 | `app/src/main/res/mipmap-anydpi/ic_launcher.xml` | `<monochrome>` 参照先を変更 |
 | `app/src/main/res/mipmap-anydpi/ic_launcher_round.xml` | 同上 |
-| `app/src/main/res/mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher.webp` | 新アートから再生成（48/72/96/144/192px、スクワークル） |
-| `app/src/main/res/mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher_round.webp` | 同上（円形） |
+| `app/src/main/res/mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher.png` | 新アートから再生成（48/72/96/144/192px、スクワークル） |
+| `app/src/main/res/mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher_round.png` | 同上（円形） |
 
 Play Store 用の 512px アイコンはリポジトリに存在しないため、本作業のスコープ外とする。
 
@@ -100,7 +100,9 @@ VectorDrawable の path を直接手書きせず、SVG も手書きしない。�
 3. `render_preview.sh` が `rsvg-convert` で SVG を PNG にレンダリングし、円 /
    スクワークルのマスクを適用して実表示を確認する。
 4. レガシー mipmap は `generate_mipmaps.sh` が合成済み PNG（background +
-   foreground をマスク適用）から各密度へ縮小し、`magick` で webp 化する。
+   foreground をマスク適用）から各密度へ縮小し、`magick` で PNG 化する。
+   PNG なのは、APK からアイコンを取り出す外部のコンシューマ（Firebase App
+   Distribution など）に WebP を解釈できないものがあるため。
 
 生成物である `app/src/main/res/drawable/ic_launcher_{background,foreground,monochrome}.xml`
 は手で編集しない。図形定義は `docs/superpowers/assets/icon/icon_shapes.py` に

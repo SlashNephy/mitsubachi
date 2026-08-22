@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# レガシー mipmap（adaptive icon 非対応ランチャー向け）を SVG から再生成する。
+# レガシー mipmap（adaptive icon 非対応の消費者向け）を SVG から再生成する。
+# 出力は PNG。Firebase App Distribution など APK からアイコンを取り出す外部の
+# コンシューマには WebP を解釈できないものがあるため、可搬性の高い形式で出す。
 set -euo pipefail
 
 dir="$(cd "$(dirname "$0")" && pwd)"
@@ -20,10 +22,9 @@ magick "$tmp/visible.png" \
   -alpha set -compose DstIn -composite "$tmp/circle.png"
 
 emit() { # $1=density $2=size
-  magick "$tmp/squircle.png" -resize "$2x$2" -define webp:lossless=true \
-    "$res/mipmap-$1/ic_launcher.webp"
-  magick "$tmp/circle.png" -resize "$2x$2" -define webp:lossless=true \
-    "$res/mipmap-$1/ic_launcher_round.webp"
+  mkdir -p "$res/mipmap-$1"
+  magick "$tmp/squircle.png" -resize "$2x$2" "$res/mipmap-$1/ic_launcher.png"
+  magick "$tmp/circle.png" -resize "$2x$2" "$res/mipmap-$1/ic_launcher_round.png"
   echo "wrote mipmap-$1 (${2}px)"
 }
 
