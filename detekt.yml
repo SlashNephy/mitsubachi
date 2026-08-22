@@ -72,8 +72,5 @@ style:
     active: false
   ReturnCount:
     max: 5
-  UnnecessaryAnnotationUseSiteTarget:
-    # @param:ApplicationContext などで文句を言ってくる
-    active: false
   UseIfInsteadOfWhen:
     active: false

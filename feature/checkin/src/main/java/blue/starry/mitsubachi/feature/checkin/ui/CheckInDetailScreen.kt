@@ -85,7 +85,7 @@ fun CheckInDetailScreen(
 }
 
 @Composable
-@Suppress("LongMethod")
+@Suppress("LongMethod", "ComposableNestingDepth")
 private fun VenueCard(checkIn: CheckIn) {
   Card(
     modifier = Modifier

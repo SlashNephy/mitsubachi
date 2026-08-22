@@ -30,7 +30,7 @@ import blue.starry.mitsubachi.core.ui.compose.locale.LocaleAware
 import coil3.compose.AsyncImage
 
 @Composable
-@Suppress("LongMethod") // TODO: リファクタリング
+@Suppress("LongMethod", "ComposableNestingDepth") // TODO: リファクタリング
 fun VenueRecommendationCard(
   recommendation: VenueRecommendation,
   modifier: Modifier = Modifier,
