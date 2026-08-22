@@ -66,7 +66,7 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
         extensions.findByType<ApplicationExtension>(),
       ).forEach { extension ->
         extension.apply {
-          compileSdk = 36
+          compileSdk = 37
 
           defaultConfig.apply {
             minSdk = 36

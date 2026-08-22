@@ -28,6 +28,12 @@ android {
     providers.environmentVariable("FIREBASE_APP_CHECK_DEBUG_TOKEN").orNull?.also {
       testInstrumentationRunnerArguments["firebaseAppCheckDebugSecret"] = it
     }
+
+    // secrets プラグインは Variant API 経由で placeholder を注入するが、
+    // HostTest (unit test) コンポーネントには manifestPlaceholders が存在せず値が届かない。
+    // ユニットテストのマニフェストマージが失敗しないよう、DSL 側にフォールバックを置く。
+    // 実際のビルドバリアントでは secrets プラグインが上書きするため、この値は使われない。
+    manifestPlaceholders["google_api_key"] = ""
   }
 
   firebaseAppDistributionDefault {
