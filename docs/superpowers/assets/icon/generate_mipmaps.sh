@@ -23,8 +23,12 @@ magick "$tmp/visible.png" \
 
 emit() { # $1=density $2=size
   mkdir -p "$res/mipmap-$1"
-  magick "$tmp/squircle.png" -resize "$2x$2" "$res/mipmap-$1/ic_launcher.png"
-  magick "$tmp/circle.png" -resize "$2x$2" "$res/mipmap-$1/ic_launcher_round.png"
+  # -strip: png:tIME（生成時刻）を落とし、再生成がバイト単位で再現するようにする
+  magick "$tmp/squircle.png" -resize "$2x$2" -strip "$res/mipmap-$1/ic_launcher.png"
+  magick "$tmp/circle.png" -resize "$2x$2" -strip "$res/mipmap-$1/ic_launcher_round.png"
+  # 旧形式が残っていると拡張子違いの同名リソースが二重定義になり、aapt2 link が
+  # conflicting value で落ちる。PNG を書けた後に掃除する。
+  rm -f "$res/mipmap-$1/ic_launcher.webp" "$res/mipmap-$1/ic_launcher_round.webp"
   echo "wrote mipmap-$1 (${2}px)"
 }
 
