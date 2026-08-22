@@ -27,4 +27,12 @@
     <issue id="IconLocation" severity="informational">
         <ignore path="feature/widget/photo/src/main/res/drawable/sushi.webp" />
     </issue>
+
+    <!--
+      レガシー mipmap は意図的に PNG で出荷する。Firebase App Distribution が
+      WebP の mipmap を解釈できず、アイコンが表示されなかったため。
+    -->
+    <issue id="ConvertToWebp">
+        <ignore regexp="app/src/main/res/mipmap-.*/ic_launcher.*\.png" />
+    </issue>
 </lint>

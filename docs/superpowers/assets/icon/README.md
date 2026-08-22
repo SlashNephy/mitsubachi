@@ -10,7 +10,7 @@ Mitsubachi のランチャーアイコン（ミツバチ）の生成元一式。
   VectorDrawable XML（出荷用）の両方に出力する。
 - `ic_launcher_{background,foreground,monochrome}.svg` — `icon_shapes.py` の生成物。
 - `render_preview.sh` — SVG から検証用のプレビューシート（`preview/` 配下）を作る。
-- `generate_mipmaps.sh` — レガシー mipmap（`mipmap-*dpi/ic_launcher*.webp`）を SVG から再生成する。
+- `generate_mipmaps.sh` — レガシー mipmap（`mipmap-*dpi/ic_launcher*.png`）を SVG から再生成する。
 - `preview/` — プレビュー・検証用のスクラッチ領域（`.gitignore` 済み）。証跡画像は
   コミットせず、PR に添付する。
 
@@ -27,7 +27,7 @@ Mitsubachi のランチャーアイコン（ミツバチ）の生成元一式。
 # SVG（プレビュー用）と VectorDrawable（出荷用）を同時に再生成する
 cd docs/superpowers/assets/icon && python3 icon_shapes.py . ../../../../app/src/main/res/drawable
 
-# レガシー mipmap（mipmap-*dpi 配下の webp）を再生成する
+# レガシー mipmap（mipmap-*dpi 配下の PNG）を再生成する
 ./generate_mipmaps.sh
 
 # 検証用プレビューシートを再生成する
