@@ -1,1 +1,24 @@
-{"$schema":"https://docs.renovatebot.com/renovate-schema.json","extends":["github>SlashNephy/renovate-config"]}
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>SlashNephy/renovate-config"],
+  "packageRules": [
+    {
+      "description": "ktorfit のコンパイラプラグインは Kotlin コンパイラのバージョンを厳密に検査するため、Kotlin と別々の PR に分かれるとどちらも CI が通らない",
+      "groupName": "kotlin",
+      "matchManagers": ["gradle"],
+      "matchPackageNames": [
+        "/^org\\.jetbrains\\.kotlin[.:]/",
+        "/^de\\.jensklingenberg\\.ktorfit[.:]/"
+      ]
+    },
+    {
+      "description": "compose-rules は detekt の RuleSetProvider API に依存しており、detekt と別々の PR に分かれるとどちらも CI が通らない",
+      "groupName": "detekt",
+      "matchManagers": ["gradle"],
+      "matchPackageNames": [
+        "/^dev\\.detekt[.:]/",
+        "/^io\\.nlopez\\.compose\\.rules[.:]/"
+      ]
+    }
+  ]
+}
