@@ -23,6 +23,9 @@ dependencies {
     }
   }
   implementation(libs.androidx.sqlite)
+  // デバッグビルドは framework SQLite ではなく bundled SQLite のドライバを使う。
+  // framework SQLite は Cursor 経由で結果を返すため、CursorWindow (約 2MB) を超える行を読めない。
+  debugImplementation(libs.androidx.sqlite.bundled)
 
   // Google Play Services
   implementation(libs.play.services.location)
