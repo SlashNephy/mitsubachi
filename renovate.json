@@ -1,11 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>SlashNephy/renovate-config"],
+  "extends": [
+    "github>SlashNephy/renovate-config"
+  ],
   "packageRules": [
     {
       "description": "ktorfit のコンパイラプラグインは Kotlin コンパイラのバージョンを厳密に検査するため、Kotlin と別々の PR に分かれるとどちらも CI が通らない",
       "groupName": "kotlin",
-      "matchManagers": ["gradle"],
+      "matchManagers": [
+        "gradle"
+      ],
       "matchPackageNames": [
         "/^org\\.jetbrains\\.kotlin[.:]/",
         "/^de\\.jensklingenberg\\.ktorfit[.:]/"
@@ -14,10 +18,22 @@
     {
       "description": "compose-rules は detekt の RuleSetProvider API に依存しており、detekt と別々の PR に分かれるとどちらも CI が通らない",
       "groupName": "detekt",
-      "matchManagers": ["gradle"],
+      "matchManagers": [
+        "gradle"
+      ],
       "matchPackageNames": [
         "/^dev\\.detekt[.:]/",
         "/^io\\.nlopez\\.compose\\.rules[.:]/"
+      ]
+    },
+    {
+      "description": "maps-compose と maps-ktx はどちらも android-maps-utils を引き込むため、別々の PR に分かれるとどちらも CI が通らない",
+      "groupName": "google-maps",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchPackageNames": [
+        "/^com\\.google\\.maps\\.android[.:]/"
       ]
     }
   ]
