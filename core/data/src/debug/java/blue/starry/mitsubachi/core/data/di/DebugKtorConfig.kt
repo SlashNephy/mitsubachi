@@ -6,6 +6,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.LoggingFormat
+import blue.starry.mitsubachi.core.data.network.GOOGLE_API_KEY_HEADER
 import io.ktor.http.HttpHeaders
 
 internal object DebugKtorConfig : KtorConfig {
@@ -25,5 +26,6 @@ internal object DebugKtorConfig : KtorConfig {
     HttpHeaders.Authorization,
     HttpHeaders.Cookie,
     HttpHeaders.SetCookie,
+    GOOGLE_API_KEY_HEADER,
   )
 }
