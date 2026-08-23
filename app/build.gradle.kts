@@ -121,6 +121,8 @@ dependencies {
   implementation(projects.feature.widget.photo)
 
   implementation(libs.androidx.core.splashscreen)
+  // themes.xml の Theme.Material3.DayNight.NoActionBar が必要とする。
+  implementation(libs.android.material)
 
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.androidx.hilt.work)

@@ -19,5 +19,4 @@ dependencies {
   implementation(libs.android.maps.utils.ktx)
   implementation(libs.android.maps.compose)
   implementation(libs.android.maps.compose.utils)
-  implementation(libs.android.places)
 }

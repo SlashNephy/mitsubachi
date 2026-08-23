@@ -5,7 +5,7 @@ android-gradle-plugin = "9.3.1"
 android-maps-compose = "8.5.0"
 android-maps-ktx = "6.3.0"
 android-mapsplatform-secrets = "2.0.1"
-android-places = "5.3.0"
+android-material = "1.12.0"
 androidx-activity = "1.13.0"
 androidx-browser = "1.10.0"
 androidx-compose-bom = "2026.08.00"
@@ -128,13 +128,15 @@ coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.r
 coil-network-cache-control = { module = "io.coil-kt.coil3:coil-network-cache-control", version.ref = "coil" }
 coil-test = { module = "io.coil-kt.coil3:coil-test", version.ref = "coil" }
 
+# Material Components (テーマ Theme.Material3.* の供給元)
+android-material = { module = "com.google.android.material:material", version.ref = "android-material" }
+
 # Google Maps SDK
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
 android-maps-ktx = { module = "com.google.maps.android:maps-ktx", version.ref = "android-maps-ktx" }
 android-maps-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "android-maps-ktx" }
 android-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "android-maps-compose" }
 android-maps-compose-utils = { module = "com.google.maps.android:maps-compose-utils", version.ref = "android-maps-compose" }
-android-places = { module = "com.google.android.libraries.places:places", version.ref = "android-places" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
