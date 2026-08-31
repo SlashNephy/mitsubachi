@@ -117,6 +117,9 @@ open class AndroidBaseConventionPlugin(private val projectType: AndroidProjectTy
 
         // Unit Testing
         "testImplementation"(kotlin("test"))
+        // kotlin("test") 単体ではアサーションヘルパーのみが提供され、kotlin.test.Test が JUnit 5 の @Test に解決されないため、
+        // kotlin-test-junit5 を追加する
+        "testImplementation"(kotlin("test-junit5"))
         "testImplementation"(versions.library("junit-jupiter"))
         "testRuntimeOnly"(versions.library("junit-jupiter-engine"))
         "testRuntimeOnly"(versions.library("junit-platform-launcher"))
