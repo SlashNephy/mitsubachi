@@ -1,16 +1,23 @@
 package blue.starry.mitsubachi.feature.home.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -20,7 +27,9 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreen
+import blue.starry.mitsubachi.core.ui.compose.screen.ErrorScreenViewModel
 import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
+import blue.starry.mitsubachi.core.ui.compose.R as CoreUiR
 
 @Composable
 fun UserCheckInsScreen(
@@ -88,10 +97,51 @@ private fun UserCheckInsList(
       }
     }
 
-    if (lazyPagingItems.loadState.append is LoadState.Loading) {
-      item {
-        LoadingMoreIndicator()
+    when (val appendState = lazyPagingItems.loadState.append) {
+      is LoadState.Loading -> {
+        item {
+          LoadingMoreIndicator()
+        }
       }
+
+      is LoadState.Error -> {
+        // 追加読み込みは retry() を呼ぶまで再開しないため、再試行の導線を出す
+        item {
+          LoadMoreErrorIndicator(
+            exception = appendState.error as? Exception ?: Exception(appendState.error),
+            onClickRetry = { lazyPagingItems.retry() },
+          )
+        }
+      }
+
+      is LoadState.NotLoading -> {
+        // 追加で表示するものはない
+      }
+    }
+  }
+}
+
+@Composable
+private fun LoadMoreErrorIndicator(
+  exception: Exception,
+  onClickRetry: () -> Unit,
+  modifier: Modifier = Modifier,
+  viewModel: ErrorScreenViewModel = hiltViewModel(),
+) {
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(16.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+  ) {
+    Text(
+      text = remember(exception) { viewModel.format(exception) },
+      textAlign = TextAlign.Center,
+    )
+
+    Button(onClick = onClickRetry) {
+      Text(stringResource(CoreUiR.string.retry_button))
     }
   }
 }

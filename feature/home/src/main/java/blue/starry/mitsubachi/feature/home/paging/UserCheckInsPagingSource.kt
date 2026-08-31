@@ -27,9 +27,10 @@ class UserCheckInsPagingSource @Inject constructor(
       val checkIns = fetchUserCheckInsUseCase(
         limit = params.loadSize,
         offset = offset,
-        // ページごとに offset が変わるためキャッシュを利用できるが、
-        // リフレッシュ時は最新の状態を取得する
-        policy = if (params is LoadParams.Refresh) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork,
+        // offset は一覧の世代に依存する。キャッシュは offset を含む URL をキーとするため、
+        // 追加読み込みでキャッシュを使うとリフレッシュ後の先頭ページと古い世代のページが
+        // 混在し、項目の欠落や重複が起きる。そのため常にネットワークから取得する
+        policy = FetchPolicy.NetworkOnly,
       )
 
       LoadResult.Page(
