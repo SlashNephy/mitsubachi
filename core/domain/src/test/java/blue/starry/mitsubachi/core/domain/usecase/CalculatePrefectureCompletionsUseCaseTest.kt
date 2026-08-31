@@ -96,12 +96,13 @@ class CalculatePrefectureCompletionsUseCaseTest {
           longitude = 139.5,
           categoryName = "Ramen Restaurant",
         ),
-        // inn の部分一致で誤って宿泊にならないこと
+        // inn の部分一致で誤って宿泊にならないこと。
+        // Dinner は "inn" を部分文字列として含むため、単語境界で判定していないと宿泊と誤判定される
         history(
           state = "Tokyo Prefecture",
           latitude = 35.51,
           longitude = 139.51,
-          categoryName = "Diner",
+          categoryName = "Dinner",
         ),
       ),
     )
@@ -177,6 +178,18 @@ class CalculatePrefectureCompletionsUseCaseTest {
 
     assertEquals(235, summary.maxScore)
     assertEquals(0, summary.totalScore)
+  }
+
+  @Test
+  fun usesAutomaticLevelsWhenNoAccountIsSignedIn() = runTest {
+    setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
+    // サインイン済みアカウントがない場合は手動上書きを読めないので自動判定だけになる
+    coEvery { findFoursquareAccount() } returns null
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
+    assertEquals(3, summary.totalScore)
   }
 
   @Test
