@@ -1260,6 +1260,10 @@ Expected: PASS（5 tests）
 もし `47 都道府県の代表都市` が落ちた場合、アセットの簡略化が想定より粗い。
 Task 1 の `SIMPLIFY_TOLERANCE` を 0.002 に下げて再生成し、再度実行する。
 
+`File("src/main/assets/prefectures.json")` は Gradle のユニットテストの作業ディレクトリが
+モジュールディレクトリであることを前提にしている。`FileNotFoundException` になった場合は、
+テストを緩めるのではなく作業ディレクトリを確認し、モジュールルートからの相対パスで解決し直すこと。
+
 - [ ] **Step 5: リポジトリ実装を書く**
 
 `core/data/src/main/java/blue/starry/mitsubachi/core/data/repository/PrefectureBoundaryRepositoryImpl.kt`:
@@ -1666,7 +1670,308 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 **Interfaces:**
 - Consumes: `FetchUserVenueHistoriesUseCase`（既存）、`PrefectureBoundaryRepository`、`PrefectureLevelRepository`、`PrefectureNameResolver`、`PrefectureLocator`、`FindFoursquareAccountUseCase`（既存）
 - Produces:
-  - `object StayVenueCategories {
+  - `object StayVenueCategories { fun matches(venue: Venue): Boolean }`
+  - `data class PrefectureCompletionSummary(val completions: ImmutableList<PrefectureCompletion>, val visitedCountryCodes: ImmutableSet<String>)` — `val totalScore: Int`、`val maxScore: Int`
+  - `class CalculatePrefectureCompletionsUseCase { suspend operator fun invoke(policy: FetchPolicy = FetchPolicy.CacheOrNetwork): PrefectureCompletionSummary }`
+
+- [ ] **Step 1: 失敗するテストを書く**
+
+`core/domain/src/test/java/blue/starry/mitsubachi/core/domain/usecase/CalculatePrefectureCompletionsUseCaseTest.kt`:
+
+```kotlin
+package blue.starry.mitsubachi.core.domain.usecase
+
+import blue.starry.mitsubachi.core.domain.model.FetchPolicy
+import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
+import blue.starry.mitsubachi.core.domain.model.Prefecture
+import blue.starry.mitsubachi.core.domain.model.PrefectureBoundary
+import blue.starry.mitsubachi.core.domain.model.PrefectureCompletionSummary
+import blue.starry.mitsubachi.core.domain.model.PrefectureLevel
+import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.domain.model.VenueCategory
+import blue.starry.mitsubachi.core.domain.model.VenueLocation
+import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import java.time.ZonedDateTime
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class CalculatePrefectureCompletionsUseCaseTest {
+  private val account = mockk<FoursquareAccount>(relaxed = true)
+  private val fetchUserVenueHistories = mockk<FetchUserVenueHistoriesUseCase>()
+  private val boundaryRepository = mockk<PrefectureBoundaryRepository>()
+  private val levelRepository = mockk<PrefectureLevelRepository>()
+  private val findFoursquareAccount = mockk<FindFoursquareAccountUseCase>()
+
+  private val useCase = CalculatePrefectureCompletionsUseCase(
+    fetchUserVenueHistoriesUseCase = fetchUserVenueHistories,
+    prefectureBoundaryRepository = boundaryRepository,
+    prefectureLevelRepository = levelRepository,
+    findFoursquareAccountUseCase = findFoursquareAccount,
+  )
+
+  private fun setUp(
+    histories: List<VenueHistory>,
+    overrides: Map<Prefecture, PrefectureLevel> = emptyMap(),
+  ) {
+    every { account.id } returns "account-1"
+    coEvery { findFoursquareAccount() } returns account
+    coEvery { fetchUserVenueHistories(any()) } returns histories
+    coEvery { boundaryRepository.findAll() } returns listOf(
+      PrefectureBoundary(Prefecture.Tokyo, listOf(square(139.0, 35.0, 140.0, 36.0))),
+    )
+    every { levelRepository.flow(account) } returns flowOf(overrides)
+  }
+
+  @Test
+  fun `チェックインのある都道府県は訪問になる`() = runTest {
+    setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
+    assertEquals(3, summary.totalScore)
+  }
+
+  @Test
+  fun `チェックインのない都道府県は未踏になる`() = runTest {
+    setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
+
+    val summary = useCase()
+
+    assertEquals(47, summary.completions.size)
+    assertEquals(PrefectureLevel.Unvisited, summary.levelOf(Prefecture.Okinawa))
+  }
+
+  @Test
+  fun `宿泊系カテゴリのベニューがあれば宿泊になる`() = runTest {
+    setUp(
+      listOf(
+        history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5),
+        history(
+          state = "Tokyo Prefecture",
+          latitude = 35.6,
+          longitude = 139.6,
+          categoryName = "Hotel",
+        ),
+      ),
+    )
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Stayed, summary.levelOf(Prefecture.Tokyo))
+  }
+
+  @Test
+  fun `宿泊系でないカテゴリは訪問どまり`() = runTest {
+    setUp(
+      listOf(
+        history(
+          state = "Tokyo Prefecture",
+          latitude = 35.5,
+          longitude = 139.5,
+          categoryName = "Ramen Restaurant",
+        ),
+        // inn の部分一致で誤って宿泊にならないこと
+        history(
+          state = "Tokyo Prefecture",
+          latitude = 35.51,
+          longitude = 139.51,
+          categoryName = "Diner",
+        ),
+      ),
+    )
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
+  }
+
+  @Test
+  fun `手動上書きは自動判定より優先される`() = runTest {
+    setUp(
+      histories = listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)),
+      overrides = mapOf(Prefecture.Tokyo to PrefectureLevel.Lived),
+    )
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Lived, summary.levelOf(Prefecture.Tokyo))
+    assertEquals(5, summary.totalScore)
+  }
+
+  @Test
+  fun `state が解決できるときはポリゴンを引かない`() = runTest {
+    // ポリゴンの外にある座標でも state で東京都に解決される
+    setUp(listOf(history(state = "Tokyo Prefecture", latitude = 12.0, longitude = 100.0)))
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
+  }
+
+  @Test
+  fun `state が解決できないときは座標で判定する`() = runTest {
+    setUp(listOf(history(state = null, latitude = 35.5, longitude = 139.5)))
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
+  }
+
+  @Test
+  fun `複合値の state は座標で判定する`() = runTest {
+    setUp(listOf(history(state = "東京都/北海道", latitude = 35.5, longitude = 139.5)))
+
+    val summary = useCase()
+
+    assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
+  }
+
+  @Test
+  fun `国外のベニューは都道府県に加算されず訪問国として数えられる`() = runTest {
+    setUp(
+      listOf(
+        history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5),
+        history(state = "Seoul", latitude = 37.5665, longitude = 126.978, countryCode = "KR"),
+        history(state = "CA", latitude = 37.7749, longitude = -122.4194, countryCode = "US"),
+        history(state = "Taoyuan", latitude = 25.033, longitude = 121.5654, countryCode = "TW"),
+      ),
+    )
+
+    val summary = useCase()
+
+    assertEquals(3, summary.totalScore)
+    assertEquals(setOf("KR", "US", "TW"), summary.visitedCountryCodes)
+  }
+
+  @Test
+  fun `満点は 235 である`() = runTest {
+    setUp(emptyList())
+
+    val summary = useCase()
+
+    assertEquals(235, summary.maxScore)
+    assertEquals(0, summary.totalScore)
+  }
+
+  @Test
+  fun `ベニュー履歴の取得ポリシーがそのまま渡される`() = runTest {
+    setUp(emptyList())
+
+    useCase(FetchPolicy.NetworkOnly)
+
+    coVerify { fetchUserVenueHistories(FetchPolicy.NetworkOnly) }
+  }
+
+  private fun PrefectureCompletionSummary.levelOf(prefecture: Prefecture): PrefectureLevel {
+    return completions.first { it.prefecture == prefecture }.effectiveLevel
+  }
+
+  private fun history(
+    state: String?,
+    latitude: Double,
+    longitude: Double,
+    countryCode: String = "JP",
+    categoryName: String = "Train Station",
+  ): VenueHistory {
+    return VenueHistory(
+      venue = Venue(
+        id = "venue-$latitude-$longitude-$categoryName",
+        name = "venue",
+        location = VenueLocation(
+          latitude = latitude,
+          longitude = longitude,
+          distance = null,
+          country = countryCode,
+          countryCode = countryCode,
+          postalCode = null,
+          state = state,
+          city = null,
+          address = null,
+          crossStreet = null,
+          neighborhood = null,
+        ),
+        createdAt = ZonedDateTime.parse("2020-01-01T00:00:00+09:00"),
+        categories = listOf(
+          VenueCategory(
+            id = "category-$categoryName",
+            name = categoryName,
+            iconUrl = "https://example.com/icon.png",
+            isPrimary = true,
+          ),
+        ),
+      ),
+      count = 1,
+    )
+  }
+
+  private fun square(
+    west: Double,
+    south: Double,
+    east: Double,
+    north: Double,
+  ): List<DoubleArray> {
+    return listOf(
+      doubleArrayOf(west, south),
+      doubleArrayOf(east, south),
+      doubleArrayOf(east, north),
+      doubleArrayOf(west, north),
+      doubleArrayOf(west, south),
+    )
+  }
+}
+```
+
+- [ ] **Step 2: テスト用の依存を追加する**
+
+`core/domain/build.gradle.kts` の `dependencies` ブロックに次を追加する。
+
+```kotlin
+  testImplementation(libs.kotlinx.coroutines.test)
+```
+
+`gradle/libs.versions.toml` の `[libraries]` に定義がなければ追加する。
+
+```toml
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+```
+
+`version.ref` は既存の kotlinx-coroutines の定義に合わせる。既存に別名があるならそれを使い、
+新しいバージョン番号を勝手に足さないこと。
+
+- [ ] **Step 3: テストが失敗することを確認する**
+
+```bash
+./gradlew :core:domain:testDebugUnitTest --tests '*CalculatePrefectureCompletionsUseCaseTest*'
+```
+
+Expected: FAIL。`Unresolved reference: CalculatePrefectureCompletionsUseCase`
+
+`FoursquareAccount` は data class なので MockK でのモックが失敗することがある。
+その場合は mockk-agent の設定を足すのではなく、実インスタンスを組み立てて使うこと。
+
+- [ ] **Step 4: StayVenueCategories を実装する**
+
+`core/domain/src/main/java/blue/starry/mitsubachi/core/domain/usecase/StayVenueCategories.kt`:
+
+```kotlin
+package blue.starry.mitsubachi.core.domain.usecase
+
+import blue.starry.mitsubachi.core.domain.model.Venue
+
+/**
+ * 宿泊施設に相当する Foursquare のカテゴリ判定。
+ *
+ * カテゴリ ID は Foursquare 側で増減するため、カテゴリ名で判定する。
+ * ホテルのラウンジに立ち寄っただけでも宿泊と判定されうるが、手動上書きで修正できる前提とする。
+ */
+object StayVenueCategories {
   // 語として一致させるキーワード。inn は Dinner のような語に部分一致してしまうため語単位で見る
   private val wordKeywords = setOf(
     "hotel",
@@ -1701,9 +2006,6 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
   }
 }
 ```
-
-Step 1 のテスト `宿泊系でないカテゴリは訪問どまり` に `categoryName = "Diner"` のケースを追加し、
-`inn` の部分一致で誤って宿泊にならないことを確認する。
 
 - [ ] **Step 5: PrefectureCompletionSummary を実装する**
 
@@ -2647,6 +2949,11 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 ```
 
 `feature/map/src/main/res/values-ko-rKR/strings.xml` に追加:
+
+**この韓国語訳は計画作成時の暫定案であり、ネイティブによる確認を受けていない。**
+既存の韓国語文言は精度が高いため、実装時にユーザーへ確認するか、PR 本文で暫定訳である旨を明記すること。
+都道府県名も韓国語ロケールではローマ字表記になる（`Prefecture.displayName()` が日本語ロケール以外は
+`romajiName` を返すため）。この点も同様に確認対象とする。
 
 ```xml
     <string name="prefecture_completion">현 답파도</string>
