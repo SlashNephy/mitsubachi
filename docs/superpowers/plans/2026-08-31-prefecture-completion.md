@@ -2303,8 +2303,10 @@ class PrefectureLevelColorsTest {
       val luminances = PrefectureLevel.entries.map { scheme.prefectureLevelColor(it).luminance() }
       for (index in 1 until luminances.size) {
         val difference = kotlin.math.abs(luminances[index] - luminances[index - 1])
+        // しきい値は実装の定数を読まずにハードコードする。
+        // 実装側の定数を参照すると、その定数を下げる変更をこのテストが検出できなくなる
         assertTrue(
-          difference >= MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE,
+          difference >= 0.02f,
           "levels ${index - 1} and $index differ by only $difference",
         )
       }
@@ -2367,8 +2369,9 @@ fun ColorScheme.prefectureLevelColor(level: PrefectureLevel): Color {
 
 Expected: PASS（5 tests）
 
-`隣接レベルの輝度差` が落ちた場合は `LEVEL_FRACTIONS` の間隔を調整する。`MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE`
-を下げて通すことはしない。
+`keepsLuminanceGapBetweenAdjacentLevels` が落ちた場合は `LEVEL_FRACTIONS` の間隔を調整する。
+`MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE` を下げて通すことはしない。テスト側はしきい値をハードコードしており、
+実装の定数を下げてもテストは緑にならない。
 
 - [ ] **Step 5: コミット**
 
