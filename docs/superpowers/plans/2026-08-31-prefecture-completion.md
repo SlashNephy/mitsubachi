@@ -636,6 +636,7 @@ import blue.starry.mitsubachi.core.domain.model.Prefecture
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class PrefectureNameResolverTest {
   @Test
@@ -697,10 +698,20 @@ class PrefectureNameResolverTest {
   }
 
   @Test
-  fun `47 都道府県すべてが日本語名とローマ字名の両方から解決できる`() {
+  fun `47 都道府県の名称データが揃っている`() {
+    // resolve に自分自身のフィールドを戻す往復テストは typo を検出できないため、データ側を検査する
+    val romajiNames = Prefecture.entries.map { it.romajiName }
+    assertEquals(romajiNames.size, romajiNames.toSet().size, "romajiName is duplicated")
+
     for (prefecture in Prefecture.entries) {
-      assertEquals(prefecture, PrefectureNameResolver.resolve(prefecture.japaneseName))
-      assertEquals(prefecture, PrefectureNameResolver.resolve(prefecture.romajiName))
+      assertTrue(
+        prefecture.romajiName.all { it in 'a'..'z' },
+        "${'$'}{prefecture.name} has a non lowercase ascii romajiName: ${'$'}{prefecture.romajiName}",
+      )
+      assertTrue(
+        prefecture.japaneseName.last() in "都道府県",
+        "${'$'}{prefecture.name} has an unexpected japaneseName: ${'$'}{prefecture.japaneseName}",
+      )
     }
   }
 }
@@ -2950,8 +2961,8 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 
 `feature/map/src/main/res/values-ko-rKR/strings.xml` に追加:
 
-**この韓国語訳は計画作成時の暫定案であり、ネイティブによる確認を受けていない。**
-既存の韓国語文言は精度が高いため、実装時にユーザーへ確認するか、PR 本文で暫定訳である旨を明記すること。
+**この韓国語訳は暫定訳であり、ネイティブによる確認を受けていない。**
+ユーザーの判断により暫定訳のまま進める。PR 本文に「韓国語訳は未確認」と明記すること。
 都道府県名も韓国語ロケールではローマ字表記になる（`Prefecture.displayName()` が日本語ロケール以外は
 `romajiName` を返すため）。この点も同様に確認対象とする。
 
