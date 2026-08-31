@@ -19,6 +19,4 @@ dependencies {
   implementation(libs.android.maps.utils.ktx)
   implementation(libs.android.maps.compose)
   implementation(libs.android.maps.compose.utils)
-
-  testImplementation(libs.androidx.compose.material3)
 }

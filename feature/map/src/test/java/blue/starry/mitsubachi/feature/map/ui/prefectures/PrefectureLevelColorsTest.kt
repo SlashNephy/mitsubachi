@@ -48,8 +48,9 @@ class PrefectureLevelColorsTest {
       val luminances = PrefectureLevel.entries.map { scheme.prefectureLevelColor(it).luminance() }
       for (index in 1 until luminances.size) {
         val difference = kotlin.math.abs(luminances[index] - luminances[index - 1])
+        // 本番コードの定数を参照すると、その値が下げられた場合に回帰が検知できなくなるため、ハードコードする
         assertTrue(
-          difference >= MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE,
+          difference >= 0.02f,
           "levels ${index - 1} and $index differ by only $difference",
         )
       }
