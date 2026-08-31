@@ -22,6 +22,9 @@
 - レベル配色は固定色を持たず `MaterialTheme.colorScheme` から導出し、ライトとダークで明度の方向を反転させる
 - UI 文字列は `values`（英語）・`values-ja`・`values-ko-rKR` の 3 ロケールすべてに追加する（既存モジュールがすべて 3 ロケール揃っているため）
 - コード内のコメントは日本語、ログとエラーメッセージは英語
+- トップレベルの `const val` と `private val` は SCREAMING_SNAKE_CASE。リポジトリの既存慣習
+  （`FOURSQUARE_API_VERSION`、`STAY_RADIUS_METERS` など）であり、detekt の `TopLevelPropertyNaming` と
+  `PropertyName` が既定でこれを要求する
 - テストメソッド名は英語 camelCase（既存の `ArchitectureTest` に合わせる）。日本語のバッククォート名は
   detekt の `UnnecessaryBackticks` と `FunctionName` のどちらかに必ず抵触し、`detekt.yml` の緩和が必要になるため使わない
 - コミットメッセージは Conventional Commits 形式、末尾に `Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>` を付ける
@@ -820,7 +823,7 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
   - `data class PrefectureBoundary(val prefecture: Prefecture, val rings: List<List<DoubleArray>>)` — `rings` は閉リングの配列、各点は `doubleArrayOf(経度, 緯度)`
   - `class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) { fun locate(latitude: Double, longitude: Double): Prefecture? }`
   - `interface PrefectureBoundaryRepository { suspend fun findAll(): List<PrefectureBoundary> }`
-  - `const val FallbackDistanceKilometers = 20.0`
+  - `const val FALLBACK_DISTANCE_KILOMETERS = 20.0`
 
 - [ ] **Step 1: 失敗するテストを書く**
 
@@ -946,15 +949,15 @@ import kotlin.math.hypot
 import kotlin.math.sqrt
 
 /** ポリゴン外の点を最寄りの都道府県に寄せる上限距離 (km)。 */
-const val FallbackDistanceKilometers = 20.0
+const val FALLBACK_DISTANCE_KILOMETERS = 20.0
 
-private const val KilometersPerDegree = 111.0
+private const val KILOMETERS_PER_DEGREE = 111.0
 
 /**
  * 座標から都道府県を引く。
  *
  * ポリゴンは簡略化されているため海岸線付近の点が外れることがある。
- * どのポリゴンにも入らない点は最寄りのポリゴンまでの距離を測り、[FallbackDistanceKilometers] 以内なら
+ * どのポリゴンにも入らない点は最寄りのポリゴンまでの距離を測り、[FALLBACK_DISTANCE_KILOMETERS] 以内なら
  * その都道府県に寄せる。それを超えたら null を返す。
  */
 class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
@@ -985,10 +988,16 @@ class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
 
     for (boundary in boundaries) {
       for (ring in boundary.rings) {
-        for (point in ring) {
-          val dx = (point[0] - longitude) * longitudeScale
-          val dy = point[1] - latitude
-          val squared = dx * dx + dy * dy
+        // 頂点だけでなく辺 (線分) への距離を測る。頂点間が長い簡略化ポリゴンでは
+        // 頂点距離だと辺のすぐ横の点を実際よりはるかに遠いと誤判定する
+        for (index in 0 until ring.size - 1) {
+          val squared = squaredDistanceToSegment(
+            longitude = longitude,
+            latitude = latitude,
+            longitudeScale = longitudeScale,
+            from = ring[index],
+            to = ring[index + 1],
+          )
           if (squared < nearestSquaredDegrees) {
             nearestSquaredDegrees = squared
             nearest = boundary.prefecture
@@ -1000,8 +1009,41 @@ class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
     if (nearest == null) {
       return null
     }
-    val kilometers = sqrt(nearestSquaredDegrees) * KilometersPerDegree
-    return nearest.takeIf { kilometers <= FallbackDistanceKilometers }
+    val kilometers = sqrt(nearestSquaredDegrees) * KILOMETERS_PER_DEGREE
+    return nearest.takeIf { kilometers <= FALLBACK_DISTANCE_KILOMETERS }
+  }
+
+  // 点と線分の距離の 2 乗を度単位で返す
+  private fun squaredDistanceToSegment(
+    longitude: Double,
+    latitude: Double,
+    longitudeScale: Double,
+    from: DoubleArray,
+    to: DoubleArray,
+  ): Double {
+    val x0 = longitude * longitudeScale
+    val y0 = latitude
+    val x1 = from[0] * longitudeScale
+    val y1 = from[1]
+    val x2 = to[0] * longitudeScale
+    val y2 = to[1]
+
+    val dx = x2 - x1
+    val dy = y2 - y1
+    val lengthSquared = dx * dx + dy * dy
+
+    // 線分が退化している場合は端点との距離を返す
+    val t = if (lengthSquared == 0.0) {
+      0.0
+    } else {
+      (((x0 - x1) * dx + (y0 - y1) * dy) / lengthSquared).coerceIn(0.0, 1.0)
+    }
+
+    val projectedX = x1 + t * dx
+    val projectedY = y1 + t * dy
+    val distanceX = x0 - projectedX
+    val distanceY = y0 - projectedY
+    return distanceX * distanceX + distanceY * distanceY
   }
 
   private fun contains(ring: List<DoubleArray>, x: Double, y: Double): Boolean {
@@ -1022,6 +1064,13 @@ class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
 
 `hypot` は使わないので import から外すこと。実装後に `./gradlew :core:domain:detekt` で未使用 import が
 検出されないことを確認する。
+
+距離は頂点ではなく**辺 (線分) への距離**で測る。簡略化されたポリゴンは頂点間が長く、頂点距離だけで測ると
+辺のすぐ横にある点を実際よりはるかに遠いと誤判定する（テストの「20km 以内」ケースは辺への距離で約 9km、
+頂点への距離だと約 56km になる）。
+
+この変更でフォールバックは頂点距離のときより緩くなる。Task 5 の実アセットを使った国外座標のテスト
+（ソウル・サンフランシスコ・台北・マニラが null を返すこと）が、緩めすぎていないことの実測ガードになる。
 
 - [ ] **Step 5: PrefectureBoundaryRepository を実装する**
 
@@ -1120,7 +1169,7 @@ class PrefectureBoundaryAssetTest {
 
   @Test
   fun everyRepresentativeCityResolvesToItsOwnPrefecture() {
-    for (fixture in CityFixtures) {
+    for (fixture in cityFixtures) {
       assertEquals(
         fixture.prefecture,
         locator.locate(latitude = fixture.latitude, longitude = fixture.longitude),
@@ -1151,7 +1200,7 @@ class PrefectureBoundaryAssetTest {
   )
 
   private companion object {
-    val CityFixtures = listOf(
+    val cityFixtures = listOf(
       CityFixture(Prefecture.Hokkaido, "Sapporo", 43.0769, 141.3381),
       CityFixture(Prefecture.Aomori, "Aomori", 40.825, 140.71),
       CityFixture(Prefecture.Iwate, "Morioka", 39.72, 141.13),
@@ -1296,7 +1345,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val AssetFileName = "prefectures.json"
+private const val ASSET_FILE_NAME = "prefectures.json"
 
 @Singleton
 internal class PrefectureBoundaryRepositoryImpl @Inject constructor(
@@ -1312,7 +1361,7 @@ internal class PrefectureBoundaryRepositoryImpl @Inject constructor(
 
     return mutex.withLock {
       cache ?: withContext(Dispatchers.IO) {
-        val text = context.assets.open(AssetFileName).bufferedReader().use { it.readText() }
+        val text = context.assets.open(ASSET_FILE_NAME).bufferedReader().use { it.readText() }
         PrefectureBoundaryParser.parse(text)
       }.also {
         cache = it
@@ -2069,7 +2118,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val JapanCountryCode = "JP"
+private const val JAPAN_COUNTRY_CODE = "JP"
 
 @Singleton
 class CalculatePrefectureCompletionsUseCase @Inject constructor(
@@ -2090,7 +2139,7 @@ class CalculatePrefectureCompletionsUseCase @Inject constructor(
 
     for (history in histories) {
       val venue = history.venue
-      if (!venue.location.countryCode.equals(JapanCountryCode, ignoreCase = true)) {
+      if (!venue.location.countryCode.equals(JAPAN_COUNTRY_CODE, ignoreCase = true)) {
         countryCodes += venue.location.countryCode.uppercase()
         continue
       }
@@ -2242,7 +2291,7 @@ class PrefectureLevelColorsTest {
       for (index in 1 until luminances.size) {
         val difference = kotlin.math.abs(luminances[index] - luminances[index - 1])
         assertTrue(
-          difference >= MinimumAdjacentLuminanceDifference,
+          difference >= MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE,
           "levels ${index - 1} and $index differ by only $difference",
         )
       }
@@ -2280,10 +2329,10 @@ import androidx.compose.ui.graphics.lerp
 import blue.starry.mitsubachi.core.domain.model.PrefectureLevel
 
 /** 隣接レベル間で最低限確保する輝度差。テストと実装で共有する。 */
-const val MinimumAdjacentLuminanceDifference = 0.02f
+const val MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE = 0.02f
 
 // 未踏 (0.0) から居住 (1.0) までの補間比率。等間隔だと低いレベル同士の差が潰れるため序盤を広めに取る
-private val LevelFractions = floatArrayOf(0f, 0.24f, 0.43f, 0.62f, 0.81f, 1f)
+private val LEVEL_FRACTIONS = floatArrayOf(0f, 0.24f, 0.43f, 0.62f, 0.81f, 1f)
 
 /**
  * レベルに対応する塗り色を返す。
@@ -2293,7 +2342,7 @@ private val LevelFractions = floatArrayOf(0f, 0.24f, 0.43f, 0.62f, 0.81f, 1f)
  * 未踏は surfaceContainerLow そのもので、彩度を持たない。
  */
 fun ColorScheme.prefectureLevelColor(level: PrefectureLevel): Color {
-  return lerp(surfaceContainerLow, primary, LevelFractions[level.score])
+  return lerp(surfaceContainerLow, primary, LEVEL_FRACTIONS[level.score])
 }
 ```
 
@@ -2305,7 +2354,7 @@ fun ColorScheme.prefectureLevelColor(level: PrefectureLevel): Color {
 
 Expected: PASS（5 tests）
 
-`隣接レベルの輝度差` が落ちた場合は `LevelFractions` の間隔を調整する。`MinimumAdjacentLuminanceDifference`
+`隣接レベルの輝度差` が落ちた場合は `LEVEL_FRACTIONS` の間隔を調整する。`MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE`
 を下げて通すことはしない。
 
 - [ ] **Step 5: コミット**
@@ -2481,19 +2530,19 @@ import kotlin.math.cos
 import kotlin.math.min
 
 /** 経度の縮尺を合わせる基準緯度。本州中央あたり。 */
-private const val ReferenceLatitude = 36.0
+private const val REFERENCE_LATITUDE = 36.0
 
 /** 本土を収める領域がキャンバスに占める割合。 */
-private const val MainAreaRatio = 0.98f
+private const val MAIN_AREA_RATIO = 0.98f
 
 /** 沖縄インセット枠の一辺がキャンバス短辺に占める割合。 */
-private const val InsetSideRatio = 0.26f
+private const val INSET_SIDE_RATIO = 0.26f
 
 /** インセット枠とキャンバス端の余白がキャンバス短辺に占める割合。 */
-private const val InsetMarginRatio = 0.02f
+private const val INSET_MARGIN_RATIO = 0.02f
 
 /** インセット枠の内側に取る余白の割合。 */
-private const val InsetPaddingRatio = 0.08f
+private const val INSET_PADDING_RATIO = 0.08f
 
 /**
  * 投影済みの 1 都道府県。
@@ -2530,10 +2579,10 @@ class JapanMapProjection(
   private val width: Float,
   private val height: Float,
 ) {
-  private val longitudeScale = cos(Math.toRadians(ReferenceLatitude)).toFloat()
+  private val longitudeScale = cos(Math.toRadians(REFERENCE_LATITUDE)).toFloat()
   private val shortSide = min(width, height)
-  private val insetMargin = shortSide * InsetMarginRatio
-  private val insetSide = shortSide * InsetSideRatio
+  private val insetMargin = shortSide * INSET_MARGIN_RATIO
+  private val insetSide = shortSide * INSET_SIDE_RATIO
 
   val insetBounds: Rect = Rect(
     offset = Offset(insetMargin, height - insetMargin - insetSide),
@@ -2547,10 +2596,10 @@ class JapanMapProjection(
 
     val mainArea = Rect(
       offset = Offset(0f, 0f),
-      size = Size(width * MainAreaRatio, height * MainAreaRatio),
-    ).translate(width * (1 - MainAreaRatio) / 2, height * (1 - MainAreaRatio) / 2)
+      size = Size(width * MAIN_AREA_RATIO, height * MAIN_AREA_RATIO),
+    ).translate(width * (1 - MAIN_AREA_RATIO) / 2, height * (1 - MAIN_AREA_RATIO) / 2)
 
-    val insetPadding = insetSide * InsetPaddingRatio
+    val insetPadding = insetSide * INSET_PADDING_RATIO
     val insetArea = Rect(
       offset = Offset(insetBounds.left + insetPadding, insetBounds.top + insetPadding),
       size = Size(insetSide - insetPadding * 2, insetSide - insetPadding * 2),
@@ -2674,7 +2723,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
 // 日本列島の外接矩形はおおむね縦長。幅に対する高さの比
-private const val MapAspectRatio = 0.82f
+private const val MAP_ASPECT_RATIO = 0.82f
 
 @Composable
 fun PrefectureMap(
@@ -2690,7 +2739,7 @@ fun PrefectureMap(
   BoxWithConstraints(
     modifier = modifier
       .fillMaxWidth()
-      .aspectRatio(MapAspectRatio),
+      .aspectRatio(MAP_ASPECT_RATIO),
   ) {
     val widthPx = with(density) { maxWidth.toPx() }
     val heightPx = with(density) { maxHeight.toPx() }
@@ -3221,7 +3270,7 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 
 **Files:**
 - Create: `docs/superpowers/assets/prefectures/preview/`（レンダリング比較シートの出力先）
-- Modify: `feature/map/src/main/java/blue/starry/mitsubachi/feature/map/ui/prefectures/PrefectureLevelColors.kt`（比較シートの結果に応じて `LevelFractions` を調整）
+- Modify: `feature/map/src/main/java/blue/starry/mitsubachi/feature/map/ui/prefectures/PrefectureLevelColors.kt`（比較シートの結果に応じて `LEVEL_FRACTIONS` を調整）
 
 **Interfaces:**
 - Consumes: Task 1〜12 のすべて
@@ -3238,7 +3287,7 @@ Expected: BUILD SUCCESSFUL。出力をそのまま完了報告の証跡に使う
 - [ ] **Step 2: 配色のレンダリング比較シートを作る**
 
 `@Preview` を使い、ライトとダークの両方で 6 段階の塗り分けを並べた比較シートを作る。
-`LevelFractions` の候補を 2〜3 パターン用意し、横並びで比較できるようにする。
+`LEVEL_FRACTIONS` の候補を 2〜3 パターン用意し、横並びで比較できるようにする。
 
 比較で見るのは次の 3 点。
 
@@ -3247,7 +3296,7 @@ Expected: BUILD SUCCESSFUL。出力をそのまま完了報告の証跡に使う
 - ダークテーマで塗りが背景に沈んでいないか
 
 比較シートは画像として書き出し、`docs/superpowers/assets/prefectures/preview/` に置く。
-判断はこのシートを見てから行い、目分量で `LevelFractions` を触らない。
+判断はこのシートを見てから行い、目分量で `LEVEL_FRACTIONS` を触らない。
 
 - [ ] **Step 3: エミュレータにインストールして画面を確認する**
 
