@@ -11,6 +11,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.concurrent.Volatile
 
 private const val ASSET_FILE_NAME = "prefectures.json"
 
@@ -19,6 +20,9 @@ internal class PrefectureBoundaryRepositoryImpl @Inject constructor(
   @param:ApplicationContext private val context: Context,
 ) : PrefectureBoundaryRepository {
   private val mutex = Mutex()
+
+  // fast path で mutex を取得せずにキャッシュを読み込むため、lock 内での書き込みが他スレッドから見える必要がある
+  @Volatile
   private var cache: List<PrefectureBoundary>? = null
 
   override suspend fun findAll(): List<PrefectureBoundary> {
