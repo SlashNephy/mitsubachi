@@ -22,6 +22,8 @@
 - レベル配色は固定色を持たず `MaterialTheme.colorScheme` から導出し、ライトとダークで明度の方向を反転させる
 - UI 文字列は `values`（英語）・`values-ja`・`values-ko-rKR` の 3 ロケールすべてに追加する（既存モジュールがすべて 3 ロケール揃っているため）
 - コード内のコメントは日本語、ログとエラーメッセージは英語
+- テストメソッド名は英語 camelCase（既存の `ArchitectureTest` に合わせる）。日本語のバッククォート名は
+  detekt の `UnnecessaryBackticks` と `FunctionName` のどちらかに必ず抵触し、`detekt.yml` の緩和が必要になるため使わない
 - コミットメッセージは Conventional Commits 形式、末尾に `Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>` を付ける
 - 検証コマンド: `./gradlew testLocalDebug`、`./gradlew detekt`、`./gradlew lintLocalDebug`
 
@@ -352,13 +354,13 @@ import kotlin.test.assertNull
 
 class PrefectureCompletionTest {
   @Test
-  fun `47 都道府県がコードの重複なく定義されている`() {
+  fun allFortySevenPrefecturesAreDefinedWithUniqueCodes() {
     assertEquals(47, Prefecture.entries.size)
     assertEquals((1..47).toList(), Prefecture.entries.map { it.code }.sorted())
   }
 
   @Test
-  fun `コードから都道府県を引ける`() {
+  fun findsPrefectureByCode() {
     assertEquals(Prefecture.Hokkaido, Prefecture.fromCode(1))
     assertEquals(Prefecture.Tokyo, Prefecture.fromCode(13))
     assertEquals(Prefecture.Okinawa, Prefecture.fromCode(47))
@@ -367,26 +369,26 @@ class PrefectureCompletionTest {
   }
 
   @Test
-  fun `満点は 235 である`() {
+  fun maxTotalScoreIs235() {
     assertEquals(235, PrefectureLevel.MaxTotalScore)
   }
 
   @Test
-  fun `全都道府県が未踏ならスコアは 0`() {
+  fun scoreIsZeroWhenEveryPrefectureIsUnvisited() {
     val completions = Prefecture.entries.map { completion(it, PrefectureLevel.Unvisited) }
 
     assertEquals(0, completions.totalScore)
   }
 
   @Test
-  fun `全都道府県が居住ならスコアは満点`() {
+  fun scoreIsMaxWhenEveryPrefectureIsLived() {
     val completions = Prefecture.entries.map { completion(it, PrefectureLevel.Lived) }
 
     assertEquals(PrefectureLevel.MaxTotalScore, completions.totalScore)
   }
 
   @Test
-  fun `混在したレベルのスコアを合計する`() {
+  fun sumsScoresOfMixedLevels() {
     val completions = listOf(
       completion(Prefecture.Tokyo, PrefectureLevel.Lived),
       completion(Prefecture.Kanagawa, PrefectureLevel.Stayed),
@@ -399,7 +401,7 @@ class PrefectureCompletionTest {
   }
 
   @Test
-  fun `手動上書きは自動判定より優先される`() {
+  fun manualLevelTakesPrecedenceOverAutomaticLevel() {
     val completion = PrefectureCompletion(
       prefecture = Prefecture.Tokyo,
       automaticLevel = PrefectureLevel.Visited,
@@ -411,7 +413,7 @@ class PrefectureCompletionTest {
   }
 
   @Test
-  fun `自動判定より低い手動上書きも優先される`() {
+  fun manualLevelTakesPrecedenceEvenWhenLowerThanAutomatic() {
     val completion = PrefectureCompletion(
       prefecture = Prefecture.Ibaraki,
       automaticLevel = PrefectureLevel.Visited,
@@ -424,7 +426,7 @@ class PrefectureCompletionTest {
   }
 
   @Test
-  fun `手動上書きがなければ自動判定が使われる`() {
+  fun usesAutomaticLevelWhenManualLevelIsAbsent() {
     val completion = PrefectureCompletion(
       prefecture = Prefecture.Tokyo,
       automaticLevel = PrefectureLevel.Stayed,
@@ -640,7 +642,7 @@ import kotlin.test.assertTrue
 
 class PrefectureNameResolverTest {
   @Test
-  fun `Prefecture 接尾辞つきの英語表記を解決する`() {
+  fun resolvesEnglishNameWithPrefectureSuffix() {
     // 実データで最多の表記
     assertEquals(Prefecture.Tokyo, PrefectureNameResolver.resolve("Tokyo Prefecture"))
     assertEquals(Prefecture.Tochigi, PrefectureNameResolver.resolve("Tochigi Prefecture"))
@@ -648,14 +650,14 @@ class PrefectureNameResolverTest {
   }
 
   @Test
-  fun `接尾辞のない英語表記を解決する`() {
+  fun resolvesEnglishNameWithoutSuffix() {
     assertEquals(Prefecture.Miyagi, PrefectureNameResolver.resolve("Miyagi"))
     assertEquals(Prefecture.Chiba, PrefectureNameResolver.resolve("Chiba"))
     assertEquals(Prefecture.Hyogo, PrefectureNameResolver.resolve("Hyogo"))
   }
 
   @Test
-  fun `マクロンつきのローマ字表記を解決する`() {
+  fun resolvesRomajiNameWithMacron() {
     // 実データに Hokkaidō が 240 件ある
     assertEquals(Prefecture.Hokkaido, PrefectureNameResolver.resolve("Hokkaidō"))
     assertEquals(Prefecture.Osaka, PrefectureNameResolver.resolve("Ōsaka"))
@@ -663,20 +665,20 @@ class PrefectureNameResolverTest {
   }
 
   @Test
-  fun `日本語表記を解決する`() {
+  fun resolvesJapaneseName() {
     assertEquals(Prefecture.Okinawa, PrefectureNameResolver.resolve("沖縄県"))
     assertEquals(Prefecture.Hokkaido, PrefectureNameResolver.resolve("北海道"))
     assertEquals(Prefecture.Tokyo, PrefectureNameResolver.resolve("東京都"))
   }
 
   @Test
-  fun `市町村名が続く日本語表記は前方一致で解決する`() {
+  fun resolvesJapaneseNameFollowedByMunicipalityByPrefix() {
     // 実データに 沖縄県伊良部町 がある
     assertEquals(Prefecture.Okinawa, PrefectureNameResolver.resolve("沖縄県伊良部町"))
   }
 
   @Test
-  fun `スラッシュ区切りの複合値は解決しない`() {
+  fun doesNotResolveSlashSeparatedCompositeValue() {
     // 実データに 東京都_北海道 のような値がある。どちらかに寄せず座標判定へ回す
     assertNull(PrefectureNameResolver.resolve("東京都/北海道"))
     assertNull(PrefectureNameResolver.resolve("千葉県/東京都"))
@@ -684,21 +686,21 @@ class PrefectureNameResolverTest {
   }
 
   @Test
-  fun `null と空文字は解決しない`() {
+  fun doesNotResolveNullOrBlank() {
     assertNull(PrefectureNameResolver.resolve(null))
     assertNull(PrefectureNameResolver.resolve(""))
     assertNull(PrefectureNameResolver.resolve("   "))
   }
 
   @Test
-  fun `日本以外の州名は解決しない`() {
+  fun doesNotResolveNonJapaneseState() {
     assertNull(PrefectureNameResolver.resolve("Seoul"))
     assertNull(PrefectureNameResolver.resolve("CA"))
     assertNull(PrefectureNameResolver.resolve("City of Manila"))
   }
 
   @Test
-  fun `47 都道府県の名称データが揃っている`() {
+  fun prefectureNameDataIsComplete() {
     // resolve に自分自身のフィールドを戻す往復テストは typo を検出できないため、データ側を検査する
     val romajiNames = Prefecture.entries.map { it.romajiName }
     assertEquals(romajiNames.size, romajiNames.toSet().size, "romajiName is duplicated")
@@ -843,19 +845,19 @@ class PrefectureLocatorTest {
   )
 
   @Test
-  fun `ポリゴン内部の点はその都道府県に解決される`() {
+  fun resolvesPointInsidePolygon() {
     assertEquals(Prefecture.Tokyo, locator.locate(latitude = 35.5, longitude = 139.5))
     assertEquals(Prefecture.Chiba, locator.locate(latitude = 35.5, longitude = 140.5))
   }
 
   @Test
-  fun `ポリゴンの外でも 20km 以内なら最寄りの都道府県に解決される`() {
+  fun resolvesPointOutsidePolygonWithinTwentyKilometers() {
     // 経度 138.9 は東京ポリゴンの西側 0.1 度 (約 9km) の位置
     assertEquals(Prefecture.Tokyo, locator.locate(latitude = 35.5, longitude = 138.9))
   }
 
   @Test
-  fun `20km を超えて離れた点は解決されない`() {
+  fun doesNotResolvePointFartherThanTwentyKilometers() {
     // 経度 138.0 は東京ポリゴンから約 90km 西
     assertNull(locator.locate(latitude = 35.5, longitude = 138.0))
     // 完全な国外
@@ -864,13 +866,13 @@ class PrefectureLocatorTest {
   }
 
   @Test
-  fun `隣接する 2 つのポリゴンで重複せずに判定される`() {
+  fun resolvesAdjacentPolygonsWithoutOverlap() {
     assertEquals(Prefecture.Tokyo, locator.locate(latitude = 35.5, longitude = 139.99))
     assertEquals(Prefecture.Chiba, locator.locate(latitude = 35.5, longitude = 140.01))
   }
 
   @Test
-  fun `ポリゴンが空なら常に解決されない`() {
+  fun resolvesNothingWhenNoBoundaryIsGiven() {
     assertNull(PrefectureLocator(emptyList()).locate(latitude = 35.5, longitude = 139.5))
   }
 
@@ -1096,13 +1098,13 @@ class PrefectureBoundaryAssetTest {
   private val locator by lazy { PrefectureLocator(boundaries) }
 
   @Test
-  fun `47 都道府県が過不足なく含まれる`() {
+  fun assetContainsExactlyFortySevenPrefectures() {
     assertEquals(47, boundaries.size)
     assertEquals(Prefecture.entries.toSet(), boundaries.map { it.prefecture }.toSet())
   }
 
   @Test
-  fun `すべてのリングが閉じていて 4 点以上ある`() {
+  fun everyRingIsClosedAndHasAtLeastFourPoints() {
     for (boundary in boundaries) {
       assertTrue(boundary.rings.isNotEmpty(), "${boundary.prefecture} has no ring")
       for (ring in boundary.rings) {
@@ -1117,7 +1119,7 @@ class PrefectureBoundaryAssetTest {
   }
 
   @Test
-  fun `47 都道府県の代表都市がそれぞれ正しい都道府県に落ちる`() {
+  fun everyRepresentativeCityResolvesToItsOwnPrefecture() {
     for (fixture in CityFixtures) {
       assertEquals(
         fixture.prefecture,
@@ -1128,13 +1130,13 @@ class PrefectureBoundaryAssetTest {
   }
 
   @Test
-  fun `海上の点は最寄りの都道府県に寄せられる`() {
+  fun resolvesOffshorePointToNearestPrefecture() {
     // 東京湾上。20km 以内に陸地がある
     assertTrue(locator.locate(latitude = 35.45, longitude = 139.85) != null)
   }
 
   @Test
-  fun `国外の点は解決されない`() {
+  fun doesNotResolvePointOutsideJapan() {
     assertNull(locator.locate(latitude = 37.5665, longitude = 126.9780)) // ソウル
     assertNull(locator.locate(latitude = 37.7749, longitude = -122.4194)) // サンフランシスコ
     assertNull(locator.locate(latitude = 25.0330, longitude = 121.5654)) // 台北
@@ -1740,7 +1742,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `チェックインのある都道府県は訪問になる`() = runTest {
+  fun prefectureWithCheckInBecomesVisited() = runTest {
     setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
 
     val summary = useCase()
@@ -1750,7 +1752,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `チェックインのない都道府県は未踏になる`() = runTest {
+  fun prefectureWithoutCheckInStaysUnvisited() = runTest {
     setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
 
     val summary = useCase()
@@ -1760,7 +1762,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `宿泊系カテゴリのベニューがあれば宿泊になる`() = runTest {
+  fun prefectureWithLodgingVenueBecomesStayed() = runTest {
     setUp(
       listOf(
         history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5),
@@ -1779,7 +1781,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `宿泊系でないカテゴリは訪問どまり`() = runTest {
+  fun nonLodgingCategoryStopsAtVisited() = runTest {
     setUp(
       listOf(
         history(
@@ -1804,7 +1806,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `手動上書きは自動判定より優先される`() = runTest {
+  fun manualLevelTakesPrecedenceOverAutomaticLevel() = runTest {
     setUp(
       histories = listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)),
       overrides = mapOf(Prefecture.Tokyo to PrefectureLevel.Lived),
@@ -1817,7 +1819,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `state が解決できるときはポリゴンを引かない`() = runTest {
+  fun doesNotUsePolygonWhenStateIsResolvable() = runTest {
     // ポリゴンの外にある座標でも state で東京都に解決される
     setUp(listOf(history(state = "Tokyo Prefecture", latitude = 12.0, longitude = 100.0)))
 
@@ -1827,7 +1829,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `state が解決できないときは座標で判定する`() = runTest {
+  fun fallsBackToCoordinatesWhenStateIsUnresolvable() = runTest {
     setUp(listOf(history(state = null, latitude = 35.5, longitude = 139.5)))
 
     val summary = useCase()
@@ -1836,7 +1838,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `複合値の state は座標で判定する`() = runTest {
+  fun fallsBackToCoordinatesForCompositeState() = runTest {
     setUp(listOf(history(state = "東京都/北海道", latitude = 35.5, longitude = 139.5)))
 
     val summary = useCase()
@@ -1845,7 +1847,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `国外のベニューは都道府県に加算されず訪問国として数えられる`() = runTest {
+  fun venuesOutsideJapanAreCountedAsCountriesNotPrefectures() = runTest {
     setUp(
       listOf(
         history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5),
@@ -1862,7 +1864,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `満点は 235 である`() = runTest {
+  fun maxTotalScoreIs235() = runTest {
     setUp(emptyList())
 
     val summary = useCase()
@@ -1872,7 +1874,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   }
 
   @Test
-  fun `ベニュー履歴の取得ポリシーがそのまま渡される`() = runTest {
+  fun passesFetchPolicyThrough() = runTest {
     setUp(emptyList())
 
     useCase(FetchPolicy.NetworkOnly)
@@ -2204,13 +2206,13 @@ class PrefectureLevelColorsTest {
   private val dark = darkColorScheme()
 
   @Test
-  fun `未踏はサーフェス色そのものになる`() {
+  fun unvisitedUsesSurfaceColorItself() {
     assertEquals(light.surfaceContainerLow, light.prefectureLevelColor(PrefectureLevel.Unvisited))
     assertEquals(dark.surfaceContainerLow, dark.prefectureLevelColor(PrefectureLevel.Unvisited))
   }
 
   @Test
-  fun `ライトではレベルが上がるほど暗くなる`() {
+  fun getsDarkerAsLevelRisesInLightTheme() {
     val luminances = PrefectureLevel.entries.map { light.prefectureLevelColor(it).luminance() }
 
     for (index in 1 until luminances.size) {
@@ -2222,7 +2224,7 @@ class PrefectureLevelColorsTest {
   }
 
   @Test
-  fun `ダークではレベルが上がるほど明るくなる`() {
+  fun getsBrighterAsLevelRisesInDarkTheme() {
     val luminances = PrefectureLevel.entries.map { dark.prefectureLevelColor(it).luminance() }
 
     for (index in 1 until luminances.size) {
@@ -2234,7 +2236,7 @@ class PrefectureLevelColorsTest {
   }
 
   @Test
-  fun `隣接レベルの輝度差が確保されている`() {
+  fun keepsLuminanceGapBetweenAdjacentLevels() {
     for (scheme in listOf(light, dark)) {
       val luminances = PrefectureLevel.entries.map { scheme.prefectureLevelColor(it).luminance() }
       for (index in 1 until luminances.size) {
@@ -2248,7 +2250,7 @@ class PrefectureLevelColorsTest {
   }
 
   @Test
-  fun `6 段階がすべて異なる色になる`() {
+  fun allSixLevelsGetDistinctColors() {
     for (scheme in listOf(light, dark)) {
       val colors = PrefectureLevel.entries.map { scheme.prefectureLevelColor(it) }
       assertEquals(colors.size, colors.toSet().size)
@@ -2364,7 +2366,7 @@ class JapanMapProjectionTest {
   private val projection = JapanMapProjection(boundaries, width = 400f, height = 600f)
 
   @Test
-  fun `すべての都道府県が投影される`() {
+  fun projectsEveryPrefecture() {
     assertEquals(3, projection.projected.size)
     assertEquals(
       boundaries.map { it.prefecture }.toSet(),
@@ -2373,7 +2375,7 @@ class JapanMapProjectionTest {
   }
 
   @Test
-  fun `投影後の座標がキャンバス内に収まる`() {
+  fun projectedCoordinatesFitInsideCanvas() {
     for (projected in projection.projected) {
       for (ring in projected.rings) {
         var index = 0
@@ -2387,7 +2389,7 @@ class JapanMapProjectionTest {
   }
 
   @Test
-  fun `北にある都道府県ほど上に描かれる`() {
+  fun drawsNorthernPrefecturesHigher() {
     val tokyo = projection.centerOf(Prefecture.Tokyo)
     val hokkaido = projection.centerOf(Prefecture.Hokkaido)
 
@@ -2395,7 +2397,7 @@ class JapanMapProjectionTest {
   }
 
   @Test
-  fun `沖縄はインセット枠の左下に描かれる`() {
+  fun drawsOkinawaInBottomLeftInset() {
     val okinawa = projection.centerOf(Prefecture.Okinawa)
 
     assertTrue(okinawa.first < 400f * 0.3f, "Okinawa should be near the left edge")
@@ -2403,7 +2405,7 @@ class JapanMapProjectionTest {
   }
 
   @Test
-  fun `描かれた都道府県の中心をタップするとその都道府県が返る`() {
+  fun hitTestReturnsPrefectureAtItsCenter() {
     for (prefecture in listOf(Prefecture.Tokyo, Prefecture.Hokkaido, Prefecture.Okinawa)) {
       val (x, y) = projection.centerOf(prefecture)
       assertEquals(prefecture, projection.hitTest(x, y), "hit test failed for $prefecture")
@@ -2411,13 +2413,13 @@ class JapanMapProjectionTest {
   }
 
   @Test
-  fun `どの都道府県にも重ならない位置のタップは null を返す`() {
+  fun hitTestReturnsNullOutsideEveryPrefecture() {
     assertNull(projection.hitTest(-10f, -10f))
     assertNull(projection.hitTest(399f, 1f))
   }
 
   @Test
-  fun `インセット枠が定義されている`() {
+  fun exposesInsetBounds() {
     assertNotNull(projection.insetBounds)
   }
 
