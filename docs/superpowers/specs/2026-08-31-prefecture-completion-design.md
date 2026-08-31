@@ -184,7 +184,13 @@ prefecture_levels(
 )
 ```
 
-アカウント単位で上書きを分離する。DB version は 6 → 7 に上げ、テーブル追加のマイグレーションを書く。
+アカウント単位で上書きを分離する。DB version は 6 → 7 に上げる。
+
+**マイグレーションを必ず書く。** 既存の `PlainMitsubachiDatabaseModule` と `EncryptedMitsubachiDatabaseModule` は
+どちらも `fallbackToDestructiveMigration(dropAllTables = true)` を指定しており、マイグレーションを用意せずに
+version を上げると `foursquare_accounts` ごと全テーブルが破棄され、既存ユーザーが再ログインを強いられる。
+テーブル追加のみの `Migration(6, 7)` を書き、両モジュールに `addMigrations` で登録する。
+
 リリースビルドでは既存どおり暗号化 DB に載る。
 
 `PrefectureLevelRepository`（`core/domain/usecase`）が読み書きのインターフェースを定義し、
@@ -271,6 +277,7 @@ prefecture_levels(
 - point-in-polygon — 47 都道府県庁所在地の実座標がそれぞれ正しい都道府県に落ちること
 - point-in-polygon — 県境付近の代表点、海上の点（20km フォールバックで拾えること）、国外の点（除外されること）
 - GeoJSON パース — 47 件揃っていること、各ポリゴンが閉じていること
+- Room マイグレーション 6 → 7 — 既存の `foursquare_accounts` の行が保持されたまま `prefecture_levels` が追加されること
 - レベル配色 — ライト / ダークそれぞれで 6 段階すべてが異なる色になること、隣接レベルの輝度差が保たれること
 
 ### 実機検証
