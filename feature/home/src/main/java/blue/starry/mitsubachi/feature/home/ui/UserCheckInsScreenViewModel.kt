@@ -52,7 +52,8 @@ class UserCheckInsScreenViewModel @Inject constructor(
     // いいねの楽観的更新を反映する。likedCheckInIds の変化で再適用されるよう combine する
     .combine(likedCheckInIds) { pagingData, likedIds ->
       pagingData.map { checkIn ->
-        if (checkIn.id in likedIds) {
+        // サーバー側で既にいいねが反映されている場合は二重に加算しない
+        if (checkIn.id in likedIds && !checkIn.isLiked) {
           checkIn.copy(isLiked = true, likeCount = checkIn.likeCount + 1)
         } else {
           checkIn
