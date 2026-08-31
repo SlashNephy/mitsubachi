@@ -1,9 +1,13 @@
 package blue.starry.mitsubachi.feature.home.ui
 
 import android.content.Context
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.usecase.FetchUserCheckInsUseCase
 import blue.starry.mitsubachi.core.domain.usecase.LikeCheckInUseCase
@@ -13,11 +17,13 @@ import blue.starry.mitsubachi.core.ui.compose.formatter.RelativeDateTimeFormatte
 import blue.starry.mitsubachi.core.ui.compose.snackbar.SnackbarHostService
 import blue.starry.mitsubachi.core.ui.compose.snackbar.enqueue
 import blue.starry.mitsubachi.feature.home.R
+import blue.starry.mitsubachi.feature.home.paging.UserCheckInsPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,63 +36,41 @@ class UserCheckInsScreenViewModel @Inject constructor(
   private val snackbarHostService: SnackbarHostService,
   private val snackbarErrorHandler: SnackbarErrorPresenter,
 ) : ViewModel(), RelativeDateTimeFormatter by relativeDateTimeFormatter {
-  @Immutable
-  sealed interface UiState {
-    data object Loading : UiState
-    data class Success(val checkIns: List<CheckIn>, val isRefreshing: Boolean) : UiState
-    data class Error(val exception: Exception) : UiState
-  }
+  private val likedCheckInIds = MutableStateFlow<Set<String>>(emptySet())
 
-  private val _state = MutableStateFlow<UiState>(UiState.Loading)
-  val state = _state.asStateFlow()
-
-  init {
-    refresh()
-  }
-
-  fun refresh(): Job {
-    return viewModelScope.launch {
-      fetch()
+  val pagingDataFlow: Flow<PagingData<CheckIn>> = Pager(
+    config = PagingConfig(
+      pageSize = PAGE_SIZE,
+      enablePlaceholders = false,
+      initialLoadSize = PAGE_SIZE,
+    ),
+    pagingSourceFactory = {
+      UserCheckInsPagingSource(fetchUserCheckInsUseCase)
+    },
+  ).flow
+    .cachedIn(viewModelScope)
+    // いいねの楽観的更新を反映する。likedCheckInIds の変化で再適用されるよう combine する
+    .combine(likedCheckInIds) { pagingData, likedIds ->
+      pagingData.map { checkIn ->
+        // サーバー側で既にいいねが反映されている場合は二重に加算しない
+        if (checkIn.id in likedIds && !checkIn.isLiked) {
+          checkIn.copy(isLiked = true, likeCount = checkIn.likeCount + 1)
+        } else {
+          checkIn
+        }
+      }
     }
-  }
-
-  private suspend fun fetch() {
-    val currentState = state.value
-    if (currentState is UiState.Success) {
-      _state.value = currentState.copy(isRefreshing = true)
-    } else {
-      _state.value = UiState.Loading
-    }
-
-    runCatching {
-      fetchUserCheckInsUseCase()
-    }.onSuccess { data ->
-      _state.value = UiState.Success(data, isRefreshing = false)
-    }.onException { e ->
-      _state.value = UiState.Error(e)
-    }
-  }
 
   fun likeCheckIn(checkInId: String): Job {
     return viewModelScope.launch {
+      // 楽観的更新
+      likedCheckInIds.value = likedCheckInIds.value + checkInId
+
       runCatching {
         likeCheckInUseCase(checkInId)
-      }.onSuccess {
-        val currentState = state.value
-        if (currentState is UiState.Success) {
-          val index = currentState.checkIns.indexOfFirst { it.id == checkInId }
-          if (index != -1) {
-            val oldCheckIn = currentState.checkIns[index]
-            val newCheckIn = oldCheckIn.copy(
-              isLiked = true,
-              likeCount = oldCheckIn.likeCount + 1,
-            )
-            val newCheckIns = currentState.checkIns.toMutableList()
-            newCheckIns[index] = newCheckIn
-            _state.value = currentState.copy(checkIns = newCheckIns)
-          }
-        }
       }.onException { e ->
+        // 失敗時は元に戻す
+        likedCheckInIds.value = likedCheckInIds.value - checkInId
         snackbarErrorHandler.handle(e) {
           context.getString(R.string.like_failed, it)
         }
@@ -99,5 +83,9 @@ class UserCheckInsScreenViewModel @Inject constructor(
     viewModelScope.launch {
       snackbarHostService.enqueue(context.getString(R.string.feature_not_implemented))
     }
+  }
+
+  private companion object {
+    const val PAGE_SIZE = 20
   }
 }

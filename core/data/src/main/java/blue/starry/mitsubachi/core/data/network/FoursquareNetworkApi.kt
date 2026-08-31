@@ -25,7 +25,6 @@ interface FoursquareNetworkApi : @NoDelegation NetworkApi {
   @GET("/checkins/recent")
   suspend fun getRecentCheckIns(
     @Query limit: Int?,
-    @Query afterTimeStamp: Long?,
     @Query ll: String?,
     @Tag policy: FetchPolicy,
   ): FoursquareApiResponse<FoursquareRecentCheckinsResponse>

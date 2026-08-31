@@ -26,7 +26,6 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -66,13 +65,11 @@ class FoursquareApiClientImpl @Inject constructor(
 
   override suspend fun getRecentCheckIns(
     limit: Int?,
-    after: ZonedDateTime?,
     coordinates: Coordinates?,
     policy: FetchPolicy,
   ): List<CheckIn> {
     val data = ktorfit.getRecentCheckIns(
       limit = limit,
-      afterTimeStamp = after?.toEpochSecond(),
       ll = coordinates?.let { "${it.latitude},${it.longitude}" },
       policy = policy,
     )
