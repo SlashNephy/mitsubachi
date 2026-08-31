@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
+import blue.starry.mitsubachi.core.data.database.migration.Migration6To7
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +27,7 @@ internal object PlainMitsubachiDatabaseModule {
       // release ビルドの SQLCipher は 16MB の CursorWindow を持つのでこの問題が出ず、
       // デバッグビルドだけが壊れる状態になっていた。
       .setDriver(BundledSQLiteDriver())
+      .addMigrations(Migration6To7)
       .fallbackToDestructiveMigration(dropAllTables = true)
       .build()
   }

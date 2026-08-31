@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.core.data.di
 import android.content.Context
 import androidx.room.Room
 import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
+import blue.starry.mitsubachi.core.data.database.migration.Migration6To7
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProvider
 import blue.starry.mitsubachi.core.data.database.security.DatabasePassphraseProviderImpl
 import dagger.Binds
@@ -39,6 +40,7 @@ internal abstract class EncryptedMitsubachiDatabaseModule {
       return Room
         .databaseBuilder<MitsubachiDatabase>(context, name = "mitsubachi.db")
         .openHelperFactory(factory)
+        .addMigrations(Migration6To7)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
     }
