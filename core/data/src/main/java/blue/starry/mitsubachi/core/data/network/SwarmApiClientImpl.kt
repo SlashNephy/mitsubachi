@@ -2,7 +2,7 @@ package blue.starry.mitsubachi.core.data.network
 
 import blue.starry.mitsubachi.core.data.network.cache.CachePlugin
 import blue.starry.mitsubachi.core.data.network.model.toDomain
-import blue.starry.mitsubachi.core.domain.model.CheckIn
+import blue.starry.mitsubachi.core.domain.model.CheckInPage
 import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.usecase.SwarmApiClient
 import de.jensklingenberg.ktorfit.Ktorfit
@@ -40,19 +40,27 @@ class SwarmApiClientImpl @Inject constructor(
     uniqueDevice: String?,
     wsid: String?,
     userAgent: String?,
-    afterTimestamp: Long?,
+    limit: Int?,
+    beforeMarker: String?,
     policy: FetchPolicy,
-  ): List<CheckIn> {
+  ): CheckInPage {
     val data = ktorfit.getRecentActivities(
       uniqueDevice = uniqueDevice?.ifBlank { null } ?: RandomStringUtils.secureStrong().nextHex(24),
       oauthToken = oauthToken,
       wsid = wsid?.ifBlank { null } ?: Uuid.random().toHexDashString(),
       userAgent = userAgent?.ifBlank { null }
         ?: "com.foursquare.robin:2025081819:20220328:16:Pixel 10:release",
-      afterTimestamp = afterTimestamp,
+      limit = limit,
+      beforeMarker = beforeMarker,
       policy = policy,
     )
-    return data.response.activities.items.map { it.checkin.toDomain() }
+
+    val activities = data.response.activities
+    return CheckInPage(
+      checkIns = activities.items.map { it.checkin.toDomain() },
+      // moreData が false のときは末尾に到達している
+      nextMarker = activities.trailingMarker?.takeIf { activities.moreData },
+    )
   }
 
   private fun RandomStringUtils.nextHex(count: Int): String {

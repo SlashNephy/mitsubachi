@@ -5,76 +5,39 @@ import androidx.paging.PagingState
 import blue.starry.mitsubachi.core.domain.model.CheckIn
 import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.usecase.FetchFeedUseCase
-import java.time.ZonedDateTime
 import javax.inject.Inject
 
 /**
- * Pagination key that contains both timestamp and the last check-in ID
- * to avoid duplicate keys when multiple check-ins have the same timestamp.
+ * ホームフィードのページング。
+ *
+ * キーは次に取得するページの先頭を指すマーカー (Swarm の `beforeMarker`) を表す。
+ * Foursquare の `/checkins/recent` はページングに対応していないため、この場合は常に 1 ページで終端となる。
  */
-data class PaginationKey(
-  val timestamp: ZonedDateTime,
-  val lastCheckInId: String,
-)
-
 class HomeFeedPagingSource @Inject constructor(
   private val fetchFeedUseCase: FetchFeedUseCase,
-) : PagingSource<PaginationKey, CheckIn>() {
-  override fun getRefreshKey(state: PagingState<PaginationKey, CheckIn>): PaginationKey? {
-    // Return null to always start from the beginning on refresh
+) : PagingSource<String, CheckIn>() {
+  override fun getRefreshKey(state: PagingState<String, CheckIn>): String? {
+    // 常に先頭から読み直す
     return null
   }
 
   @Suppress("TooGenericExceptionCaught")
-  override suspend fun load(params: LoadParams<PaginationKey>): LoadResult<PaginationKey, CheckIn> {
+  override suspend fun load(params: LoadParams<String>): LoadResult<String, CheckIn> {
     return try {
-      val key = params.key
-      // Use NetworkOnly for refresh (when key is null), CacheOrNetwork for pagination
-      val policy = if (params is LoadParams.Refresh && key == null) {
-        FetchPolicy.NetworkOnly
-      } else {
-        FetchPolicy.CacheOrNetwork
-      }
-
-      val checkIns = fetchFeedUseCase(
+      val page = fetchFeedUseCase(
         limit = params.loadSize,
-        after = key?.timestamp,
-        policy = policy,
+        beforeMarker = params.key,
+        // リフレッシュ時は最新の状態を取得する
+        policy = if (params is LoadParams.Refresh) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork,
       )
 
-      // Filter out items that were already loaded (same timestamp, same or earlier ID)
-      // This is necessary because the API might return some items with the same timestamp
-      // as the pagination key when multiple check-ins occur at the same second
-      val filteredCheckIns = if (key != null) {
-        checkIns.filter { checkIn -> isCheckInAfterKey(checkIn, key) }
-      } else {
-        checkIns
-      }
-
       LoadResult.Page(
-        data = filteredCheckIns,
-        prevKey = null, // Only support forward pagination
-        // Use composite key with timestamp and ID to avoid duplicates
-        nextKey = filteredCheckIns.lastOrNull()?.let { lastCheckIn ->
-          PaginationKey(
-            timestamp = lastCheckIn.timestamp,
-            lastCheckInId = lastCheckIn.id,
-          )
-        },
+        data = page.checkIns,
+        prevKey = null, // 前方向のページングのみ対応する
+        nextKey = page.nextMarker,
       )
     } catch (e: Exception) {
       LoadResult.Error(e)
-    }
-  }
-
-  private fun isCheckInAfterKey(checkIn: CheckIn, key: PaginationKey): Boolean {
-    // Keep items with timestamp after the key timestamp, or
-    // items with the same timestamp but ID lexicographically after the last seen ID
-    // Note: Foursquare check-in IDs are hex strings that can be compared lexicographically
-    return when {
-      checkIn.timestamp > key.timestamp -> true
-      checkIn.timestamp == key.timestamp -> checkIn.id > key.lastCheckInId
-      else -> false
     }
   }
 }

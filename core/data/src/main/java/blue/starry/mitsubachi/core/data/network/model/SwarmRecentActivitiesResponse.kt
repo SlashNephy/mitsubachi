@@ -12,6 +12,7 @@ data class SwarmRecentActivitiesResponse(
     val count: Int, // 20
     val items: List<Item>,
     val moreData: Boolean, // true
+    val trailingMarker: String? = null, // 6a94bd66fe6cf82a7152fe35
   ) {
     @Serializable
     data class Item(

@@ -1,6 +1,7 @@
 package blue.starry.mitsubachi.core.data.repository
 
-import androidx.room.withTransaction
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
 import blue.starry.mitsubachi.core.data.database.dao.UserSettingsDao
 import blue.starry.mitsubachi.core.data.database.entity.UserSettings
@@ -36,18 +37,22 @@ internal class UserSettingsRepositoryImpl @Inject constructor(
     account: FoursquareAccount,
     block: (DomainUserSettings) -> DomainUserSettings,
   ) {
-    database.withTransaction {
-      val oldEntity = dao.findByFoursquareAccountId(account.id).first()?.payload
-      val newEntity = (oldEntity?.toDomain() ?: DomainUserSettings.Default)
-        .let(block)
-        .toEntity()
+    // BundledSQLiteDriver を使う構成では SupportSQLiteOpenHelper が存在しないため、
+    // androidx.room.withTransaction は使用できない。ドライバベースの API を利用する
+    database.useWriterConnection { transactor ->
+      transactor.immediateTransaction {
+        val oldEntity = dao.getByFoursquareAccountId(account.id)?.payload
+        val newEntity = (oldEntity?.toDomain() ?: DomainUserSettings.Default)
+          .let(block)
+          .toEntity()
 
-      dao.insertOrUpdate(
-        UserSettings(
-          foursquareAccountId = account.id,
-          payload = newEntity,
-        ),
-      )
+        dao.insertOrUpdate(
+          UserSettings(
+            foursquareAccountId = account.id,
+            payload = newEntity,
+          ),
+        )
+      }
     }
   }
 }

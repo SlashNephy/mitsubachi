@@ -42,7 +42,9 @@ class HomeScreenViewModel @Inject constructor(
     config = PagingConfig(
       pageSize = PAGE_SIZE,
       enablePlaceholders = false,
-      initialLoadSize = PAGE_SIZE,
+      // Foursquare の /checkins/recent はページングに対応せず全件 (最大 55 件程度) を 1 度に返すため、
+      // 初回ロードのみ大きめに要求する。Swarm 互換モードでは 1 ページ 30 件が上限となる
+      initialLoadSize = INITIAL_LOAD_SIZE,
     ),
     pagingSourceFactory = {
       HomeFeedPagingSource(fetchFeedUseCase)
@@ -86,5 +88,6 @@ class HomeScreenViewModel @Inject constructor(
 
   private companion object {
     const val PAGE_SIZE = 20
+    const val INITIAL_LOAD_SIZE = 100
   }
 }

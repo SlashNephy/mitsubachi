@@ -9,13 +9,11 @@ import blue.starry.mitsubachi.core.domain.model.Venue
 import blue.starry.mitsubachi.core.domain.model.VenueRecommendation
 import blue.starry.mitsubachi.core.domain.model.foursquare.Photo
 import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
-import java.time.ZonedDateTime
 
 @Suppress("TooManyFunctions")
 interface FoursquareApiClient {
   suspend fun getRecentCheckIns(
     limit: Int? = null,
-    after: ZonedDateTime? = null,
     coordinates: Coordinates? = null,
     policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
   ): List<CheckIn>

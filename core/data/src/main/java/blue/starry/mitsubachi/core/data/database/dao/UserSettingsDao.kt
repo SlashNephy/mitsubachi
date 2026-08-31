@@ -12,6 +12,9 @@ interface UserSettingsDao {
   @Query("SELECT * FROM `user_settings` WHERE `foursquare_account_id` = :accountId")
   fun findByFoursquareAccountId(accountId: String): Flow<UserSettings?>
 
+  @Query("SELECT * FROM `user_settings` WHERE `foursquare_account_id` = :accountId")
+  suspend fun getByFoursquareAccountId(accountId: String): UserSettings?
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertOrUpdate(entity: UserSettings)
 }
