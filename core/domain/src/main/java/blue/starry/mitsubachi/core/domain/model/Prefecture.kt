@@ -56,7 +56,7 @@ enum class Prefecture(val code: Int, val japaneseName: String, val romajiName: S
   Okinawa(47, "沖縄県", "okinawa"),
   ;
 
-    companion object {
+  companion object {
     private val byCode = entries.associateBy { it.code }
 
     fun fromCode(code: Int): Prefecture? {
