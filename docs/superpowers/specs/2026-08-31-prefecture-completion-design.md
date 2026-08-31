@@ -201,8 +201,13 @@ version を上げると `foursquare_accounts` ごと全テーブルが破棄さ�
 ### 配置と導線
 
 `feature/map` モジュール内に `ui/prefectures/` を新設する。
-導線は Map 画面（`VenueHistoriesScreen`）の TopBar に切替を置き、「チェックイン地図」と「県踏破度」を行き来する。
-ボトムバーの項目は増やさない。
+
+導線は Map 画面（`VenueHistoriesScreen`）の既存 FAB 列（現在地・ズームイン・ズームアウト）に
+4 つ目のボタンとして県踏破度への遷移を足す。ボトムバーの項目は増やさない。
+
+当初は Map 画面の TopBar に切替を置く想定だったが、`VenueHistoriesScreen` は TopBar を持たない全面地図であり
+（`AppTopBar` でも `else -> {}` に落ちている）、TopBar を新設すると地図の表示領域が削られる。
+FAB を足すほうが既存の作りに沿う。遷移先の県踏破度画面は既存の `MapScreenTopBar` を再利用して戻れるようにする。
 
 ### 画面構成
 
