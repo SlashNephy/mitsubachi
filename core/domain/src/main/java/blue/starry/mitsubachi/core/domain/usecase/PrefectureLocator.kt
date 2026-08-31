@@ -6,7 +6,7 @@ import kotlin.math.cos
 import kotlin.math.sqrt
 
 /** ポリゴン外の点を最寄りの都道府県に寄せる上限距離 (km)。 */
-const val FallbackDistanceKilometers = 20.0
+const val FALLBACK_DISTANCE_KILOMETERS = 20.0
 
 private const val KILOMETERS_PER_DEGREE = 111.0
 
@@ -14,7 +14,7 @@ private const val KILOMETERS_PER_DEGREE = 111.0
  * 座標から都道府県を引く。
  *
  * ポリゴンは簡略化されているため海岸線付近の点が外れることがある。
- * どのポリゴンにも入らない点は最寄りのポリゴンの辺までの距離を測り、[FallbackDistanceKilometers] 以内なら
+ * どのポリゴンにも入らない点は最寄りのポリゴンの辺までの距離を測り、[FALLBACK_DISTANCE_KILOMETERS] 以内なら
  * その都道府県に寄せる。それを超えたら null を返す。
  */
 class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
@@ -71,7 +71,7 @@ class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
       return null
     }
     val kilometers = sqrt(nearestSquaredDegrees) * KILOMETERS_PER_DEGREE
-    return nearest.takeIf { kilometers <= FallbackDistanceKilometers }
+    return nearest.takeIf { kilometers <= FALLBACK_DISTANCE_KILOMETERS }
   }
 
   // 点 (px, py) から線分 (ax, ay)-(bx, by) までの最短距離の二乗を求める
