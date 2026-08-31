@@ -2726,7 +2726,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
@@ -2752,6 +2754,10 @@ fun PrefectureMap(
   val colorScheme = MaterialTheme.colorScheme
   val density = LocalDensity.current
 
+  // pointerInput は projection が変わらない限りコルーチンを再起動しないため、
+  // onSelect を直接キャプチャすると古いラムダを掴み続ける
+  val currentOnSelect by rememberUpdatedState(onSelect)
+
   BoxWithConstraints(
     modifier = modifier
       .fillMaxWidth()
@@ -2770,7 +2776,7 @@ fun PrefectureMap(
         .fillMaxSize()
         .pointerInput(projection) {
           detectTapGestures { offset ->
-            projection.hitTest(offset.x, offset.y)?.also(onSelect)
+            projection.hitTest(offset.x, offset.y)?.also(currentOnSelect)
           }
         },
     ) {
