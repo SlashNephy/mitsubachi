@@ -47,7 +47,8 @@ class PrefectureCompletionScreenViewModel @Inject constructor(
   val state: StateFlow<UiState> = _state.asStateFlow()
 
   // refresh / setLevel / clearLevel は独立に viewModelScope へ launch されるため、
-  // 直列化しないと後発の書き込みを先発の再計算が上書きして表示が巻き戻る
+  // 直列化しないと後発の書き込みを先発の再計算が上書きして表示が巻き戻る。
+  // 書き込みと再計算を同じ区間に入れて、操作した順に永続化されるようにする
   private val mutex = Mutex()
 
   init {
@@ -62,59 +63,74 @@ class PrefectureCompletionScreenViewModel @Inject constructor(
 
   fun setLevel(prefecture: Prefecture, level: PrefectureLevel): Job {
     return viewModelScope.launch {
-      val account = findFoursquareAccountUseCase()
-      if (account != null) {
-        prefectureLevelRepository.set(account, prefecture, level)
-        // 上書きはキャッシュ済みのベニュー履歴で再計算できるのでネットワークには行かない
-        fetch(policy = FetchPolicy.CacheOrNetwork, showRefreshIndicator = false)
+      // 書き込みも同じロックの下に置く。外に出すと、素早く連続で操作したときに
+      // 先発の書き込みが後発の書き込みの後に完了し、古いレベルが永続化されうる
+      mutex.withLock {
+        val account = findFoursquareAccountUseCase()
+        if (account != null) {
+          prefectureLevelRepository.set(account, prefecture, level)
+          // 上書きはキャッシュ済みのベニュー履歴で再計算できるのでネットワークには行かない
+          fetchLocked(policy = FetchPolicy.CacheOrNetwork, showRefreshIndicator = false)
+        }
       }
     }
   }
 
   fun clearLevel(prefecture: Prefecture): Job {
     return viewModelScope.launch {
-      val account = findFoursquareAccountUseCase()
-      if (account != null) {
-        prefectureLevelRepository.clear(account, prefecture)
-        fetch(policy = FetchPolicy.CacheOrNetwork, showRefreshIndicator = false)
+      mutex.withLock {
+        val account = findFoursquareAccountUseCase()
+        if (account != null) {
+          prefectureLevelRepository.clear(account, prefecture)
+          fetchLocked(policy = FetchPolicy.CacheOrNetwork, showRefreshIndicator = false)
+        }
       }
     }
   }
 
-  // policy: null なら初回はキャッシュ、リフレッシュ時はネットワークを使う
-  // showRefreshIndicator: 再取得中のインジケータを出すか。
-  //   手動上書き後のキャッシュ再計算は一瞬で終わるので出さない
+  // 同時に走ると後発の書き込みを先発の再計算が上書きしてしまうので直列化する
   private suspend fun fetch(
     policy: FetchPolicy? = null,
     showRefreshIndicator: Boolean = true,
   ) {
-    // 同時に走ると後発の書き込みを先発の再計算が上書きしてしまうので直列化する
     mutex.withLock {
-      val currentState = state.value
-      val isRefreshing = currentState is UiState.Success
+      fetchLocked(policy = policy, showRefreshIndicator = showRefreshIndicator)
+    }
+  }
 
-      if (isRefreshing) {
-        _state.value = currentState.copy(isRefreshing = showRefreshIndicator)
-      } else if (showRefreshIndicator) {
-        // インジケータを出さない指定のときは、エラー表示のまま静かに再計算する
-        _state.value = UiState.Loading
-      }
+  // [mutex] を取得済みの呼び出し元から使う。Mutex は再入不可なのでここでは取らない
+  //
+  // policy: null なら初回はキャッシュ、リフレッシュ時はネットワークを使う
+  // showRefreshIndicator: 再取得中のインジケータを出すか。
+  //   手動上書き後のキャッシュ再計算は一瞬で終わるので出さない
+  private suspend fun fetchLocked(
+    policy: FetchPolicy?,
+    showRefreshIndicator: Boolean,
+  ) {
+    val currentState = state.value
+    val isRefreshing = currentState is UiState.Success
 
-      runCatching {
-        // 初回読み込みはキャッシュを使い、リフレッシュ時はネットワークから取得する
-        val effectivePolicy = policy
-          ?: if (isRefreshing) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork
-        calculatePrefectureCompletionsUseCase(effectivePolicy) to
-          prefectureBoundaryRepository.findAll().toImmutableList()
-      }.onSuccess { (summary, boundaries) ->
-        _state.value = UiState.Success(
-          summary = summary,
-          boundaries = boundaries,
-          isRefreshing = false,
-        )
-      }.onException { e ->
-        _state.value = UiState.Error(e)
-      }
+    if (isRefreshing) {
+      _state.value = currentState.copy(isRefreshing = showRefreshIndicator)
+    } else if (showRefreshIndicator) {
+      // インジケータを出さない指定のときは、エラー表示のまま静かに再計算する
+      _state.value = UiState.Loading
+    }
+
+    runCatching {
+      // 初回読み込みはキャッシュを使い、リフレッシュ時はネットワークから取得する
+      val effectivePolicy = policy
+        ?: if (isRefreshing) FetchPolicy.NetworkOnly else FetchPolicy.CacheOrNetwork
+      calculatePrefectureCompletionsUseCase(effectivePolicy) to
+        prefectureBoundaryRepository.findAll().toImmutableList()
+    }.onSuccess { (summary, boundaries) ->
+      _state.value = UiState.Success(
+        summary = summary,
+        boundaries = boundaries,
+        isRefreshing = false,
+      )
+    }.onException { e ->
+      _state.value = UiState.Error(e)
     }
   }
 }
