@@ -55,6 +55,20 @@ class PrefectureBoundaryAssetTest {
   }
 
   @Test
+  fun resolvesAmamiIslandsToKagoshima() {
+    // 元データ (admin-1) は奄美群島を沖縄県側に置いているため、付け替えたリングの確認
+    assertEquals(Prefecture.Kagoshima, locator.locate(latitude = 28.3775, longitude = 129.4936)) // 名瀬 (奄美大島)
+    assertEquals(Prefecture.Kagoshima, locator.locate(latitude = 27.7222, longitude = 128.9861)) // 亀津 (徳之島)
+    assertEquals(Prefecture.Kagoshima, locator.locate(latitude = 27.39, longitude = 128.60)) // 沖永良部島
+    assertEquals(Prefecture.Kagoshima, locator.locate(latitude = 28.32, longitude = 129.98)) // 喜界島
+    assertEquals(Prefecture.Kagoshima, locator.locate(latitude = 27.04, longitude = 128.43)) // 与論島
+    // 与論島とは緯度が重なるが鹿児島県ではない、沖縄県最北の有人島
+    assertEquals(Prefecture.Okinawa, locator.locate(latitude = 27.05, longitude = 127.97)) // 伊平屋島
+    assertEquals(Prefecture.Okinawa, locator.locate(latitude = 25.94, longitude = 131.30)) // 北大東島
+    assertEquals(Prefecture.Okinawa, locator.locate(latitude = 24.34, longitude = 124.16)) // 石垣島
+  }
+
+  @Test
   fun resolvesOffshorePointToNearestPrefecture() {
     // 東京湾上。20km 以内に陸地がある
     assertTrue(locator.locate(latitude = 35.45, longitude = 139.85) != null)

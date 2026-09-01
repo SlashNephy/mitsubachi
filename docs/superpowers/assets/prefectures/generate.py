@@ -26,6 +26,20 @@ DISPUTED_URL = f"https://naciscdn.org/naturalearth/10m/cultural/{DISPUTED_NAME}.
 DISPUTED_BRK_NAME = "Kuril Is."
 HOKKAIDO_CODE = 1
 
+# admin-1 は奄美群島を沖縄県側に置いているが、実際には鹿児島県に属する。
+# リングの外接矩形がこの矩形に収まるものを沖縄県から鹿児島県へ移す。
+# インデックス直書きにしないのは、再生成でリングの順序が変わりうるため。
+# 各境界は沖縄県のリングの外接矩形の実測から、空いている値の中央を取った。
+#   西 128.16: 伊平屋島の西端 127.926E (沖縄県) と与論島の西端 128.396E のあいだ。
+#     与論島 (27.021-27.067N) と伊平屋島 (27.010-27.092N) は緯度が完全に重なるため、
+#     両者を分けられるのは経度だけ。
+#   東 130.62: 喜界島の東端 130.030E と大東諸島の西端 131.212E (沖縄県) のあいだ。
+#   南 26.49: 大東諸島の北端 25.951N (沖縄県) と与論島の南端 27.021N のあいだ。
+#   北 29.00: 奄美大島の北端 28.510N とトカラ列島の南端 29.443N (鹿児島県) のあいだ。
+AMAMI_BOX = (128.16, 26.49, 130.62, 29.00)
+OKINAWA_CODE = 47
+KAGOSHIMA_CODE = 46
+
 SOURCE_LABEL = (
     "Natural Earth 1:10m Admin 1 - States, Provinces 5.1.1 "
     "+ Admin 0 - Breakaway, Disputed Areas 5.1.1 (Kuril Is.)"
@@ -134,6 +148,26 @@ def build_northern_territories(shapefile_base):
     raise SystemExit(f"{DISPUTED_BRK_NAME} not found in the disputed areas layer")
 
 
+def is_amami(ring):
+    """リングの外接矩形が [AMAMI_BOX] に収まるかを返す。"""
+    west, south, east, north = AMAMI_BOX
+    xs = [point[0] for point in ring]
+    ys = [point[1] for point in ring]
+    return min(xs) >= west and min(ys) >= south and max(xs) <= east and max(ys) <= north
+
+
+def move_amami_to_kagoshima(prefectures):
+    """奄美群島のリングを沖縄県から鹿児島県へ移し、移した本数を返す。"""
+    okinawa = next(p for p in prefectures if p["code"] == OKINAWA_CODE)
+    kagoshima = next(p for p in prefectures if p["code"] == KAGOSHIMA_CODE)
+    moved = [r for r in okinawa["rings"] if is_amami(r)]
+    if not moved:
+        raise SystemExit("no Amami rings found in Okinawa; check AMAMI_BOX")
+    okinawa["rings"] = [r for r in okinawa["rings"] if not is_amami(r)]
+    kagoshima["rings"].extend(moved)
+    return len(moved)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--work-dir", default=".work")
@@ -155,6 +189,8 @@ def main():
     hokkaido = next(p for p in prefectures if p["code"] == HOKKAIDO_CODE)
     hokkaido["rings"].extend(northern_territories)
 
+    amami_rings = move_amami_to_kagoshima(prefectures)
+
     document = {
         "source": SOURCE_LABEL,
         "simplifyTolerance": SIMPLIFY_TOLERANCE,
@@ -169,7 +205,8 @@ def main():
     points = sum(len(r) for p in prefectures for r in p["rings"])
     print(
         f"prefectures={len(prefectures)} rings={rings} points={points} "
-        f"northernTerritoryRings={len(northern_territories)} bytes={len(payload.encode())}"
+        f"northernTerritoryRings={len(northern_territories)} amamiRings={amami_rings} "
+        f"bytes={len(payload.encode())}"
     )
 
 
