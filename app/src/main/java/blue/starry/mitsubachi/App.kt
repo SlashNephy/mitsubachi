@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -201,9 +200,7 @@ private fun AppTopBar(backStack: NavBackStack<RouteKey>) {
         onBack = {
           backStack.remove(key)
         },
-        title = {
-          Text(stringResource(blue.starry.mitsubachi.feature.map.R.string.prefecture_completion))
-        },
+        title = stringResource(blue.starry.mitsubachi.feature.map.R.string.prefecture_completion),
       )
     }
 

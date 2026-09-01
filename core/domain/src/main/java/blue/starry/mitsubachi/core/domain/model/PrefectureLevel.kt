@@ -15,7 +15,7 @@ enum class PrefectureLevel(val score: Int) {
   Lived(5),
   ;
 
-  companion object {
+    companion object {
     /** 47 都道府県すべてが [Lived] のときの得点。 */
     val MaxTotalScore: Int = Prefecture.entries.size * Lived.score
 

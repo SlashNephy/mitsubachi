@@ -106,7 +106,11 @@ class PrefectureLocator(private val boundaries: List<PrefectureBoundary>) {
       val yi = ring[i][1]
       val xj = ring[j][0]
       val yj = ring[j][1]
-      if (yi > y != yj > y && x < (xj - xi) * (y - yi) / (yj - yi) + xi) {
+      // 辺が水平線 y をまたぐとき、その交点の x 座標を求めて左右を判定する
+      val isAboveI = yi > y
+      val isAboveJ = yj > y
+      val intersectionX = (xj - xi) * (y - yi) / (yj - yi) + xi
+      if (isAboveI != isAboveJ && x < intersectionX) {
         inside = !inside
       }
       j = i
