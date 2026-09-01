@@ -13,4 +13,20 @@
     <string name="zoom_in">확대</string>
     <string name="zoom_out">축소</string>
     <string name="like_failed">좋아요 실패: %s</string>
+    <string name="prefecture_completion">현 답파도</string>
+    <string name="prefecture_completion_score">%1$d / %2$d</string>
+    <string name="prefecture_completion_countries">일본 외 %1$d개국</string>
+    <string name="prefecture_completion_legend">범례</string>
+    <string name="prefecture_completion_level_unvisited">미답</string>
+    <string name="prefecture_completion_level_passed_through">통과</string>
+    <string name="prefecture_completion_level_landed">발 디딤</string>
+    <string name="prefecture_completion_level_visited">방문</string>
+    <string name="prefecture_completion_level_stayed">숙박</string>
+    <string name="prefecture_completion_level_lived">거주</string>
+    <string name="prefecture_completion_level_points">%1$d점</string>
+    <string name="prefecture_completion_venue_count">%1$d곳</string>
+    <string name="prefecture_completion_overridden">수동 설정</string>
+    <string name="prefecture_completion_clear_override">자동 판정으로 되돌리기</string>
+    <string name="prefecture_completion_credit">‘경현치’(都道府県市区町村 uub.jp)에서 착안했습니다</string>
+    <string name="prefecture_completion_open">현 답파도 열기</string>
 </resources>

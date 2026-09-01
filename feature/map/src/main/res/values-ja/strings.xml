@@ -13,4 +13,20 @@
     <string name="zoom_in">ズームイン</string>
     <string name="zoom_out">ズームアウト</string>
     <string name="like_failed">いいねに失敗しました: %s</string>
+    <string name="prefecture_completion">県踏破度</string>
+    <string name="prefecture_completion_score">%1$d / %2$d</string>
+    <string name="prefecture_completion_countries">日本以外に %1$d ヶ国</string>
+    <string name="prefecture_completion_legend">凡例</string>
+    <string name="prefecture_completion_level_unvisited">未踏</string>
+    <string name="prefecture_completion_level_passed_through">通過</string>
+    <string name="prefecture_completion_level_landed">接地</string>
+    <string name="prefecture_completion_level_visited">訪問</string>
+    <string name="prefecture_completion_level_stayed">宿泊</string>
+    <string name="prefecture_completion_level_lived">居住</string>
+    <string name="prefecture_completion_level_points">%1$d 点</string>
+    <string name="prefecture_completion_venue_count">%1$d か所</string>
+    <string name="prefecture_completion_overridden">手動設定</string>
+    <string name="prefecture_completion_clear_override">自動判定に戻す</string>
+    <string name="prefecture_completion_credit">「経県値」（都道府県市区町村 uub.jp）に着想を得ています</string>
+    <string name="prefecture_completion_open">県踏破度を開く</string>
 </resources>
