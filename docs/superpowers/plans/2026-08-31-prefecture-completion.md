@@ -2397,7 +2397,7 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 
 ### Task 9: Canvas 日本地図
 
-都道府県ポリゴンを Compose Canvas に描く。沖縄は左下にインセット表示し、タップで都道府県を返す。
+都道府県ポリゴンを Compose Canvas に描く。沖縄は左上 (日本海側) にインセット表示し、タップで都道府県を返す。
 
 **Files:**
 - Create: `feature/map/src/main/java/blue/starry/mitsubachi/feature/map/ui/prefectures/JapanMapProjection.kt`
@@ -2412,7 +2412,7 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
   - `@Composable fun PrefectureMap(boundaries: ImmutableList<PrefectureBoundary>, levels: ImmutableMap<Prefecture, PrefectureLevel>, selected: Prefecture?, onSelect: (Prefecture) -> Unit, modifier: Modifier)`
 
 **投影方式:** 沖縄県 (`Prefecture.Okinawa`) を除いた 46 都道府県の外接矩形に等積で収まる正射的な投影を作る。
-経度方向は本州中央の緯度 `cos(36°)` で縮める。沖縄県は同じ縮尺で別に投影し、キャンバス左下の
+経度方向は本州中央の緯度 `cos(36°)` で縮める。沖縄県は同じ縮尺で別に投影し、キャンバス左上の
 インセット枠（幅・高さともキャンバス短辺の 26%）に収めて枠線を描く。
 ヒットテストは投影後のスクリーン座標で even-odd 判定を行い、判定用と描画用で同じ点列を使う。
 
@@ -2598,7 +2598,7 @@ class ProjectedPrefecture(
 /**
  * 都道府県ポリゴンをキャンバス座標に落とす。
  *
- * 沖縄県は本土から遠いので、同じ縮尺のまま左下のインセット枠に別途配置する。
+ * 沖縄県は本土から遠いので、同じ縮尺のまま左上のインセット枠に別途配置する。
  * 描画とヒットテストで同じ点列を使うため、判定と見た目がずれない。
  */
 class JapanMapProjection(
@@ -3383,7 +3383,7 @@ mobile-mcp で次を確認し、スクリーンショットを撮る。
 
 - Map 画面に県踏破度の FAB が出ていること
 - 県踏破度画面でスコアが `N / 235` の形で表示されること
-- 日本地図が 47 都道府県すべて描かれ、沖縄が左下のインセット枠に入っていること
+- 日本地図が 47 都道府県すべて描かれ、沖縄が左上のインセット枠に入っていること
 - 訪問国カウンターが出ていること（実データでは 4 ヶ国前後）
 - クレジットが最下部に出ていること
 
