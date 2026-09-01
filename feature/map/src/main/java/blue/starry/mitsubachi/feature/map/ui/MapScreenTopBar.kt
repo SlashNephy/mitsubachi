@@ -15,10 +15,11 @@ import blue.starry.mitsubachi.core.ui.symbols.MaterialSymbols
 fun MapScreenTopBar(
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
+  title: @Composable () -> Unit = {},
 ) {
   TopAppBar(
     modifier = modifier,
-    title = {},
+    title = title,
     navigationIcon = {
       IconButton(onClick = onBack) {
         Icon(
