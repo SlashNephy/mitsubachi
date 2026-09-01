@@ -8,8 +8,12 @@ import blue.starry.mitsubachi.core.domain.model.PrefectureLevel
 /** 隣接レベル間で最低限確保する輝度差。テストと実装で共有する。 */
 const val MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE = 0.02f
 
-// 未踏 (0.0) から居住 (1.0) までの補間比率。等間隔だと低いレベル同士の差が潰れるため序盤を広めに取る
-private val LEVEL_FRACTIONS = floatArrayOf(0f, 0.24f, 0.43f, 0.62f, 0.81f, 1f)
+// 未踏 (0.0) から居住 (1.0) までの補間比率。
+// 等間隔だと低いレベル同士の差が潰れるため序盤を広めに取る。
+// ダークテーマでは未踏とレベル 1 の輝度差がもっとも小さくなるので、
+// レンダリング比較 (docs/superpowers/assets/prefectures/preview) にもとづき序盤をさらに広げた。
+// 上位側の比率は据え置き、レベル 4 とレベル 5 の差はライトテーマでも保つ。
+private val LEVEL_FRACTIONS = floatArrayOf(0f, 0.30f, 0.48f, 0.65f, 0.82f, 1f)
 
 /**
  * レベルに対応する塗り色を返す。
