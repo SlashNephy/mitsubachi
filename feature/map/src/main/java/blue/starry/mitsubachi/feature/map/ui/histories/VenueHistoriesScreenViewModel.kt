@@ -1,5 +1,9 @@
 package blue.starry.mitsubachi.feature.map.ui.histories
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blue.starry.mitsubachi.core.domain.model.FetchPolicy
@@ -10,6 +14,7 @@ import blue.starry.mitsubachi.core.ui.compose.error.onException
 import blue.starry.mitsubachi.feature.map.ui.toLatLng
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
@@ -21,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VenueHistoriesScreenViewModel @Inject constructor(
+  @param:ApplicationContext private val context: Context,
   private val fetchUserVenueHistoriesUseCase: FetchUserVenueHistoriesUseCase,
   private val deviceLocationRepository: DeviceLocationRepository,
 ) : ViewModel() {
@@ -88,10 +94,21 @@ class VenueHistoriesScreenViewModel @Inject constructor(
     }
 
   suspend fun findCurrentLocation(): LatLng? {
+    if (ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+      ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+      ) != PackageManager.PERMISSION_GRANTED
+    ) {
+      return null
+    }
+
     return try {
       deviceLocationRepository.findCurrentLocation()?.toLatLng()
     } catch (_: SecurityException) {
-      // 権限がある前提
+      // 権限チェックと実際の呼び出しの間で権限が取り消される可能性があるため、念のため捕捉する
       null
     }
   }
