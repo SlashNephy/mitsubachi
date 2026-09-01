@@ -1,6 +1,5 @@
 package blue.starry.mitsubachi.core.domain.usecase
 
-import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.model.FoursquareAccount
 import blue.starry.mitsubachi.core.domain.model.Prefecture
 import blue.starry.mitsubachi.core.domain.model.PrefectureBoundary
@@ -11,7 +10,6 @@ import blue.starry.mitsubachi.core.domain.model.VenueCategory
 import blue.starry.mitsubachi.core.domain.model.VenueLocation
 import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
@@ -22,25 +20,25 @@ import kotlin.test.assertEquals
 
 class CalculatePrefectureCompletionsUseCaseTest {
   private val account = mockk<FoursquareAccount>(relaxed = true)
-  private val fetchUserVenueHistories = mockk<FetchUserVenueHistoriesUseCase>()
   private val boundaryRepository = mockk<PrefectureBoundaryRepository>()
   private val levelRepository = mockk<PrefectureLevelRepository>()
   private val findFoursquareAccount = mockk<FindFoursquareAccountUseCase>()
 
   private val useCase = CalculatePrefectureCompletionsUseCase(
-    fetchUserVenueHistoriesUseCase = fetchUserVenueHistories,
     prefectureBoundaryRepository = boundaryRepository,
     prefectureLevelRepository = levelRepository,
     findFoursquareAccountUseCase = findFoursquareAccount,
   )
 
+  private var histories = emptyList<VenueHistory>()
+
   private fun setUp(
     histories: List<VenueHistory>,
     overrides: Map<Prefecture, PrefectureLevel> = emptyMap(),
   ) {
+    this.histories = histories
     every { account.id } returns "account-1"
     coEvery { findFoursquareAccount() } returns account
-    coEvery { fetchUserVenueHistories(any()) } returns histories
     coEvery { boundaryRepository.findAll() } returns listOf(
       PrefectureBoundary(Prefecture.Tokyo, listOf(square(139.0, 35.0, 140.0, 36.0))),
     )
@@ -51,7 +49,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   fun prefectureWithCheckInBecomesVisited() = runTest {
     setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
     assertEquals(3, summary.totalScore)
@@ -61,7 +59,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   fun prefectureWithoutCheckInStaysUnvisited() = runTest {
     setUp(listOf(history(state = "Tokyo Prefecture", latitude = 35.5, longitude = 139.5)))
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(47, summary.completions.size)
     assertEquals(PrefectureLevel.Unvisited, summary.levelOf(Prefecture.Okinawa))
@@ -83,7 +81,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
       ),
     )
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Stayed, summary.levelOf(Prefecture.Tokyo))
   }
@@ -112,7 +110,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
       ),
     )
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
   }
@@ -124,7 +122,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
       overrides = mapOf(Prefecture.Tokyo to PrefectureLevel.Lived),
     )
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Lived, summary.levelOf(Prefecture.Tokyo))
     assertEquals(5, summary.totalScore)
@@ -135,7 +133,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
     // ポリゴンの外にある座標でも state で東京都に解決される
     setUp(listOf(history(state = "Tokyo Prefecture", latitude = 12.0, longitude = 100.0)))
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
   }
@@ -144,7 +142,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   fun fallsBackToCoordinatesWhenStateIsUnresolvable() = runTest {
     setUp(listOf(history(state = null, latitude = 35.5, longitude = 139.5)))
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
   }
@@ -153,7 +151,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   fun fallsBackToCoordinatesForCompositeState() = runTest {
     setUp(listOf(history(state = "東京都/北海道", latitude = 35.5, longitude = 139.5)))
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
   }
@@ -169,7 +167,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
       ),
     )
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(3, summary.totalScore)
     assertEquals(setOf("KR", "US", "TW"), summary.visitedCountryCodes)
@@ -179,7 +177,7 @@ class CalculatePrefectureCompletionsUseCaseTest {
   fun maxTotalScoreIs235() = runTest {
     setUp(emptyList())
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(235, summary.maxScore)
     assertEquals(0, summary.totalScore)
@@ -191,19 +189,10 @@ class CalculatePrefectureCompletionsUseCaseTest {
     // サインイン済みアカウントがない場合は手動上書きを読めないので自動判定だけになる
     coEvery { findFoursquareAccount() } returns null
 
-    val summary = useCase()
+    val summary = useCase(histories)
 
     assertEquals(PrefectureLevel.Visited, summary.levelOf(Prefecture.Tokyo))
     assertEquals(3, summary.totalScore)
-  }
-
-  @Test
-  fun passesFetchPolicyThrough() = runTest {
-    setUp(emptyList())
-
-    useCase(FetchPolicy.NetworkOnly)
-
-    coVerify { fetchUserVenueHistories(FetchPolicy.NetworkOnly) }
   }
 
   private fun PrefectureCompletionSummary.levelOf(prefecture: Prefecture): PrefectureLevel {

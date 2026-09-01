@@ -1,11 +1,11 @@
 package blue.starry.mitsubachi.core.domain.usecase
 
-import blue.starry.mitsubachi.core.domain.model.FetchPolicy
 import blue.starry.mitsubachi.core.domain.model.Prefecture
 import blue.starry.mitsubachi.core.domain.model.PrefectureCompletion
 import blue.starry.mitsubachi.core.domain.model.PrefectureCompletionSummary
 import blue.starry.mitsubachi.core.domain.model.PrefectureLevel
 import blue.starry.mitsubachi.core.domain.model.Venue
+import blue.starry.mitsubachi.core.domain.model.foursquare.VenueHistory
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.first
@@ -15,7 +15,11 @@ import javax.inject.Singleton
 private const val JAPAN_COUNTRY_CODE = "JP"
 
 /**
- * ベニュー履歴・境界ポリゴン・手動上書きを束ねて 47 都道府県分の踏破度を判定する。
+ * 取得済みのベニュー履歴・境界ポリゴン・手動上書きを束ねて 47 都道府県分の踏破度を判定する。
+ *
+ * 履歴の取得は行わない。ネットワークに行きうる取得を呼び出し側の排他区間の外に出せるよう、
+ * 取得済みの履歴を受け取る形にしている。手動上書きは呼び出しのたびにリポジトリから読み直すため、
+ * 直前に書き込まれた上書きが必ず反映される。
  *
  * 都道府県の判定は次の優先順で行う。
  * 1. `countryCode` が JP でなければ海外のベニューとして国コードのみを記録し、都道府県判定は行わない
@@ -25,15 +29,11 @@ private const val JAPAN_COUNTRY_CODE = "JP"
  */
 @Singleton
 class CalculatePrefectureCompletionsUseCase @Inject constructor(
-  private val fetchUserVenueHistoriesUseCase: FetchUserVenueHistoriesUseCase,
   private val prefectureBoundaryRepository: PrefectureBoundaryRepository,
   private val prefectureLevelRepository: PrefectureLevelRepository,
   private val findFoursquareAccountUseCase: FindFoursquareAccountUseCase,
 ) {
-  suspend operator fun invoke(
-    policy: FetchPolicy = FetchPolicy.CacheOrNetwork,
-  ): PrefectureCompletionSummary {
-    val histories = fetchUserVenueHistoriesUseCase(policy)
+  suspend operator fun invoke(histories: List<VenueHistory>): PrefectureCompletionSummary {
     val locator = PrefectureLocator(prefectureBoundaryRepository.findAll())
 
     val venueCounts = mutableMapOf<Prefecture, Int>()
