@@ -76,7 +76,9 @@ class CalculatePrefectureCompletionsUseCaseTest {
           state = "Tokyo Prefecture",
           latitude = 35.6,
           longitude = 139.6,
-          categoryName = "Hotel",
+          categoryId = "4bf58dd8d48988d1fa931735",
+          categoryName = "ホテル",
+          categoryIconPath = "travel/hotel_",
         ),
       ),
     )
@@ -94,15 +96,18 @@ class CalculatePrefectureCompletionsUseCaseTest {
           state = "Tokyo Prefecture",
           latitude = 35.5,
           longitude = 139.5,
-          categoryName = "Ramen Restaurant",
+          categoryId = "55a59bace4b013909087cb24",
+          categoryName = "ラーメン屋",
+          categoryIconPath = "food/ramen_",
         ),
-        // inn の部分一致で誤って宿泊にならないこと。
-        // Dinner は "inn" を部分文字列として含むため、単語境界で判定していないと宿泊と誤判定される
+        // 「ホテル」を部分文字列として含む名前でも、宿泊系の ID・アイコンでなければ拾わないこと
         history(
           state = "Tokyo Prefecture",
           latitude = 35.51,
           longitude = 139.51,
-          categoryName = "Dinner",
+          categoryId = "4bf58dd8d48988d116941735",
+          categoryName = "ホテルバー",
+          categoryIconPath = "nightlife/pub_",
         ),
       ),
     )
@@ -210,7 +215,9 @@ class CalculatePrefectureCompletionsUseCaseTest {
     latitude: Double,
     longitude: Double,
     countryCode: String = "JP",
-    categoryName: String = "Train Station",
+    categoryId: String = "4bf58dd8d48988d129951735",
+    categoryName: String = "鉄道駅",
+    categoryIconPath: String = "travel/trainstation_",
   ): VenueHistory {
     return VenueHistory(
       venue = Venue(
@@ -232,9 +239,9 @@ class CalculatePrefectureCompletionsUseCaseTest {
         createdAt = ZonedDateTime.parse("2020-01-01T00:00:00+09:00"),
         categories = listOf(
           VenueCategory(
-            id = "category-$categoryName",
+            id = categoryId,
             name = categoryName,
-            iconUrl = "https://example.com/icon.png",
+            iconUrl = "https://ss3.4sqi.net/img/categories_v2/${categoryIconPath}64.png",
             isPrimary = true,
           ),
         ),
