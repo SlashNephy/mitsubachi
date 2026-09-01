@@ -18,6 +18,7 @@
     <plurals name="prefecture_completion_countries">
         <item quantity="other">日本以外に %1$d ヶ国</item>
     </plurals>
+    <string name="prefecture_completion_group_header">%1$s (%2$d)</string>
     <string name="prefecture_completion_legend">凡例</string>
     <string name="prefecture_completion_level_unvisited">未踏</string>
     <string name="prefecture_completion_level_passed_through">通過</string>

@@ -234,7 +234,7 @@ private fun ColorSwatch(level: PrefectureLevel, modifier: Modifier = Modifier) {
 @Composable
 private fun PrefectureGroupHeader(level: PrefectureLevel, count: Int, modifier: Modifier = Modifier) {
   Text(
-    text = "${level.displayName()} ($count)",
+    text = stringResource(R.string.prefecture_completion_group_header, level.displayName(), count),
     style = MaterialTheme.typography.titleSmall,
     modifier = modifier
       .fillMaxWidth()
