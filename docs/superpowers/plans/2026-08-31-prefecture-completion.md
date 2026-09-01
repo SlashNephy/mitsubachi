@@ -3014,7 +3014,10 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 ```xml
     <string name="prefecture_completion">Prefecture Completion</string>
     <string name="prefecture_completion_score">%1$d / %2$d</string>
-    <string name="prefecture_completion_countries">%1$d countries outside Japan</string>
+    <plurals name="prefecture_completion_countries">
+        <item quantity="one">%1$d country outside Japan</item>
+        <item quantity="other">%1$d countries outside Japan</item>
+    </plurals>
     <string name="prefecture_completion_legend">Legend</string>
     <string name="prefecture_completion_level_unvisited">Never been</string>
     <string name="prefecture_completion_level_passed_through">Passed through</string>
@@ -3023,19 +3026,28 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
     <string name="prefecture_completion_level_stayed">Stayed overnight</string>
     <string name="prefecture_completion_level_lived">Lived</string>
     <string name="prefecture_completion_level_points">%1$d pt</string>
-    <string name="prefecture_completion_venue_count">%1$d places</string>
+    <plurals name="prefecture_completion_venue_count">
+        <item quantity="one">%1$d place</item>
+        <item quantity="other">%1$d places</item>
+    </plurals>
     <string name="prefecture_completion_overridden">Edited</string>
     <string name="prefecture_completion_clear_override">Reset to automatic</string>
     <string name="prefecture_completion_credit">Inspired by Keikenchi from Todofuken Shikuchoson (uub.jp)</string>
     <string name="prefecture_completion_open">Open prefecture completion</string>
 ```
 
+`values/`（英語）のみ複数形の区別があるため `<plurals>` にする。`values-ja` と `values-ko-rKR` は
+複数形の区別がなく `quantity="other"` のみを持たせる（Android は同一リソース名で `values/` が
+`<plurals>`、他ロケールが `<string>` という混在を許さないため）。
+
 `feature/map/src/main/res/values-ja/strings.xml` に追加:
 
 ```xml
     <string name="prefecture_completion">県踏破度</string>
     <string name="prefecture_completion_score">%1$d / %2$d</string>
-    <string name="prefecture_completion_countries">日本以外に %1$d ヶ国</string>
+    <plurals name="prefecture_completion_countries">
+        <item quantity="other">日本以外に %1$d ヶ国</item>
+    </plurals>
     <string name="prefecture_completion_legend">凡例</string>
     <string name="prefecture_completion_level_unvisited">未踏</string>
     <string name="prefecture_completion_level_passed_through">通過</string>
@@ -3044,7 +3056,9 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
     <string name="prefecture_completion_level_stayed">宿泊</string>
     <string name="prefecture_completion_level_lived">居住</string>
     <string name="prefecture_completion_level_points">%1$d 点</string>
-    <string name="prefecture_completion_venue_count">%1$d か所</string>
+    <plurals name="prefecture_completion_venue_count">
+        <item quantity="other">%1$d か所</item>
+    </plurals>
     <string name="prefecture_completion_overridden">手動設定</string>
     <string name="prefecture_completion_clear_override">自動判定に戻す</string>
     <string name="prefecture_completion_credit">「経県値」（都道府県市区町村 uub.jp）に着想を得ています</string>
@@ -3061,7 +3075,9 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
 ```xml
     <string name="prefecture_completion">현 답파도</string>
     <string name="prefecture_completion_score">%1$d / %2$d</string>
-    <string name="prefecture_completion_countries">일본 외 %1$d개국</string>
+    <plurals name="prefecture_completion_countries">
+        <item quantity="other">일본 외 %1$d개국</item>
+    </plurals>
     <string name="prefecture_completion_legend">범례</string>
     <string name="prefecture_completion_level_unvisited">미답</string>
     <string name="prefecture_completion_level_passed_through">통과</string>
@@ -3070,7 +3086,9 @@ Co-Authored-By: Claude Fable 6 <noreply@anthropic.com>"
     <string name="prefecture_completion_level_stayed">숙박</string>
     <string name="prefecture_completion_level_lived">거주</string>
     <string name="prefecture_completion_level_points">%1$d점</string>
-    <string name="prefecture_completion_venue_count">%1$d곳</string>
+    <plurals name="prefecture_completion_venue_count">
+        <item quantity="other">%1$d곳</item>
+    </plurals>
     <string name="prefecture_completion_overridden">수동 설정</string>
     <string name="prefecture_completion_clear_override">자동 판정으로 되돌리기</string>
     <string name="prefecture_completion_credit">‘경현치’(都道府県市区町村 uub.jp)에서 착안했습니다</string>
@@ -3111,7 +3129,7 @@ private fun PrefectureLevel.displayName(): String {
 
 1. **スコアヘッダー** — `stringResource(R.string.prefecture_completion_score, summary.totalScore, summary.maxScore)` を
    `MaterialTheme.typography.displaySmall` で表示し、その下に
-   `stringResource(R.string.prefecture_completion_countries, summary.visitedCountryCodes.size)` を
+   `pluralStringResource(R.plurals.prefecture_completion_countries, summary.visitedCountryCodes.size, summary.visitedCountryCodes.size)` を
    `bodyMedium` で置く。`visitedCountryCodes` が空なら国カウンターの行を出さない
 2. **日本地図** — Task 9 の `PrefectureMap`。`levels` は `summary.completions.associate { it.prefecture to it.effectiveLevel }` の
    `toImmutableMap()`。タップで `selectedPrefecture` を更新してボトムシートを開く
@@ -3119,12 +3137,13 @@ private fun PrefectureLevel.displayName(): String {
    `stringResource(R.string.prefecture_completion_level_points, level.score)` の 3 点セット。
    色だけに情報を載せないため、レベル名と点数を必ず文字で添える
 4. **都道府県リスト** — レベルの高い順にグループ化する。各グループの見出しはレベル名と件数。
-   行は都道府県名、`stringResource(R.string.prefecture_completion_venue_count, completion.venueCount)`、
+   行は都道府県名、`pluralStringResource(R.plurals.prefecture_completion_venue_count, completion.venueCount, completion.venueCount)`、
    手動上書きがある行には `AssistChip` で `stringResource(R.string.prefecture_completion_overridden)` を出す。
    行タップで地図と同じボトムシートを開く
 5. **クレジット** — 最下部に `stringResource(R.string.prefecture_completion_credit)` を
    `MaterialTheme.typography.labelSmall` と `colorScheme.onSurfaceVariant` で表示する。
-   タップで `https://uub.jp/` をブラウザで開く。
+   タップで `https://uub.jp/` をブラウザで開く。ブラウザ等のハンドラを持たない端末では
+   `startActivity` が `ActivityNotFoundException` を投げるため、捕捉して画面のクラッシュを防ぐ。
 
 ```kotlin
 val context = LocalContext.current
@@ -3135,7 +3154,11 @@ Text(
   modifier = Modifier
     .fillMaxWidth()
     .clickable {
-      context.startActivity(Intent(Intent.ACTION_VIEW, "https://uub.jp/".toUri()))
+      try {
+        context.startActivity(Intent(Intent.ACTION_VIEW, "https://uub.jp/".toUri()))
+      } catch (e: ActivityNotFoundException) {
+        Timber.w(e, "No activity found to handle the credit link")
+      }
     }
     .padding(16.dp),
 )
