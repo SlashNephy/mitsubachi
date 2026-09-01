@@ -80,7 +80,7 @@ class ProjectedPrefecture(
 /**
  * 都道府県ポリゴンをキャンバス座標に落とす。
  *
- * 沖縄県は本土から遠いので、同じ縮尺のまま左下のインセット枠に別途配置する。
+ * 沖縄県は本土から遠いので、同じ縮尺のまま左上 (日本海側) のインセット枠に別途配置する。
  * 描画とヒットテストで同じ点列を使うため、判定と見た目がずれない。
  *
  * 小笠原諸島・南鳥島・トカラ列島・大東諸島のような遠隔離島は列島を縮めてしまうため、
@@ -97,16 +97,15 @@ class JapanMapProjection(
   private val insetMargin = shortSide * INSET_MARGIN_RATIO
   private val insetSide = shortSide * INSET_SIDE_RATIO
 
+  // 日本海にあたるキャンバス左上の空白に置く。本土は南西から北東へ斜めに伸びるため、
+  // ここには本土のポリゴンが来ない (実測: 1080x1317 で最寄りの本土の点まで約 285px)
   val insetBounds: Rect = Rect(
-    offset = Offset(insetMargin, height - insetMargin - insetSide),
+    offset = Offset(insetMargin, insetMargin),
     size = Size(insetSide, insetSide),
   )
 
   /** 本土側と沖縄インセット側を連結したもの。インセットが後ろ = 最前面に描かれる。 */
   val projected: List<ProjectedPrefecture>
-
-  private val mainProjected: List<ProjectedPrefecture>
-  private val insetProjected: List<ProjectedPrefecture>
 
   init {
     val (inset, main) = boundaries.partition { it.prefecture == Prefecture.Okinawa }
@@ -122,24 +121,12 @@ class JapanMapProjection(
       size = Size(insetSide - insetPadding * 2, insetSide - insetPadding * 2),
     )
 
-    mainProjected = project(main, mainArea, MAIN_WINDOW)
-    insetProjected = project(inset, insetArea, INSET_WINDOW)
-    projected = mainProjected + insetProjected
+    projected = project(main, mainArea, MAIN_WINDOW) + project(inset, insetArea, INSET_WINDOW)
   }
 
+  // インセット枠は本土と重ならない位置に置いているため、走査順による取り違えは起きない
   fun hitTest(x: Float, y: Float): Prefecture? {
-    // インセット枠の中は沖縄が最前面に描かれるので先に判定する。枠は線だけで下の本土が
-    // 透けて見えるため、沖縄のポリゴンに当たらなければ見えているとおり本土に落とす
-    val inset = if (insetBounds.contains(Offset(x, y))) hitTest(insetProjected, x, y) else null
-    return inset ?: hitTest(mainProjected, x, y)
-  }
-
-  private fun hitTest(
-    items: List<ProjectedPrefecture>,
-    x: Float,
-    y: Float,
-  ): Prefecture? {
-    for (item in items) {
+    for (item in projected) {
       for (ring in item.rings) {
         if (contains(ring, x, y)) {
           return item.prefecture

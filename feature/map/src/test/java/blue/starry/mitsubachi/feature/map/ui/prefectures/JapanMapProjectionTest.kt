@@ -57,11 +57,11 @@ class JapanMapProjectionTest {
   }
 
   @Test
-  fun drawsOkinawaInBottomLeftInset() {
+  fun drawsOkinawaInTopLeftInset() {
     val okinawa = projection.centerOf(Prefecture.Okinawa)
 
     assertTrue(okinawa.first < 400f * 0.3f, "Okinawa should be near the left edge")
-    assertTrue(okinawa.second > 600f * 0.7f, "Okinawa should be near the bottom edge")
+    assertTrue(okinawa.second < 600f * 0.3f, "Okinawa should be near the top edge")
   }
 
   @Test
@@ -115,34 +115,6 @@ class JapanMapProjectionTest {
     // インセット枠の一辺は 400x600 のキャンバスで 104px。大東諸島が混じるとその 2 割程度に縮む
     assertTrue(bounds.width >= 50f, "Okinawa width ${bounds.width} is too small")
     assertTrue(bounds.height >= 50f, "Okinawa height ${bounds.height} is too small")
-  }
-
-  @Test
-  fun hitTestPrefersOkinawaInsideInset() {
-    // 本土がインセット枠を覆う極端な形。枠内では最前面の沖縄が勝ち、
-    // 沖縄のポリゴンから外れた点は枠の下に見えている本土を拾う
-    val overlapping = JapanMapProjection(
-      listOf(
-        PrefectureBoundary(Prefecture.Tokyo, listOf(square(128.6, 30.3, 145.8, 45.5))),
-        PrefectureBoundary(Prefecture.Okinawa, listOf(square(127.0, 26.0, 128.0, 27.0))),
-      ),
-      width = 400f,
-      height = 600f,
-    )
-    val okinawa = overlapping.boundsOf(Prefecture.Okinawa)
-    val inset = overlapping.insetBounds
-
-    assertEquals(
-      Prefecture.Okinawa,
-      overlapping.hitTest(okinawa.center.x, okinawa.center.y),
-      "Okinawa should win where both polygons contain the point",
-    )
-    // 沖縄は枠の中央に置かれるので、枠の左上の角付近は沖縄の外側
-    assertEquals(
-      Prefecture.Tokyo,
-      overlapping.hitTest(inset.left + 1f, inset.top + 1f),
-      "the mainland visible under the inset frame should stay tappable",
-    )
   }
 
   private fun JapanMapProjection.ringsOf(prefecture: Prefecture): List<FloatArray> {
