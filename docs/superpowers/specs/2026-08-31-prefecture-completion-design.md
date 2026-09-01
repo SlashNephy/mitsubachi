@@ -183,7 +183,7 @@ Renovate では追跡できず、手動更新とすることを README に明記
 
 Room の既存 `MitsubachiDatabase` に新テーブルを追加する。
 
-```
+```sql
 prefecture_levels(
   foursquare_account_id TEXT NOT NULL,
   prefecture_code       INTEGER NOT NULL,
