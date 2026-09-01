@@ -5,9 +5,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import blue.starry.mitsubachi.core.domain.model.PrefectureLevel
 
-/** 隣接レベル間で最低限確保する輝度差。テストと実装で共有する。 */
-const val MINIMUM_ADJACENT_LUMINANCE_DIFFERENCE = 0.02f
-
 // 未踏 (0.0) から居住 (1.0) までの補間比率。
 // 等間隔だと低いレベル同士の差が潰れるため序盤を広めに取る。
 // ダークテーマでは未踏とレベル 1 の輝度差がもっとも小さくなるので、
