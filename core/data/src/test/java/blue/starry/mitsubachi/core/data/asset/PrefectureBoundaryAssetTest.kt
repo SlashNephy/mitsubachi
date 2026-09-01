@@ -47,6 +47,14 @@ class PrefectureBoundaryAssetTest {
   }
 
   @Test
+  fun resolvesNorthernTerritoriesToHokkaido() {
+    // 元データ (admin-1) はロシア側に置いているため、係争地レイヤから補ったリングの確認
+    assertEquals(Prefecture.Hokkaido, locator.locate(latitude = 45.0, longitude = 147.7)) // 択捉島
+    assertEquals(Prefecture.Hokkaido, locator.locate(latitude = 44.0, longitude = 145.8)) // 国後島
+    assertEquals(Prefecture.Hokkaido, locator.locate(latitude = 43.79, longitude = 146.75)) // 色丹島
+  }
+
+  @Test
   fun resolvesOffshorePointToNearestPrefecture() {
     // 東京湾上。20km 以内に陸地がある
     assertTrue(locator.locate(latitude = 35.45, longitude = 139.85) != null)
