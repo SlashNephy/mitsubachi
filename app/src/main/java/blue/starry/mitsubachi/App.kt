@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
@@ -39,6 +40,7 @@ import blue.starry.mitsubachi.feature.home.ui.UserCheckInsScreen
 import blue.starry.mitsubachi.feature.map.ui.MapScreen
 import blue.starry.mitsubachi.feature.map.ui.MapScreenTopBar
 import blue.starry.mitsubachi.feature.map.ui.histories.VenueHistoriesScreen
+import blue.starry.mitsubachi.feature.map.ui.prefectures.PrefectureCompletionScreen
 import blue.starry.mitsubachi.feature.map.ui.search.SearchMapScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreen
 import blue.starry.mitsubachi.feature.settings.ui.SettingsScreenTopBar
@@ -193,6 +195,15 @@ private fun AppTopBar(backStack: NavBackStack<RouteKey>) {
       )
     }
 
+    is RouteKey.PrefectureCompletion -> {
+      MapScreenTopBar(
+        onBack = {
+          backStack.remove(key)
+        },
+        title = stringResource(blue.starry.mitsubachi.feature.map.R.string.prefecture_completion),
+      )
+    }
+
     is RouteKey.Settings -> {
       SettingsScreenTopBar(
         onBack = {
@@ -325,7 +336,17 @@ private fun AppEntryProvider(backStack: NavBackStack<RouteKey>): (RouteKey) -> N
 
       is RouteKey.VenueHistories -> {
         NavEntry(key) {
-          VenueHistoriesScreen()
+          VenueHistoriesScreen(
+            onClickPrefectureCompletion = {
+              backStack.add(RouteKey.PrefectureCompletion)
+            },
+          )
+        }
+      }
+
+      is RouteKey.PrefectureCompletion -> {
+        NavEntry(key) {
+          PrefectureCompletionScreen()
         }
       }
 

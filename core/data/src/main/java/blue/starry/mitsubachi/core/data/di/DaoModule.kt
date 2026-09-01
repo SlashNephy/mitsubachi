@@ -3,6 +3,7 @@ package blue.starry.mitsubachi.core.data.di
 import blue.starry.mitsubachi.core.data.database.MitsubachiDatabase
 import blue.starry.mitsubachi.core.data.database.dao.CacheDao
 import blue.starry.mitsubachi.core.data.database.dao.FoursquareAccountDao
+import blue.starry.mitsubachi.core.data.database.dao.PrefectureLevelOverrideDao
 import blue.starry.mitsubachi.core.data.database.dao.UserSettingsDao
 import dagger.Module
 import dagger.Provides
@@ -29,5 +30,13 @@ internal object DaoModule {
   @Singleton
   internal fun provideUserSettingsDao(database: MitsubachiDatabase): UserSettingsDao {
     return database.userSettings()
+  }
+
+  @Provides
+  @Singleton
+  internal fun providePrefectureLevelOverrideDao(
+    database: MitsubachiDatabase,
+  ): PrefectureLevelOverrideDao {
+    return database.prefectureLevelOverride()
   }
 }

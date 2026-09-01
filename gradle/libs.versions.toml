@@ -40,7 +40,7 @@ indriya = "2.2.4"
 junit-jupiter = "6.1.3"
 kotlin = "2.4.10"
 kotlinx-collections-immutable = "0.5.1"
-kotlinx-coroutines-play-services = "1.11.0"
+kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
 kover = "0.9.9"
 ksp = "2.3.11"
@@ -106,9 +106,10 @@ androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core",
 
 # Google Play Services
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
-kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines-play-services" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
 # Ktor
 ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }

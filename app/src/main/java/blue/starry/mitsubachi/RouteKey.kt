@@ -45,6 +45,10 @@ sealed interface RouteKey : NavKey {
 
   @Immutable
   @Serializable
+  data object PrefectureCompletion : RouteKey
+
+  @Immutable
+  @Serializable
   data object Search : RouteKey
 
   @Immutable

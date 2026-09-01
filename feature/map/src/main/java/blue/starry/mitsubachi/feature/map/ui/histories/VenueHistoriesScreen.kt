@@ -44,6 +44,7 @@ internal const val DEFAULT_CLUSTERING_THRESHOLD_ZOOM_LEVEL = 0f // デフォル�
 @OptIn(MapsComposeExperimentalApi::class)
 @Suppress("LongMethod") // TODO: リファクタリング
 fun VenueHistoriesScreen(
+  onClickPrefectureCompletion: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: VenueHistoriesScreenViewModel = hiltViewModel(),
 ) {
@@ -103,6 +104,16 @@ fun VenueHistoriesScreen(
               .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
           ) {
+            // 県踏破度へ
+            SmallFloatingActionButton(
+              onClick = onClickPrefectureCompletion,
+            ) {
+              Icon(
+                painter = painterResource(MaterialSymbols.attractions),
+                contentDescription = stringResource(R.string.prefecture_completion_open),
+              )
+            }
+
             // 現在地へ移動ボタン
             if (permissionState.status == PermissionStatus.Granted) {
               SmallFloatingActionButton(

@@ -16,4 +16,6 @@ dependencies {
 
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.compose.runtime.annotation)
+
+  testImplementation(libs.kotlinx.coroutines.test)
 }
