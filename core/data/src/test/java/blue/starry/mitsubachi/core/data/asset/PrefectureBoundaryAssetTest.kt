@@ -36,6 +36,31 @@ class PrefectureBoundaryAssetTest {
   }
 
   @Test
+  fun noRingLiesInsideAnotherRingOfTheSamePrefecture() {
+    // 内側リング (穴) があると、リングを順に見て最初に含んだものを返す判定
+    // (PrefectureLocator.locateInside / JapanMapProjection.hitTest) が
+    // 穴の内部の点を外側リングの都道府県と答えてしまう。
+    // 現在のアセットには穴が 1 本もないため単純な走査で足りている。
+    // データを更新して穴が入ったら、判定側に穴の除外を入れる必要がある
+    for (boundary in boundaries) {
+      for (inner in boundary.rings.indices) {
+        for (outer in boundary.rings.indices) {
+          if (inner == outer) {
+            continue
+          }
+          val innerRing = boundary.rings[inner]
+          val outerRing = boundary.rings[outer]
+          // 穴なら内側リングの頂点はすべて外側リングの内部に入る
+          assertTrue(
+            innerRing.any { !contains(outerRing, x = it[0], y = it[1]) },
+            "${boundary.prefecture} has ring #$inner inside ring #$outer",
+          )
+        }
+      }
+    }
+  }
+
+  @Test
   fun everyRepresentativeCityResolvesToItsOwnPrefecture() {
     for (fixture in cityFixtures) {
       assertEquals(
@@ -90,6 +115,25 @@ class PrefectureBoundaryAssetTest {
   )
 
   private companion object {
+    /** 点 ([x], [y]) が閉リング [ring] の内部にあるか (交差数判定)。 */
+    fun contains(ring: List<DoubleArray>, x: Double, y: Double): Boolean {
+      var inside = false
+      var j = ring.lastIndex
+      for (i in ring.indices) {
+        val xi = ring[i][0]
+        val yi = ring[i][1]
+        val xj = ring[j][0]
+        val yj = ring[j][1]
+        val isAboveI = yi > y
+        val isAboveJ = yj > y
+        if (isAboveI != isAboveJ && x < (xj - xi) * (y - yi) / (yj - yi) + xi) {
+          inside = !inside
+        }
+        j = i
+      }
+      return inside
+    }
+
     val cityFixtures = listOf(
       CityFixture(Prefecture.Hokkaido, "Sapporo", 43.0769, 141.3381),
       CityFixture(Prefecture.Aomori, "Aomori", 40.825, 140.71),
