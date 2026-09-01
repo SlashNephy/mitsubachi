@@ -27,16 +27,27 @@ private const val INSET_PADDING_RATIO = 0.08f
 // 本土として描画する地理窓。アセット (Natural Earth 1:10m) の全リングの外接矩形を実測し、
 // 遠隔離島と本土のあいだに空いている値の中央を境目に取った。
 // 南限 30.1: トカラ列島の北端 30.005N (鹿児島県) と屋久島の南端 30.226N のあいだ。
-//   これで小笠原諸島 (26.6-27.2N)・硫黄島 (24.7-25.5N)・南鳥島 (24.3N)・トカラ列島も落ちる。
+//   これで小笠原諸島 (26.6-27.2N)・硫黄島 (24.7-25.5N)・南鳥島 (24.3N) も落ちる。
 // 東限 151.4: 択捉島の東端 148.856E (北海道) と南鳥島 153.941E (東京都) のあいだ。
-// 除外しても 47 都道府県すべてが 1 つ以上のリングを残す。判定側 (PrefectureLocator) は
-// 元のアセットをそのまま使うため、離島でのチェックインは従来どおり拾える。
 private val MAIN_WINDOW = GeoWindow(west = 120.0, south = 30.1, east = 151.4, north = 46.0)
 
+// 薩南諸島 (トカラ列島・奄美群島) を描画する地理窓。いずれも鹿児島県で、九州の南に連なる。
+// 経度が近い東京都の離島 (硫黄島 141.275E・小笠原諸島 142.111E) とは 11 度以上離れているため、
+// 東限 130.7 (喜界島の東端 130.030E のすぐ東) で分けられる。
+// 南限 26.87: 母島の北端 26.721N (東京都) と与論島の南端 27.021N のあいだ。
+//   与論島と小笠原の父島 (27.040-27.094N) は緯度が重なるので、経度と併せて初めて分けられる。
+// 北限 30.1 は [MAIN_WINDOW] の南限と接しており、薩南諸島の連なりに隙間ができない。
+private val SATSUNAN_WINDOW = GeoWindow(west = 120.0, south = 26.87, east = 130.7, north = 30.1)
+
+// 本土側で描画する地理窓。どれかに収まるリングを描く。
+// 除外しても 47 都道府県すべてが 1 つ以上のリングを残す。判定側 (PrefectureLocator) は
+// 元のアセットをそのまま使うため、離島でのチェックインは従来どおり拾える。
+private val MAIN_WINDOWS = listOf(MAIN_WINDOW, SATSUNAN_WINDOW)
+
 // 沖縄インセットとして描画する地理窓。
-// 東限 130.5: 奄美群島の東端 130.030E と大東諸島の西端 131.212E のあいだ。
+// 東限 129.8: 沖縄本島の東端 128.338E と大東諸島の西端 131.212E のあいだ。
 // 大東諸島は沖縄本島から約 350km 東に離れており、枠を横に引き伸ばすだけなので落とす。
-private val INSET_WINDOW = GeoWindow(west = 120.0, south = 20.0, east = 130.5, north = 40.0)
+private val INSET_WINDOWS = listOf(GeoWindow(west = 120.0, south = 20.0, east = 129.8, north = 40.0))
 
 /**
  * 描画対象とする地理窓。境界は経度・緯度そのもので、外接矩形が完全に収まるリングだけを通す。
@@ -83,8 +94,8 @@ class ProjectedPrefecture(
  * 沖縄県は本土から遠いので、同じ縮尺のまま左上 (日本海側) のインセット枠に別途配置する。
  * 描画とヒットテストで同じ点列を使うため、判定と見た目がずれない。
  *
- * 小笠原諸島・南鳥島・トカラ列島・大東諸島のような遠隔離島は列島を縮めてしまうため、
- * [MAIN_WINDOW] / [INSET_WINDOW] の外にあるリングを描画とスケール計算の両方から除く。
+ * 小笠原諸島・南鳥島・大東諸島のような遠隔離島は列島を縮めてしまうため、
+ * [MAIN_WINDOWS] / [INSET_WINDOWS] のどれにも収まらないリングを描画とスケール計算の両方から除く。
  * アセット自体は加工しないので、判定側はこれらの離島も従来どおり拾う。
  */
 class JapanMapProjection(
@@ -98,7 +109,7 @@ class JapanMapProjection(
   private val insetSide = shortSide * INSET_SIDE_RATIO
 
   // 日本海にあたるキャンバス左上の空白に置く。本土は南西から北東へ斜めに伸びるため、
-  // ここには本土のポリゴンが来ない (実測: 1080x1317 で最寄りの本土の点まで約 285px)
+  // ここには本土のポリゴンが来ない (実測: 1080x1317 で最寄りの本土の点まで約 275px)
   val insetBounds: Rect = Rect(
     offset = Offset(insetMargin, insetMargin),
     size = Size(insetSide, insetSide),
@@ -121,7 +132,7 @@ class JapanMapProjection(
       size = Size(insetSide - insetPadding * 2, insetSide - insetPadding * 2),
     )
 
-    projected = project(main, mainArea, MAIN_WINDOW) + project(inset, insetArea, INSET_WINDOW)
+    projected = project(main, mainArea, MAIN_WINDOWS) + project(inset, insetArea, INSET_WINDOWS)
   }
 
   // インセット枠は本土と重ならない位置に置いているため、走査順による取り違えは起きない
@@ -139,10 +150,12 @@ class JapanMapProjection(
   private fun project(
     boundaries: List<PrefectureBoundary>,
     area: Rect,
-    window: GeoWindow,
+    windows: List<GeoWindow>,
   ): List<ProjectedPrefecture> {
     val visible = boundaries.mapNotNull { boundary ->
-      val indices = boundary.boundingBoxes.indices.filter { window.contains(boundary.boundingBoxes[it]) }
+      val indices = boundary.boundingBoxes.indices.filter { index ->
+        windows.any { it.contains(boundary.boundingBoxes[index]) }
+      }
       if (indices.isEmpty()) {
         null
       } else {
