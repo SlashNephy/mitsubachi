@@ -10,6 +10,9 @@
 
 **設計ドキュメント:** [docs/superpowers/specs/2026-08-31-prefecture-completion-design.md](../specs/2026-08-31-prefecture-completion-design.md)
 
+> 本書のコード断片は計画時点のもので、実装後の修正までは追随していない。現在の仕様は設計ドキュメントを、
+> 現在のコードは実装そのものを参照すること。
+
 ## Global Constraints
 
 - 呼称は **県踏破度**。「経県値」はアプリの UI 文言に使わない（クレジット表記の中でのみ使う）
