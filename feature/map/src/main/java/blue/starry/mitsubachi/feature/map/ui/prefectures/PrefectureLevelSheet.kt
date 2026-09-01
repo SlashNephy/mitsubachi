@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import blue.starry.mitsubachi.core.domain.model.PrefectureCompletion
 import blue.starry.mitsubachi.core.domain.model.PrefectureLevel
@@ -55,10 +56,11 @@ fun PrefectureLevelSheet(
               .selectable(
                 selected = selected,
                 onClick = { onSelectLevel(level) },
+                role = Role.RadioButton,
               )
               .padding(vertical = 8.dp),
           ) {
-            RadioButton(selected = selected, onClick = { onSelectLevel(level) })
+            RadioButton(selected = selected, onClick = null)
 
             LevelColorSwatch(level = level)
 

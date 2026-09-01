@@ -1,5 +1,6 @@
 package blue.starry.mitsubachi.feature.map.ui.prefectures
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -42,6 +44,7 @@ import blue.starry.mitsubachi.core.ui.compose.screen.LoadingScreen
 import blue.starry.mitsubachi.feature.map.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import timber.log.Timber
 
 @Composable
 fun PrefectureCompletionScreen(
@@ -164,7 +167,11 @@ private fun ScoreHeader(summary: PrefectureCompletionSummary, modifier: Modifier
 
     if (summary.visitedCountryCodes.isNotEmpty()) {
       Text(
-        text = stringResource(R.string.prefecture_completion_countries, summary.visitedCountryCodes.size),
+        text = pluralStringResource(
+          R.plurals.prefecture_completion_countries,
+          summary.visitedCountryCodes.size,
+          summary.visitedCountryCodes.size,
+        ),
         style = MaterialTheme.typography.bodyMedium,
       )
     }
@@ -252,7 +259,11 @@ private fun PrefectureListRow(
     Column(modifier = Modifier.weight(1f)) {
       Text(completion.prefecture.displayName(), style = MaterialTheme.typography.bodyLarge)
       Text(
-        text = stringResource(R.string.prefecture_completion_venue_count, completion.venueCount),
+        text = pluralStringResource(
+          R.plurals.prefecture_completion_venue_count,
+          completion.venueCount,
+          completion.venueCount,
+        ),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
@@ -277,7 +288,11 @@ private fun CreditFooter(modifier: Modifier = Modifier) {
     modifier = modifier
       .fillMaxWidth()
       .clickable {
-        context.startActivity(Intent(Intent.ACTION_VIEW, "https://uub.jp/".toUri()))
+        try {
+          context.startActivity(Intent(Intent.ACTION_VIEW, "https://uub.jp/".toUri()))
+        } catch (e: ActivityNotFoundException) {
+          Timber.w(e, "No activity found to handle the credit link")
+        }
       }
       .padding(16.dp),
   )

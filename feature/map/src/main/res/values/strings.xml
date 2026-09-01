@@ -15,7 +15,10 @@
     <string name="like_failed">Failed to like: %s</string>
     <string name="prefecture_completion">Prefecture Completion</string>
     <string name="prefecture_completion_score">%1$d / %2$d</string>
-    <string name="prefecture_completion_countries">%1$d countries outside Japan</string>
+    <plurals name="prefecture_completion_countries">
+        <item quantity="one">%1$d country outside Japan</item>
+        <item quantity="other">%1$d countries outside Japan</item>
+    </plurals>
     <string name="prefecture_completion_legend">Legend</string>
     <string name="prefecture_completion_level_unvisited">Never been</string>
     <string name="prefecture_completion_level_passed_through">Passed through</string>
@@ -24,7 +27,10 @@
     <string name="prefecture_completion_level_stayed">Stayed overnight</string>
     <string name="prefecture_completion_level_lived">Lived</string>
     <string name="prefecture_completion_level_points">%1$d pt</string>
-    <string name="prefecture_completion_venue_count">%1$d places</string>
+    <plurals name="prefecture_completion_venue_count">
+        <item quantity="one">%1$d place</item>
+        <item quantity="other">%1$d places</item>
+    </plurals>
     <string name="prefecture_completion_overridden">Edited</string>
     <string name="prefecture_completion_clear_override">Reset to automatic</string>
     <string name="prefecture_completion_credit">Inspired by Keikenchi from Todofuken Shikuchoson (uub.jp)</string>
