@@ -128,10 +128,18 @@ class JapanMapProjection(
   }
 
   fun hitTest(x: Float, y: Float): Prefecture? {
-    // インセット枠の中は沖縄が最前面に描かれる。本土 (九州南端など) が枠に重なっても
-    // 見た目どおり沖縄だけを判定し、外れたときは本土に落とさない。
-    val targets = if (insetBounds.contains(Offset(x, y))) insetProjected else mainProjected
-    for (item in targets) {
+    // インセット枠の中は沖縄が最前面に描かれるので先に判定する。枠は線だけで下の本土が
+    // 透けて見えるため、沖縄のポリゴンに当たらなければ見えているとおり本土に落とす
+    val inset = if (insetBounds.contains(Offset(x, y))) hitTest(insetProjected, x, y) else null
+    return inset ?: hitTest(mainProjected, x, y)
+  }
+
+  private fun hitTest(
+    items: List<ProjectedPrefecture>,
+    x: Float,
+    y: Float,
+  ): Prefecture? {
+    for (item in items) {
       for (ring in item.rings) {
         if (contains(ring, x, y)) {
           return item.prefecture
